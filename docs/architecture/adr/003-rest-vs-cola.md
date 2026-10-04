@@ -25,6 +25,9 @@ ETA ≤ 15 s (QA-01); el equipo evita operar brokers distribuidos (R-02/R-03).
 ## Decisión
 Usaremos **REST al borde con cola Redis interna** y reintentos idempotentes.
 
+Cada posición llevará un ID de evento estable, reutilizado por el bus al reintentar; el worker impondrá unicidad de ese ID en PostgreSQL antes de aplicar cambios o emitir alertas.
+Así, los reintentos toleran cortes 3G/4G (R-05) sin duplicar efectos ni añadir infraestructura al VPS de bajo costo (R-03).
+
 ## Consecuencias
 - Positiva: desacopla ingesta de cálculo, absorbe picos y mantiene QA-01 con
   una sola pieza extra (Redis) en el VPS.
