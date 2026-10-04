@@ -1,0 +1,30 @@
+@startuml
+' Alternativa descartada: A. Monolito en capas (2.ª mejor, 4,10) — RutaSIT Arequipa
+skinparam componentStyle rectangle
+actor "Bus GPS" as Bus
+actor "Pasajero" as Pax
+actor "Operador" as Ops
+database "PostgreSQL" as DB
+cloud "Mapas abiertos (externo)" as Maps
+
+package "Monolito en capas (un proceso)" {
+  [Presentación\nAPI REST] as Pres
+  [Negocio\nIngesta + ETA + Alertas] as Neg
+  [Datos\nORM] as Dat
+}
+
+Bus --> Pres : POST /positions cada 10 s
+Pax --> Pres : mapa + ETA
+Ops --> Pres : panel y rutas
+Pres --> Neg
+Neg --> Dat
+Dat --> DB
+Pres ..> Maps : tiles y geometría
+
+note bottom of Neg
+  Descartada: total 4,10 vs 4,20 del
+  monolito modular. Sin cola intermedia
+  la ingesta comparte proceso con la API
+  (peor aislamiento y modificabilidad).
+end note
+@enduml
