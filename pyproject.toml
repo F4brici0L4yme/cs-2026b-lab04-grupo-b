@@ -1,0 +1,11 @@
+[project]
+name = "cs-2026b-lab04-grupo-05"
+version = "0.1.0"
+description = "Scripts de figuras y diagramas del Laboratorio 04 (RutaSIT Arequipa) - Construcción de Software"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.9",
+]
+
+[dependency-groups]
+dev = []

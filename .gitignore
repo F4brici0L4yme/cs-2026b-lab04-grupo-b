@@ -1,0 +1,8 @@
+# Entorno virtual de Python (uv)
+.venv/
+__pycache__/
+*.pyc
+
+# Salidas temporales
+capture_logs/
+submission/
