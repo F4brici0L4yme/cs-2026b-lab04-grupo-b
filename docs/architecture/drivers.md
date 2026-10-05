@@ -15,6 +15,7 @@
 | RF-04 | El sistema genera alertas de desvío de ruta o de congestión para el operador.     | Operador   | Alta      |
 | RF-05 | El operador administra rutas y paraderos (registrar, editar y desactivar).        | Operador   | Media     |
 | RF-06 | El operador consulta un panel con el estado de la flota (buses activos / sin señal). | Operador | Media     |
+| RF-07 | El operador consulta el historial de alertas de los últimos 7 días (módulo Alertas, QA-02). | Operador | Media |
 
 ## 2. Atributos de calidad (ordenados por prioridad)
 
