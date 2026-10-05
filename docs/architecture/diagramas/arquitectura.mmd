@@ -1,16 +1,16 @@
 %% Arquitectura elegida (C. Monolito modular) — RutaSIT Arequipa
-%% Trazabilidad: RF-01..RF-06, QA-01 (ETA ≤ 15 s), R-01..R-05
+%% Trazabilidad: RF-01..RF-07, QA-01 (ETA ≤ 15 s), R-01..R-05
 flowchart LR
   subgraph Actores[Actores]
     BUS[Bus GPS\nRF-01]
     PAX[Pasajero\nRF-02 · RF-03]
-    OPS[Operador\nRF-04 · RF-05 · RF-06]
+    OPS[Operador\nRF-04 · RF-05 · RF-06 · RF-07]
   end
   subgraph App[Monolito modular — Django en VPS]
     ING[Ingesta\n positions cada 10 s]
     QUEUE[(Cola Redis\n desacopla ingesta)]
     ETA[ETA\nRF-03]
-    ALE[Alertas\nRF-04]
+    ALE[Alertas + historial 7 d\nRF-04 · RF-07]
     FLO[Flota\nRF-06]
     RUT[Rutas y paraderos\nRF-05]
     API[API REST]
@@ -25,6 +25,7 @@ flowchart LR
   FLO --> API
   RUT --> API
   ALE --> API
+  ALE --> DB
   API --> DB
   ETA --> DB
   RUT --> DB
