@@ -1,0 +1,82 @@
+@startuml
+title HU-06: Actualización GPS, ETA y detección de desvío
+autonumber
+actor ":Pasajero" as Pasajero
+participant ":RutaSITAPI" as API
+participant ":MonitoreoController" as Controller
+participant ":SeguimientoService" as Service
+participant ":IRepositorioRutaSIT" as Repo
+participant ":IGpsProvider" as GPS
+participant ":IReloj" as Reloj
+participant ":Bus" as Bus
+participant ":UbicacionGPS" as Ubicacion
+participant ":Ruta" as Ruta
+participant ":Paradero" as Paradero
+participant ":IEstimadorETA" as Estimador
+participant ":AlertaDesvio" as Alerta
+participant ":INotificadorAlerta" as Notificador
+
+loop Consulta periódica del pasajero (objetivo: cada 10 s)
+  Pasajero -> API: consultar_seguimiento(bus_id, paradero_id)
+  API -> Controller: consultar_seguimiento(bus_id, paradero_id)
+  Controller -> Service: consultar_seguimiento(bus_id, paradero_id)
+  Service -> Repo: obtener_bus(bus_id)
+  Repo -->> Service: Bus
+  Service -> Bus: estado_actual()
+  Bus -->> Service: estadoAnterior
+  alt estadoAnterior == FUERA_DE_SERVICIO
+    Service -->> Controller: ResultadoSeguimiento(no disponible)
+  else bus conocido y no fuera de servicio
+    Service -> Repo: obtener_ruta(bus.ruta_id)
+    Repo -->> Service: Ruta
+    Service -> Repo: obtener_paradero(paradero_id)
+    Repo -->> Service: Paradero
+    Service -> GPS: obtener_ultima_ubicacion(bus_id)
+    GPS -->> Service: UbicacionGPS
+    Service -> Reloj: ahora()
+    Reloj -->> Service: datetime
+    Service -> Ubicacion: es_reciente(datetime, 30 s)
+    Ubicacion -->> Service: bool
+    alt ubicación GPS reciente (≤ 30 s)
+      Service -> Bus: actualizar_ubicacion(ubicacion)
+      alt estadoAnterior == EN_ESPERA
+        Service -> Bus: actualizar_estado_por_ubicacion(ruta, paradero, 30 m, 15 m)
+        Bus -->> Service: EN_ESPERA
+        Service -->> Controller: ResultadoSeguimiento(estado=EN_ESPERA, sin ETA ni alerta)
+      else estadoAnterior en servicio
+        par calcular ETA candidato
+          Service -> Service: calcular_eta(bus, paradero, datetime)
+          Service -> Estimador: calcular_eta(bus, paradero, datetime)
+          Estimador -->> Service: ETA | None
+          Service -->> Service: ETA candidato
+        else clasificar ubicación y estado
+          Service -> Bus: actualizar_estado_por_ubicacion(ruta, paradero, 30 m, 15 m)
+          activate Bus
+          Bus -> Bus: detectar_desvio(ruta, 30 m)
+          Bus -> Ruta: esta_en_ruta(ubicacion, 30 m)
+          Ruta -->> Bus: bool
+          Bus -> Paradero: distancia_a(ubicacion)
+          Paradero -->> Bus: float (metros)
+          Bus -->> Service: EstadoBus
+          deactivate Bus
+        end
+        alt estado DESVIADO y estadoAnterior != DESVIADO
+          Service -> Alerta: desde_bus(bus, ubicacion, datetime)
+          Alerta -->> Service: AlertaDesvio
+          Service ->> Notificador: notificar(alerta)
+          Notificador -->> Service: None (aceptada para envío asíncrono)
+          Service -->> Controller: ResultadoSeguimiento(estado=DESVIADO, alerta; ETA candidato descartado)
+        else estado DESVIADO sin nueva transición
+          Service -->> Controller: ResultadoSeguimiento(estado=DESVIADO, sin alerta duplicada)
+        else estado EN_RUTA o EN_PARADERO
+          Service -->> Controller: ResultadoSeguimiento(estado, ubicacion, ETA candidato)
+        end
+      end
+    else ubicación GPS obsoleta
+      Service -->> Controller: ResultadoSeguimiento(telemetria_vigente=false)
+    end
+  end
+  Controller -->> API: ResultadoSeguimiento
+  API -->> Pasajero: ubicación, estado, ETA y/o aviso
+end
+@enduml
