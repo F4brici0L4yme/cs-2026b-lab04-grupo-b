@@ -1,0 +1,196 @@
+@startuml
+!pragma layout smetana
+title RutaSIT: Modelo de dominio y puertos (Lab 05)
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty members
+top to bottom direction
+
+  class Id <<type>>
+
+  enum EstadoBus {
+    EN_ESPERA
+    EN_RUTA
+    EN_PARADERO
+    DESVIADO
+    FUERA_DE_SERVICIO
+  }
+
+  abstract class UsuarioSistema {
+    -id_anonimo: Id
+    -activo: bool
+    +desactivar(): None
+  }
+
+  class Conductor {
+    +puede_conducir(): bool
+  }
+
+  class UbicacionGPS {
+    -latitud: float
+    -longitud: float
+    -capturada_en: datetime
+    +distancia_a(otra: UbicacionGPS): float
+    +es_reciente(ahora: datetime, antiguedad_max: timedelta): bool
+  }
+
+  class Paradero {
+    -id: Id
+    -nombre: str
+    -ubicacion: UbicacionGPS
+    +distancia_a(ubicacion: UbicacionGPS): float
+  }
+
+  class Ruta {
+    -id: Id
+    -nombre: str
+    -paraderos: tuple[Paradero, ...]
+    -puntos_trazado: tuple[UbicacionGPS, ...]
+    +esta_en_ruta(ubicacion: UbicacionGPS, tolerancia_m: float): bool
+    +paradero_por_id(paradero_id: Id): Paradero | None
+    +siguiente_paradero(ubicacion: UbicacionGPS): Paradero | None
+  }
+
+  class Bus {
+    -id: Id
+    -ruta_id: Id | None
+    -conductor_id: Id | None
+    -estado: EstadoBus
+    -ultima_ubicacion: UbicacionGPS | None
+    -historial: list[UbicacionGPS]
+    +actualizar_ubicacion(ubicacion: UbicacionGPS): None
+    +detectar_desvio(ruta: Ruta, tolerancia_m: float): bool
+    +actualizar_estado_por_ubicacion(ruta: Ruta, paradero: Paradero | None, tolerancia_desvio_m: float, tolerancia_paradero_m: float): EstadoBus
+    +estado_actual(): EstadoBus
+    +iniciar_servicio(): None
+    +retirar_servicio(): None
+  }
+
+  class ETA {
+    -bus_id: Id
+    -paradero_id: Id
+    -llegada_estimada: datetime
+    -calculada_en: datetime
+    +vigente(ahora: datetime, antiguedad_max: timedelta): bool
+  }
+
+  class AlertaDesvio {
+    -id: Id
+    -bus_id: Id
+    -ubicacion: UbicacionGPS
+    -creada_en: datetime
+    -descripcion: str
+    {static} +desde_bus(bus: Bus, ubicacion: UbicacionGPS, creada_en: datetime): AlertaDesvio
+  }
+
+  class ResultadoSeguimiento {
+    -bus_id: Id
+    -estado: EstadoBus
+    -ubicacion: UbicacionGPS | None
+    -eta: ETA | None
+    -alerta: AlertaDesvio | None
+    -telemetria_vigente: bool
+  }
+
+  interface IRepositorioRutaSIT {
+    +obtener_bus(bus_id: Id): Bus
+    +obtener_ruta(ruta_id: Id): Ruta
+    +obtener_paradero(paradero_id: Id): Paradero
+    +guardar_bus(bus: Bus): None
+  }
+
+  interface IGpsProvider {
+    +obtener_ultima_ubicacion(bus_id: Id): UbicacionGPS
+  }
+
+  interface INotificadorAlerta {
+    +notificar(alerta: AlertaDesvio): None
+  }
+
+  interface IEstimadorETA {
+    +calcular_eta(bus: Bus, paradero: Paradero, calculada_en: datetime): ETA | None
+  }
+
+  interface IReloj {
+    +ahora(): datetime
+  }
+
+  class SeguimientoService {
+    -repositorio: IRepositorioRutaSIT
+    -gps_provider: IGpsProvider
+    -notificador: INotificadorAlerta
+    -estimador_eta: IEstimadorETA
+    -reloj: IReloj
+    +consultar_seguimiento(bus_id: Id, paradero_id: Id): ResultadoSeguimiento
+    +procesar_telemetria(bus_id: Id, ubicacion: UbicacionGPS): ResultadoSeguimiento
+  }
+
+  class MonitoreoController {
+    -seguimiento: SeguimientoService
+    +consultar_seguimiento(bus_id: Id, paradero_id: Id): ResultadoSeguimiento
+  }
+
+  class RutaSITAPI {
+    -controller: MonitoreoController
+    +consultar_seguimiento(bus_id: Id, paradero_id: Id): ResultadoSeguimiento
+  }
+
+  class RepositorioMemoria {
+    -buses: dict[Id, Bus]
+    -rutas: dict[Id, Ruta]
+    -paraderos: dict[Id, Paradero]
+    +obtener_bus(bus_id: Id): Bus
+    +obtener_ruta(ruta_id: Id): Ruta
+    +obtener_paradero(paradero_id: Id): Paradero
+    +guardar_bus(bus: Bus): None
+  }
+  class ProveedorGPSMemoria {
+    -ubicaciones: dict[Id, UbicacionGPS]
+    +obtener_ultima_ubicacion(bus_id: Id): UbicacionGPS
+    +registrar(bus_id: Id, ubicacion: UbicacionGPS): None
+  }
+  class NotificadorAlertaMemoria {
+    -alertas: list[AlertaDesvio]
+    +notificar(alerta: AlertaDesvio): None
+  }
+  class EstimadorETASimple {
+    -velocidad_media_m_s: float
+    +calcular_eta(bus: Bus, paradero: Paradero, calculada_en: datetime): ETA | None
+  }
+  class RelojSistema {
+    +ahora(): datetime
+  }
+
+' Herencia y realizaciones de puertos.
+Conductor --|> UsuarioSistema
+RepositorioMemoria ..|> IRepositorioRutaSIT
+ProveedorGPSMemoria ..|> IGpsProvider
+NotificadorAlertaMemoria ..|> INotificadorAlerta
+EstimadorETASimple ..|> IEstimadorETA
+RelojSistema ..|> IReloj
+
+' Asociaciones con multiplicidades explícitas en ambos extremos.
+Ruta "1" o-- "1..*" Paradero: agrupa
+Bus "1" *-- "0..*" UbicacionGPS: historial de posiciones
+Bus "0..*" --> "0..1" Ruta: ruta activa
+Bus "0..*" --> "0..1" Conductor: asignación seudónima
+AlertaDesvio "0..*" --> "1" Bus: corresponde a
+AlertaDesvio "0..*" --> "1" UbicacionGPS: detectada en
+RutaSITAPI "1" --> "1" MonitoreoController: delega
+MonitoreoController "1" --> "1" SeguimientoService: ejecuta
+
+' Dependencias de aplicación hacia puertos y tipos del dominio.
+SeguimientoService ..> IRepositorioRutaSIT: consulta/guarda
+SeguimientoService ..> IGpsProvider: obtiene telemetría
+SeguimientoService ..> INotificadorAlerta: encola alertas
+SeguimientoService ..> IEstimadorETA: calcula ETA
+SeguimientoService ..> IReloj: obtiene hora
+SeguimientoService ..> ResultadoSeguimiento: devuelve
+Bus ..> EstadoBus: mantiene
+ETA ..> Id
+
+note bottom of Conductor
+  Solo se conserva un identificador seudónimo y el estado activo.
+  No se almacenan nombre, DNI, teléfono ni datos personales innecesarios.
+end note
+@enduml
