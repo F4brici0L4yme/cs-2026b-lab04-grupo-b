@@ -1,0 +1,18 @@
+stateDiagram-v2
+    [*] --> EN_ESPERA
+
+    EN_ESPERA --> EN_RUTA: iniciar_servicio()
+
+    EN_RUTA --> EN_PARADERO: actualizar_estado_por_ubicacion() [enRuta && distanciaParadero <= 15m]
+    EN_PARADERO --> EN_RUTA: actualizar_estado_por_ubicacion() [enRuta && distanciaParadero > 15m]
+
+    EN_RUTA --> DESVIADO: actualizar_estado_por_ubicacion() [desvioDetectado == true]
+    EN_PARADERO --> DESVIADO: actualizar_estado_por_ubicacion() [desvioDetectado == true]
+    DESVIADO --> EN_RUTA: actualizar_estado_por_ubicacion() [desvioDetectado == false && distanciaParadero > 15m]
+    DESVIADO --> EN_PARADERO: actualizar_estado_por_ubicacion() [desvioDetectado == false && distanciaParadero <= 15m]
+
+    EN_ESPERA --> FUERA_DE_SERVICIO: retirar_servicio()
+    EN_RUTA --> FUERA_DE_SERVICIO: retirar_servicio()
+    EN_PARADERO --> FUERA_DE_SERVICIO: retirar_servicio()
+    DESVIADO --> FUERA_DE_SERVICIO: retirar_servicio()
+    FUERA_DE_SERVICIO --> [*]
