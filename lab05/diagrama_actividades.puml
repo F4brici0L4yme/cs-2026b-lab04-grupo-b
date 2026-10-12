@@ -1,0 +1,60 @@
+@startuml
+!pragma layout smetana
+title Procesamiento de Telemetría GPS y Cálculo de ETA
+
+|DispositivoGPS|
+start
+:Capturar latitud, longitud y hora;
+if (¿Coordenada dentro de rango?) then (sí)
+  :Enviar posición al backend;
+else (no)
+  :Descartar lectura inválida;
+  stop
+endif
+
+|BackendRutaSIT|
+:Buscar bus y ruta asignada;
+if (¿Bus conocido, no fuera de servicio y con ruta?) then (sí)
+  :Obtener la ubicación GPS recibida;
+  :SeguimientoService.procesar_telemetria(bus_id, ubicacion);
+  :UbicacionGPS.es_reciente(ahora, 30 s);
+  if (¿Lectura reciente, <= 30 s?) then (sí)
+    :Bus.actualizar_ubicacion(ubicacion);
+    if (¿Estado EN_RUTA o EN_PARADERO?) then (sí)
+      fork
+        :SeguimientoService.calcular_eta(bus, paradero, ahora);
+      fork again
+        :Ruta.esta_en_ruta(ubicacion, 30 m);
+        :Paradero.distancia_a(ubicacion);
+      end fork
+      :Bus.actualizar_estado_por_ubicacion(...);
+      if (¿Desvío detectado?) then (sí)
+        :Crear AlertaDesvio.desde_bus(...);
+        :INotificadorAlerta.notificar(alerta) en segundo plano;
+        |AppPasajero|
+        :Mostrar ubicación y aviso de desvío;
+      else (no)
+        |AppPasajero|
+        :Mostrar ubicación y ETA;
+      endif
+    else (EN_ESPERA)
+      |AppPasajero|
+      :Conservar ubicación; no calcular ETA ni alertar;
+    endif
+  else (no)
+    :Ignorar lectura obsoleta;
+    note right
+      Revisión simulada con un operador: una lectura GPS antigua
+      podría provocar una alerta falsa. Se añadió la validación
+      de vigencia (30 s) antes de actualizar estado o ETA.
+    end note
+    |AppPasajero|
+    :Conservar última ubicación y ETA conocidos;
+  endif
+else (no)
+  :Registrar telemetría no procesable;
+  |AppPasajero|
+  :Mostrar que el bus no está disponible;
+endif
+stop
+@enduml
