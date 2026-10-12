@@ -1,0 +1,128 @@
+@startuml classes_rutasit
+set namespaceSeparator none
+class "AlertaDesvio" as rutasit.dominio.AlertaDesvio {
+  bus_id: Id
+  creada_en: datetime
+  descripcion: str
+  id: Id
+  ubicacion
+  desde_bus(bus: Bus, ubicacion: UbicacionGPS, creada_en: datetime) -> AlertaDesvio
+}
+class "Bus" as rutasit.dominio.Bus {
+  conductor_id: Id | None
+  estado
+  historial: list[UbicacionGPS]
+  id: Id
+  ruta_id: Id | None
+  ultima_ubicacion: UbicacionGPS | None
+  actualizar_estado_por_ubicacion(ruta: Ruta, paradero: Paradero | None, tolerancia_desvio_m: float, tolerancia_paradero_m: float) -> EstadoBus
+  actualizar_ubicacion(ubicacion: UbicacionGPS) -> None
+  detectar_desvio(ruta: Ruta, tolerancia_m: float) -> bool
+  estado_actual() -> EstadoBus
+  iniciar_servicio() -> None
+  retirar_servicio() -> None
+}
+class "Conductor" as rutasit.dominio.Conductor {
+  puede_conducir() -> bool
+}
+class "ETA" as rutasit.dominio.ETA {
+  bus_id: Id
+  calculada_en: datetime
+  llegada_estimada: datetime
+  paradero_id: Id
+  vigente(ahora: datetime, antiguedad_max: timedelta) -> bool
+}
+class "EstadoBus" as rutasit.dominio.EstadoBus {
+  name
+}
+class "EstimadorETASimple" as rutasit.infraestructura.EstimadorETASimple {
+  calcular_eta(bus: Bus, paradero: Paradero, calculada_en: datetime) -> ETA | None
+}
+class "IEstimadorETA" as rutasit.puertos.IEstimadorETA {
+  calcular_eta(bus: Bus, paradero: Paradero, calculada_en: datetime) -> ETA | None
+}
+class "IGpsProvider" as rutasit.puertos.IGpsProvider {
+  obtener_ultima_ubicacion(bus_id: Id) -> UbicacionGPS
+}
+class "INotificadorAlerta" as rutasit.puertos.INotificadorAlerta {
+  notificar(alerta: AlertaDesvio) -> None
+}
+class "IReloj" as rutasit.puertos.IReloj {
+  ahora() -> datetime
+}
+class "IRepositorioRutaSIT" as rutasit.puertos.IRepositorioRutaSIT {
+  guardar_bus(bus: Bus) -> None
+  obtener_bus(bus_id: Id) -> Bus
+  obtener_paradero(paradero_id: Id) -> Paradero
+  obtener_ruta(ruta_id: Id) -> Ruta
+}
+class "MonitoreoController" as rutasit.servicios.MonitoreoController {
+  consultar_seguimiento(bus_id: Id, paradero_id: Id) -> ResultadoSeguimiento
+}
+class "NotificadorAlertaMemoria" as rutasit.infraestructura.NotificadorAlertaMemoria {
+  alertas: list[AlertaDesvio]
+  notificar(alerta: AlertaDesvio) -> None
+}
+class "Paradero" as rutasit.dominio.Paradero {
+  id: Id
+  nombre: str
+  ubicacion
+  distancia_a(ubicacion: UbicacionGPS) -> float
+}
+class "ProveedorGPSMemoria" as rutasit.infraestructura.ProveedorGPSMemoria {
+  obtener_ultima_ubicacion(bus_id: Id) -> UbicacionGPS
+  registrar(bus_id: Id, ubicacion: UbicacionGPS) -> None
+}
+class "RelojSistema" as rutasit.infraestructura.RelojSistema {
+  ahora() -> datetime
+}
+class "RepositorioMemoria" as rutasit.infraestructura.RepositorioMemoria {
+  guardar_bus(bus: Bus) -> None
+  obtener_bus(bus_id: Id) -> Bus
+  obtener_paradero(paradero_id: Id) -> Paradero
+  obtener_ruta(ruta_id: Id) -> Ruta
+}
+class "ResultadoSeguimiento" as rutasit.servicios.ResultadoSeguimiento {
+  alerta: AlertaDesvio | None
+  bus_id: Id
+  estado
+  eta: ETA | None
+  telemetria_vigente: bool
+  ubicacion: UbicacionGPS | None
+}
+class "Ruta" as rutasit.dominio.Ruta {
+  id: Id
+  nombre: str
+  paraderos: tuple[Paradero, ...]
+  puntos_trazado: tuple[UbicacionGPS, ...]
+  esta_en_ruta(ubicacion: UbicacionGPS, tolerancia_m: float) -> bool
+  paradero_por_id(paradero_id: Id) -> Paradero | None
+  siguiente_paradero(ubicacion: UbicacionGPS) -> Paradero | None
+}
+class "RutaSITAPI" as rutasit.servicios.RutaSITAPI {
+  consultar_seguimiento(bus_id: Id, paradero_id: Id) -> ResultadoSeguimiento
+}
+class "SeguimientoService" as rutasit.servicios.SeguimientoService {
+  calcular_eta(bus: Bus, paradero: Paradero, calculada_en: datetime) -> ETA | None
+  consultar_seguimiento(bus_id: Id, paradero_id: Id) -> ResultadoSeguimiento
+  procesar_telemetria(bus_id: Id, ubicacion: UbicacionGPS) -> ResultadoSeguimiento
+}
+class "UbicacionGPS" as rutasit.dominio.UbicacionGPS {
+  capturada_en: datetime
+  latitud: float
+  longitud: float
+  distancia_a(otra: UbicacionGPS) -> float
+  es_reciente(ahora: datetime, antiguedad_max: timedelta) -> bool
+}
+class "UsuarioSistema" as rutasit.dominio.UsuarioSistema {
+  activo: bool
+  id_anonimo: Id
+  desactivar() -> None
+}
+rutasit.dominio.Conductor --|> rutasit.dominio.UsuarioSistema
+rutasit.infraestructura.NotificadorAlertaMemoria --> rutasit.dominio.AlertaDesvio: alertas
+rutasit.dominio.Bus --> rutasit.dominio.EstadoBus: estado
+rutasit.servicios.ResultadoSeguimiento --> rutasit.dominio.EstadoBus: estado
+rutasit.dominio.AlertaDesvio --> rutasit.dominio.UbicacionGPS: ubicacion
+rutasit.dominio.Paradero --> rutasit.dominio.UbicacionGPS: ubicacion
+@enduml

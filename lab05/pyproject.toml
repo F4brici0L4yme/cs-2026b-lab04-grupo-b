@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rutasit-lab05"
+version = "0.1.0"
+description = "Esqueleto de dominio y seguimiento GPS para RutaSIT: Lab 05"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+roundtrip = ["pylint>=3.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
