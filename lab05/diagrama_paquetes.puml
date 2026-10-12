@@ -1,0 +1,66 @@
+@startuml
+!pragma layout smetana
+title RutaSIT: Paquetes y dirección de dependencias (C4)
+skinparam packageStyle rectangle
+
+package "presentacion" as presentacion {
+  class RutaSITAPI
+  class MonitoreoController
+}
+
+package "aplicacion" as aplicacion {
+  class SeguimientoService
+  class ResultadoSeguimiento
+  interface IRepositorioRutaSIT
+  interface IGpsProvider
+  interface INotificadorAlerta
+  interface IEstimadorETA
+  interface IReloj
+}
+
+package "dominio" as dominio {
+  abstract class UsuarioSistema
+  class Conductor
+  class Bus
+  class Ruta
+  class Paradero
+  class UbicacionGPS
+  class EstadoBus <<enumeration>>
+  class ETA
+  class AlertaDesvio
+}
+
+package "infraestructura" as infraestructura {
+  class RepositorioMemoria
+  class ProveedorGPSMemoria
+  class NotificadorAlertaMemoria
+  class EstimadorETASimple
+  class RelojSistema
+}
+
+package "compartido" as compartido {
+  class Id <<type>>
+}
+
+presentacion ..> aplicacion: invoca consultas y casos de uso
+aplicacion ..> dominio: aplica reglas del dominio
+aplicacion ..> compartido: usa identificadores y tipos comunes
+dominio ..> compartido: usa Id
+infraestructura ..> aplicacion: implementa puertos
+infraestructura ..> dominio: adapta/persiste entidades
+
+RepositorioMemoria ..|> IRepositorioRutaSIT
+ProveedorGPSMemoria ..|> IGpsProvider
+NotificadorAlertaMemoria ..|> INotificadorAlerta
+EstimadorETASimple ..|> IEstimadorETA
+RelojSistema ..|> IReloj
+
+note bottom
+  Regla de dependencias: las capas internas (dominio y aplicación)
+  no dependen de las capas externas (presentación e infraestructura).
+  Los puertos se declaran hacia dentro y la infraestructura los implementa.
+  No existen dependencias cíclicas entre paquetes: cumplimiento de C4.
+  El directorio Python raíz rutasit/ es un namespace técnico, no una sexta capa;
+  __init__.py solo reexporta tipos públicos y no introduce un ciclo.
+end note
+@enduml
