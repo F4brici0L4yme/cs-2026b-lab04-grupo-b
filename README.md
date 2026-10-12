@@ -91,3 +91,125 @@ gratis), por lo que cada afirmación se verificó con cálculo y documentación
 oficial antes de decidir. Aprendimos a pedir medidas numéricas, a desconfiar de
 recomendaciones sin restricción de plazo/equipo y a registrar todo en la
 [bitácora](docs/architecture/bitacora-ia.md).
+
+## Diseño UML (Lab 05)
+
+Laboratorio 05 de Construcción de Software: modelado de HU-06 para **RutaSIT Arequipa**, actualización de telemetría GPS, cálculo de ETA y alertas de desvío. Las fuentes editables están en [`lab05/`](lab05/README.md).
+
+### Máquina de estados del Bus (E3)
+
+```mermaid
+stateDiagram-v2
+    [*] --> EN_ESPERA
+
+    EN_ESPERA --> EN_RUTA: iniciar_servicio()
+
+    EN_RUTA --> EN_PARADERO: actualizar_estado_por_ubicacion() [enRuta && distanciaParadero <= 15m]
+    EN_PARADERO --> EN_RUTA: actualizar_estado_por_ubicacion() [enRuta && distanciaParadero > 15m]
+
+    EN_RUTA --> DESVIADO: actualizar_estado_por_ubicacion() [desvioDetectado == true]
+    EN_PARADERO --> DESVIADO: actualizar_estado_por_ubicacion() [desvioDetectado == true]
+    DESVIADO --> EN_RUTA: actualizar_estado_por_ubicacion() [desvioDetectado == false && distanciaParadero > 15m]
+    DESVIADO --> EN_PARADERO: actualizar_estado_por_ubicacion() [desvioDetectado == false && distanciaParadero <= 15m]
+
+    EN_ESPERA --> FUERA_DE_SERVICIO: retirar_servicio()
+    EN_RUTA --> FUERA_DE_SERVICIO: retirar_servicio()
+    EN_PARADERO --> FUERA_DE_SERVICIO: retirar_servicio()
+    DESVIADO --> FUERA_DE_SERVICIO: retirar_servicio()
+    FUERA_DE_SERVICIO --> [*]
+```
+
+### Diagramas renderizados y fuentes
+
+| Entregable | Imagen en `lab05/img/` | Fuente |
+|---|---|---|
+| E1: clases | [SVG](lab05/img/diagrama_clases.svg) · [PNG](lab05/img/diagrama_clases.png) | [PlantUML](lab05/diagrama_clases.puml) |
+| E2: secuencia | [SVG](lab05/img/diagrama_secuencia.svg) · [PNG](lab05/img/diagrama_secuencia.png) | [PlantUML](lab05/diagrama_secuencia.puml) |
+| E3: estados | [SVG](lab05/img/diagrama_estados.svg) · [PNG](lab05/img/diagrama_estados.png) | [Mermaid](lab05/diagrama_estados.mmd) |
+| E4: actividades | [SVG](lab05/img/diagrama_actividades.svg) · [PNG](lab05/img/diagrama_actividades.png) | [PlantUML](lab05/diagrama_actividades.puml) |
+| E5: paquetes | [SVG](lab05/img/diagrama_paquetes.svg) · [PNG](lab05/img/diagrama_paquetes.png) | [PlantUML](lab05/diagrama_paquetes.puml) |
+
+Más archivos: [historia HU-06](lab05/historia.md), [round-trip](lab05/round-trip.md), [matriz C1-C5](lab05/consistencia.md), [bitácora IA](lab05/bitacora-ia.md) y [esqueleto Python](lab05/src/rutasit/README.md).
+
+### Regenerar diagramas y verificar código
+
+Desde la raíz del repositorio, con Java y PlantUML disponibles:
+
+```bash
+cd lab05
+java -DPLANTUML_LIMIT_SIZE=8192 -jar plantuml.jar -tsvg -o img \
+  diagrama_clases.puml diagrama_secuencia.puml \
+  diagrama_actividades.puml diagrama_paquetes.puml
+npx --yes @mermaid-js/mermaid-cli -i diagrama_estados.mmd -o img/diagrama_estados.svg -b white
+java -DPLANTUML_LIMIT_SIZE=8192 -jar plantuml.jar -tpng -o img \
+  diagrama_clases.puml diagrama_secuencia.puml \
+  diagrama_actividades.puml diagrama_paquetes.puml
+npx --yes @mermaid-js/mermaid-cli -i diagrama_estados.mmd -o img/diagrama_estados.png -b white
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+### Commits sugeridos por entregable
+
+Ejecutar cada commit después de revisar su diff; los avances se mantendrán separados hasta la integración final.
+
+| E | Mensaje de commit |
+|---|---|
+| E1 | `E1: diagrama de clases` |
+| E2 | `E2: secuencia` |
+| E3 | `E3: estados` |
+| E4 | `E4: diagrama de actividades` |
+| E5 | `E5: diagrama de paquetes` |
+| E6 | `E6: esqueleto Python y round-trip` |
+| E7 | `E7: consistencia C1-C5 y bitácora IA` |
+| E8 | `E8: README y flujo de entrega` |
+
+Comandos para registrar los ocho avances como commits separados:
+
+```bash
+git add lab05/historia.md lab05/diagrama_clases.puml
+git add lab05/img/diagrama_clases.png lab05/img/diagrama_clases.svg
+git commit -m "E1: diagrama de clases"
+git add lab05/diagrama_secuencia.puml lab05/img/diagrama_secuencia.png lab05/img/diagrama_secuencia.svg
+git commit -m "E2: secuencia"
+git add lab05/diagrama_estados.mmd lab05/img/diagrama_estados.png lab05/img/diagrama_estados.svg
+git commit -m "E3: estados"
+git add lab05/diagrama_actividades.puml lab05/img/diagrama_actividades.png lab05/img/diagrama_actividades.svg
+git commit -m "E4: diagrama de actividades"
+git add lab05/diagrama_paquetes.puml lab05/img/diagrama_paquetes.png lab05/img/diagrama_paquetes.svg
+git commit -m "E5: diagrama de paquetes"
+git add lab05/pyproject.toml lab05/src/rutasit lab05/tests lab05/round-trip.md lab05/roundtrip
+git commit -m "E6: esqueleto Python y round-trip"
+git add lab05/consistencia.md lab05/bitacora-ia.md
+git commit -m "E7: consistencia C1-C5 y bitácora IA"
+git add README.md lab05/README.md
+git commit -m "E8: README y flujo de entrega"
+```
+
+### Pull Request cruzado y tag de entrega
+
+Flujo de rama/PR de ejemplo para un entregable; asignar `$REVISOR` a otro integrante, nunca al autor del PR:
+
+```bash
+git switch -c feat/lab05-e1-clases
+git add lab05/historia.md lab05/diagrama_clases.puml lab05/img/diagrama_clases.png lab05/img/diagrama_clases.svg
+git commit -m "E1: diagrama de clases"
+git push -u origin feat/lab05-e1-clases
+REVISOR="usuario-github-del-revisor"
+gh pr create --base master --head feat/lab05-e1-clases --title "E1: diagrama de clases" --body "Revisión cruzada de HU-06 y modelo de dominio."
+gh pr edit --add-reviewer "$REVISOR"
+# El revisor, en su sesión, comprueba el diff y las pruebas y, si corresponde:
+gh pr checkout feat/lab05-e1-clases
+gh pr review feat/lab05-e1-clases --approve
+# Integrar el PR aprobado en master desde GitHub.
+```
+
+1. Cada integrante trabaja en una rama `feat/lab05-eN-*`, publica la rama y abre un PR a `master` con el mensaje del entregable.
+2. Solicitar revisión cruzada: Layme revisa un PR de Brayan, Brayan uno de Castillo y Castillo uno de Layme. Nadie aprueba su propio PR; integrar tras revisión de diagramas, C1-C5 y pruebas.
+3. Después de integrar y validar todos los entregables:
+
+```bash
+git switch master
+git pull --ff-only origin master
+git tag v0.5-diseno
+git push origin v0.5-diseno
+```
