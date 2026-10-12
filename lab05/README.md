@@ -2,8 +2,6 @@
 
 Entregables de diseño para el caso 6, RutaSIT Arequipa. Las fuentes UML son los archivos `.puml` y `diagrama_estados.mmd`; los SVG de `img/` son sus vistas renderizadas.
 
-Informe en formato UNSA: [Informe Lab05: Construcción de Software con cuestionario (.docx)](Informe_Lab05_Construccion_de_Software_RutaSIT_Cuestionario.docx). Contiene espacios reservados para pegar los cinco diagramas y cuatro líneas para cada respuesta del cuestionario.
-
 ## Entregables
 
 - [HU-06](historia.md)
