@@ -44,6 +44,9 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
         rutasit.app.infraestructura -> rutasit.app.dominio "Persiste y reconstruye entidades"
         rutasit.app.aplicacion -> rutasit.cache "Encola la alerta de desvío para su envío asíncrono" "Redis protocol"
         rutasit.app.infraestructura -> rutasit.db "Lee y escribe datos y reconstruye el estado" "SQL/TCP"
+        gps -> rutasit.app.presentacion "Envía la posición de cada unidad cada 10 s" "HTTPS/JSON"
+        pasajero -> rutasit.app.presentacion "Consulta la ubicación y el ETA de su bus" "HTTPS/JSON"
+        operador -> rutasit.app.presentacion "Consulta el panel de flota y el historial de alertas" "HTTPS/JSON"
     }
 
     views {
@@ -59,6 +62,19 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
 
         component rutasit.app "Componentes" "Nivel 3: capas internas del monolito modular, coherentes con diagrama_paquetes.puml (Lab 05)." {
             include *
+            autolayout lr
+        }
+
+        dynamic rutasit.app "ConsultaSeguimientoDesvio" "Dinámico: consulta de seguimiento del pasajero con detección de desvío (HU-06)." {
+            gps -> rutasit.app.presentacion "Envía la posición de cada unidad cada 10 s"
+            pasajero -> rutasit.app.presentacion "Consulta la ubicación y el ETA de su bus"
+            rutasit.app.presentacion -> rutasit.app.aplicacion "Delega consultar_seguimiento(bus, paradero)"
+            rutasit.app.infraestructura -> rutasit.db "Obtiene bus, ruta, paradero y la última posición GPS"
+            rutasit.app.aplicacion -> rutasit.app.dominio "Aplica reglas: vigencia ≤ 30 s, geocerca 30 m / 15 m y ETA"
+            rutasit.app.aplicacion -> rutasit.cache "Encola la alerta de desvío para su envío asíncrono"
+            rutasit.worker -> rutasit.cache "Consume posiciones y alertas"
+            rutasit.worker -> rutasit.db "Actualiza el estado del bus y registra la alerta"
+            operador -> rutasit.app.presentacion "Consulta el panel de flota y el historial de alertas"
             autolayout lr
         }
 
