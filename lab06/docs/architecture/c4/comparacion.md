@@ -27,3 +27,13 @@ crítico (HU-06) sin entrar al detalle de las operaciones.
 | 9 | Operador → Presentación: «Consulta el panel de flota y el historial de alertas» | `drivers.md`: RF-04, RF-06 y RF-07 (panel del operador) |
 
 Cada paso usa una relación ya existente en `workspace.dsl`; la vista no introduce relaciones nuevas.
+
+## 2. C4-PlantUML escrito a mano frente al modelo Structurizr (E6)
+
+| Criterio | `contexto-manual.puml` (a mano) | `workspace.dsl` + exportación |
+|---|---|---|
+| Tiempo de creación | Una sola pasada de edición (nueve líneas de macros `Person`, `System_Ext` y `Rel`); sirve para **una** vista: dibujar las cinco a mano multiplica el trabajo. | El modelo se escribió incrementalmente (E1–E5); exportar las cinco vistas a C4-PlantUML y Mermaid son dos comandos (~1,4 s y ~1,5 s, medidos) y los seis PNG se renderizan en ~4,5 s. |
+| Errores | Ninguno: renderizó a la primera. Pero no existe validación contra el modelo: nada avisaría si un nombre o una relación cambia (p. ej., el dibujo usa `System_Ext` gris y el export usa `System` azul). | `structurizr validate` detectó dos errores reales durante la construcción (componentes en la vista dinámica con alcance de sistema; rutas incompletas con identificadores jerárquicos) y el export reveló un tercero (los nodos de despliegue sin instancias se descartan); todos corregidos y documentados. |
+| Renombrar un contenedor («Cola y caché» → «Cola de mensajes y caché», probado en `/tmp`) | Habría que editar a mano cada vista afectada; el contexto a mano ni siquiera muestra contenedores (no se enteraría del cambio). | Un solo cambio en `workspace.dsl` + re-exportación (~1,8 s): 4 de los 5 `.puml` se actualizaron automáticamente (Contenedores, Componentes, Dinámica y Despliegue; el Contexto no muestra contenedores). |
+
+Conclusión: modelar una vez y derivar las vistas gana en consistencia y mantenimiento —una sola fuente de verdad—, que es la ventaja concreta del DSL frente a dibujar cada vista; el dibujo a mano conserva el control fino del diseño (el contexto manual queda más compacto, con los externos en gris) a cambio de duplicar la información. Nota: el export a Mermaid conserva el gris de la etiqueta «Externo» (el de `plantuml/c4plantuml` no traduce etiquetas ni estilos) y GitHub advierte que su soporte de Mermaid C4 es experimental.

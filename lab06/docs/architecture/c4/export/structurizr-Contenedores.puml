@@ -1,0 +1,41 @@
+@startuml
+title <size:24>Container View: RutaSIT Arequipa</size>\n<size:24>Nivel 2: contenedores del sistema y su tecnología.</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
+System(MapasabiertosOSM, "Mapas abiertos (OSM)", $descr="Servicio externo de mapas abiertos que provee los tiles y la geometría de referencia.", $tags="", $link="")
+
+System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
+  Container(RutaSITArequipa.WorkerETAAlertas, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
+  ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")
+  ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
+  Container(RutaSITArequipa.APIRutaSIT, "API RutaSIT", $techn="Python 3.11 / Django", $descr="Monolito modular (Ingesta, Flota, ETA, Alertas y Rutas) que expone la API REST de consulta, sirve el mapa del pasajero y el panel del operador.", $tags="", $link="")
+}
+
+Rel(Pasajero, RutaSITArequipa.APIRutaSIT, "Consulta la ubicación y el ETA de su bus", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Operador, RutaSITArequipa.APIRutaSIT, "Consulta el panel de flota y el historial de alertas", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa.APIRutaSIT, "Envía la posición de cada unidad cada 10 s", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT, RutaSITArequipa.Colaycaché, "Encola posiciones y alertas", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Colaycaché, "Consume posiciones y alertas", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT, RutaSITArequipa.Basededatos, "Lee y escribe rutas, paraderos, estado y alertas", $techn="SQL/TCP", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Basededatos, "Guarda posiciones, estado del bus y alertas", $techn="SQL/TCP", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT, MapasabiertosOSM, "Solicita tiles y geometría del mapa", $techn="HTTPS", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

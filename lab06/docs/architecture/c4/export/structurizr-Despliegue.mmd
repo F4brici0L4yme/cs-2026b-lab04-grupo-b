@@ -1,0 +1,38 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Deployment View: RutaSIT Arequipa - Producción"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 38 ["Bus del SIT (300 unidades)"]
+      style 38 fill:#ffffff,stroke:#444444,color:#444444
+
+      subgraph 39 ["Rastreador GPS"]
+        style 39 fill:#ffffff,stroke:#444444,color:#444444
+
+        40["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Rastreador a bordo de cada<br />unidad; transmite latitud,<br />longitud y hora por red móvil<br />3G/4G.</div>"]
+        style 40 fill:#999999,stroke:#6b6b6b,color:#ffffff
+      end
+
+    end
+
+    subgraph 41 ["VPS único (R-03)"]
+      style 41 fill:#ffffff,stroke:#444444,color:#444444
+
+      42["<div style='font-weight: bold'>API RutaSIT</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / Django]</div><div style='font-size: 80%; margin-top:10px'>Monolito modular (Ingesta,<br />Flota, ETA, Alertas y Rutas)<br />que expone la API REST de<br />consulta, sirve el mapa del<br />pasajero y el panel del<br />operador.</div>"]
+      style 42 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      44["<div style='font-weight: bold'>Worker ETA/Alertas</div><div style='font-size: 70%; margin-top: 0px'>[Container: Celery]</div><div style='font-size: 80%; margin-top:10px'>Procesa la telemetría de<br />forma asíncrona: calcula el<br />ETA y evalúa desvíos y<br />alertas.</div>"]
+      style 44 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      45["<div style='font-weight: bold'>Cola y caché</div><div style='font-size: 70%; margin-top: 0px'>[Container: Redis]</div><div style='font-size: 80%; margin-top:10px'>Cola interna que desacopla la<br />ingesta de posiciones y caché<br />del estado reciente.</div>"]
+      style 45 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      48[("<div style='font-weight: bold'>Base de datos</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Rutas, paraderos, estado de<br />flota, alertas e historial de<br />7 días; posiciones en tablas<br />de series temporales (un<br />esquema por módulo).</div>")]
+      style 48 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    end
+
+    40-. "<div>Envía la posición de cada<br />unidad cada 10 s</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->42
+    42-. "<div>Encola posiciones y alertas</div><div style='font-size: 70%'>[Redis protocol]</div>" .->45
+    44-. "<div>Consume posiciones y alertas</div><div style='font-size: 70%'>[Redis protocol]</div>" .->45
+    42-. "<div>Lee y escribe rutas,<br />paraderos, estado y alertas</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->48
+    44-. "<div>Guarda posiciones, estado del<br />bus y alertas</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->48
+
+  end

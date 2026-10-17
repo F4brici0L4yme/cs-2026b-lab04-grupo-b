@@ -1,0 +1,56 @@
+@startuml
+title <size:24>Dynamic View: RutaSIT Arequipa - API RutaSIT</size>\n<size:24>Dinámico: consulta de seguimiento del pasajero con detección de desvío (HU-06).</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
+
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
+
+System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
+  Container_Boundary("RutaSITArequipa.APIRutaSIT_boundary", "API RutaSIT", $tags="") {
+    Component(RutaSITArequipa.APIRutaSIT.Presentación, "Presentación", $techn="Python 3.11 / Django", $descr="Fachada de la API y controlador de monitoreo; recibe las solicitudes REST y delega los casos de uso.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Aplicación, "Aplicación", $techn="Python 3.11", $descr="Caso de uso de seguimiento y puertos de repositorio, GPS, notificador, estimador de ETA y reloj.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Dominio, "Dominio", $techn="Python 3.11", $descr="Entidades y reglas de bus, ruta, paradero, ubicación, ETA y alerta de desvío.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Infraestructura, "Infraestructura", $techn="Python 3.11", $descr="Adaptadores de repositorio, GPS, notificador, estimador de ETA y reloj; persisten y reconstruyen entidades.", $tags="", $link="")
+  }
+
+  Container(RutaSITArequipa.WorkerETAAlertas, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
+  ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")
+  ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
+}
+
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
+Container(RutaSITArequipa.WorkerETAAlertas, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
+ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")
+ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
+
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa.APIRutaSIT.Presentación, "1: Envía la posición de cada unidad cada 10 s", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Pasajero, RutaSITArequipa.APIRutaSIT.Presentación, "2: Consulta la ubicación y el ETA de su bus", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Presentación, RutaSITArequipa.APIRutaSIT.Aplicación, "3: Delega consultar_seguimiento(bus, paradero)", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.Basededatos, "4: Obtiene bus, ruta, paradero y la última posición GPS", $techn="SQL/TCP", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.APIRutaSIT.Dominio, "5: Aplica reglas: vigencia ≤ 30 s, geocerca 30 m / 15 m y ETA", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.Colaycaché, "6: Encola la alerta de desvío para su envío asíncrono", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Colaycaché, "7: Consume posiciones y alertas", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Basededatos, "8: Actualiza el estado del bus y registra la alerta", $techn="SQL/TCP", $tags="", $link="")
+Rel(Operador, RutaSITArequipa.APIRutaSIT.Presentación, "9: Consulta el panel de flota y el historial de alertas", $techn="HTTPS/JSON", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

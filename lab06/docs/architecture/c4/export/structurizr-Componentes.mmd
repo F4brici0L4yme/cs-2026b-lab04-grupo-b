@@ -1,0 +1,51 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Component View: RutaSIT Arequipa - API RutaSIT"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Pasajero</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Consulta la ubicación de los<br />buses y su ETA para<br />planificar su viaje.</div>"]
+    style 1 fill:#08427b,stroke:#052e56,color:#ffffff
+    2["<div style='font-weight: bold'>Operador</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Supervisa la flota, recibe<br />alertas de desvío y<br />administra rutas y paraderos.</div>"]
+    style 2 fill:#08427b,stroke:#052e56,color:#ffffff
+
+    13["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Rastreador a bordo de cada<br />unidad; transmite latitud,<br />longitud y hora por red móvil<br />3G/4G.</div>"]
+    style 13 fill:#999999,stroke:#6b6b6b,color:#ffffff
+
+    subgraph 3 ["RutaSIT Arequipa"]
+      style 3 fill:#ffffff,stroke:#0b4884,color:#0b4884
+
+      subgraph 4 ["API RutaSIT"]
+        style 4 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+        5["<div style='font-weight: bold'>Presentación</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python 3.11 / Django]</div><div style='font-size: 80%; margin-top:10px'>Fachada de la API y<br />controlador de monitoreo;<br />recibe las solicitudes REST y<br />delega los casos de uso.</div>"]
+        style 5 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        6["<div style='font-weight: bold'>Aplicación</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python 3.11]</div><div style='font-size: 80%; margin-top:10px'>Caso de uso de seguimiento y<br />puertos de repositorio, GPS,<br />notificador, estimador de ETA<br />y reloj.</div>"]
+        style 6 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        7["<div style='font-weight: bold'>Dominio</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python 3.11]</div><div style='font-size: 80%; margin-top:10px'>Entidades y reglas de bus,<br />ruta, paradero, ubicación,<br />ETA y alerta de desvío.</div>"]
+        style 7 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        8["<div style='font-weight: bold'>Infraestructura</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python 3.11]</div><div style='font-size: 80%; margin-top:10px'>Adaptadores de repositorio,<br />GPS, notificador, estimador<br />de ETA y reloj; persisten y<br />reconstruyen entidades.</div>"]
+        style 8 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        9["<div style='font-weight: bold'>Compartido</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python 3.11]</div><div style='font-size: 80%; margin-top:10px'>Identificadores y tipos<br />comunes del modelo.</div>"]
+        style 9 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      end
+
+      11["<div style='font-weight: bold'>Cola y caché</div><div style='font-size: 70%; margin-top: 0px'>[Container: Redis]</div><div style='font-size: 80%; margin-top:10px'>Cola interna que desacopla la<br />ingesta de posiciones y caché<br />del estado reciente.</div>"]
+      style 11 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      12[("<div style='font-weight: bold'>Base de datos</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Rutas, paraderos, estado de<br />flota, alertas e historial de<br />7 días; posiciones en tablas<br />de series temporales (un<br />esquema por módulo).</div>")]
+      style 12 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    end
+
+    5-. "<div>Invoca consultas y casos de<br />uso</div><div style='font-size: 70%'></div>" .->6
+    6-. "<div>Aplica reglas del dominio</div><div style='font-size: 70%'></div>" .->7
+    6-. "<div>Usa identificadores y tipos<br />comunes</div><div style='font-size: 70%'></div>" .->9
+    7-. "<div>Usa Id</div><div style='font-size: 70%'></div>" .->9
+    8-. "<div>Implementa los puertos</div><div style='font-size: 70%'></div>" .->6
+    8-. "<div>Persiste y reconstruye<br />entidades</div><div style='font-size: 70%'></div>" .->7
+    6-. "<div>Encola la alerta de desvío<br />para su envío asíncrono</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+    8-. "<div>Lee y escribe datos y<br />reconstruye el estado</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->12
+    13-. "<div>Envía la posición de cada<br />unidad cada 10 s</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+    1-. "<div>Consulta la ubicación y el<br />ETA de su bus</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+    2-. "<div>Consulta el panel de flota y<br />el historial de alertas</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+
+  end

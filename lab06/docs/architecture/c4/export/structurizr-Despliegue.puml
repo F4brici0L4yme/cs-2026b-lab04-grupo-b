@@ -1,0 +1,41 @@
+@startuml
+title <size:24>Deployment View: RutaSIT Arequipa - Producción</size>\n<size:24>Despliegue en producción del MVP: VPS único (R-03) y rastreadores GPS de los buses.</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Deployment>
+
+Deployment_Node(Producción.BusdelSIT300unidades, "Bus del SIT (300 unidades)", $type="Red móvil 3G/4G", $descr="Flota con rastreador a bordo.", $tags="", $link="") {
+  Deployment_Node(Producción.BusdelSIT300unidades.RastreadorGPS, "Rastreador GPS", $type="Unidad a bordo", $descr="Captura latitud, longitud y hora; envía la posición cada 10 s.", $tags="", $link="") {
+    System(Producción.BusdelSIT300unidades.RastreadorGPS.RastreadorGPSdelosbuses_1, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
+  }
+
+}
+
+Deployment_Node(Producción.VPSúnicoR03, "VPS único (R-03)", $type="Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM", $descr="Hosting de bajo costo del MVP.", $tags="", $link="") {
+  Container(Producción.VPSúnicoR03.APIRutaSIT_1, "API RutaSIT", $techn="Python 3.11 / Django", $descr="Monolito modular (Ingesta, Flota, ETA, Alertas y Rutas) que expone la API REST de consulta, sirve el mapa del pasajero y el panel del operador.", $tags="", $link="")
+  Container(Producción.VPSúnicoR03.WorkerETAAlertas_1, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
+  ContainerQueue(Producción.VPSúnicoR03.Colaycaché_1, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")
+  ContainerDb(Producción.VPSúnicoR03.Basededatos_1, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
+}
+
+Rel(Producción.BusdelSIT300unidades.RastreadorGPS.RastreadorGPSdelosbuses_1, Producción.VPSúnicoR03.APIRutaSIT_1, "Envía la posición de cada unidad cada 10 s", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.APIRutaSIT_1, Producción.VPSúnicoR03.Colaycaché_1, "Encola posiciones y alertas", $techn="Redis protocol", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.WorkerETAAlertas_1, Producción.VPSúnicoR03.Colaycaché_1, "Consume posiciones y alertas", $techn="Redis protocol", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.APIRutaSIT_1, Producción.VPSúnicoR03.Basededatos_1, "Lee y escribe rutas, paraderos, estado y alertas", $techn="SQL/TCP", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.WorkerETAAlertas_1, Producción.VPSúnicoR03.Basededatos_1, "Guarda posiciones, estado del bus y alertas", $techn="SQL/TCP", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

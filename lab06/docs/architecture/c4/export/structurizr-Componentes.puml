@@ -1,0 +1,51 @@
+@startuml
+title <size:24>Component View: RutaSIT Arequipa - API RutaSIT</size>\n<size:24>Nivel 3: capas internas del monolito modular, coherentes con diagrama_paquetes.puml (Lab 05).</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
+
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
+
+System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
+  Container_Boundary("RutaSITArequipa.APIRutaSIT_boundary", "API RutaSIT", $tags="") {
+    Component(RutaSITArequipa.APIRutaSIT.Presentación, "Presentación", $techn="Python 3.11 / Django", $descr="Fachada de la API y controlador de monitoreo; recibe las solicitudes REST y delega los casos de uso.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Aplicación, "Aplicación", $techn="Python 3.11", $descr="Caso de uso de seguimiento y puertos de repositorio, GPS, notificador, estimador de ETA y reloj.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Dominio, "Dominio", $techn="Python 3.11", $descr="Entidades y reglas de bus, ruta, paradero, ubicación, ETA y alerta de desvío.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Infraestructura, "Infraestructura", $techn="Python 3.11", $descr="Adaptadores de repositorio, GPS, notificador, estimador de ETA y reloj; persisten y reconstruyen entidades.", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Compartido, "Compartido", $techn="Python 3.11", $descr="Identificadores y tipos comunes del modelo.", $tags="", $link="")
+  }
+
+  ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")
+  ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
+}
+
+Rel(RutaSITArequipa.APIRutaSIT.Presentación, RutaSITArequipa.APIRutaSIT.Aplicación, "Invoca consultas y casos de uso", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.APIRutaSIT.Dominio, "Aplica reglas del dominio", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.APIRutaSIT.Compartido, "Usa identificadores y tipos comunes", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Dominio, RutaSITArequipa.APIRutaSIT.Compartido, "Usa Id", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.APIRutaSIT.Aplicación, "Implementa los puertos", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.APIRutaSIT.Dominio, "Persiste y reconstruye entidades", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.Colaycaché, "Encola la alerta de desvío para su envío asíncrono", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.Basededatos, "Lee y escribe datos y reconstruye el estado", $techn="SQL/TCP", $tags="", $link="")
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa.APIRutaSIT.Presentación, "Envía la posición de cada unidad cada 10 s", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Pasajero, RutaSITArequipa.APIRutaSIT.Presentación, "Consulta la ubicación y el ETA de su bus", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Operador, RutaSITArequipa.APIRutaSIT.Presentación, "Consulta el panel de flota y el historial de alertas", $techn="HTTPS/JSON", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml
