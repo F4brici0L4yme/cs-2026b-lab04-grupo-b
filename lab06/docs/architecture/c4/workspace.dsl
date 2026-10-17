@@ -47,6 +47,20 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
         gps -> rutasit.app.presentacion "Envía la posición de cada unidad cada 10 s" "HTTPS/JSON"
         pasajero -> rutasit.app.presentacion "Consulta la ubicación y el ETA de su bus" "HTTPS/JSON"
         operador -> rutasit.app.presentacion "Consulta el panel de flota y el historial de alertas" "HTTPS/JSON"
+
+        produccion = deploymentEnvironment "Producción" {
+            deploymentNode "Bus del SIT (300 unidades)" "Flota con rastreador a bordo." "Red móvil 3G/4G" {
+                deploymentNode "Rastreador GPS" "Captura latitud, longitud y hora; envía la posición cada 10 s." "Unidad a bordo" {
+                    softwareSystemInstance gps
+                }
+            }
+            deploymentNode "VPS único (R-03)" "Hosting de bajo costo del MVP." "Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM" {
+                containerInstance rutasit.app
+                containerInstance rutasit.worker
+                containerInstance rutasit.cache
+                containerInstance rutasit.db
+            }
+        }
     }
 
     views {
@@ -75,6 +89,11 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
             rutasit.worker -> rutasit.cache "Consume posiciones y alertas"
             rutasit.worker -> rutasit.db "Actualiza el estado del bus y registra la alerta"
             operador -> rutasit.app.presentacion "Consulta el panel de flota y el historial de alertas"
+            autolayout lr
+        }
+
+        deployment rutasit produccion "Despliegue" "Despliegue en producción del MVP: VPS único (R-03) y rastreadores GPS de los buses." {
+            include *
             autolayout lr
         }
 
