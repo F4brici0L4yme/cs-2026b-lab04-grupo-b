@@ -23,7 +23,7 @@ Deployment_Node(Producción.BusdelSIT300unidades, "Bus del SIT (300 unidades)", 
 
 }
 
-Deployment_Node(Producción.VPSúnicoR03, "VPS único (R-03)", $type="Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM", $descr="Hosting de bajo costo del MVP.", $tags="", $link="") {
+Deployment_Node(Producción.VPSúnicoR03, "VPS único (R-03)", $type="Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM", $descr="Servidor privado virtual (VPS) de bajo costo para el MVP (producto mínimo viable).", $tags="", $link="") {
   Container(Producción.VPSúnicoR03.APIRutaSIT_1, "API RutaSIT", $techn="Python 3.11 / Django", $descr="Monolito modular (Ingesta, Flota, ETA, Alertas y Rutas) que expone la API REST de consulta, sirve el mapa del pasajero y el panel del operador.", $tags="", $link="")
   Container(Producción.VPSúnicoR03.WorkerETAAlertas_1, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
   ContainerQueue(Producción.VPSúnicoR03.Colaycaché_1, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")

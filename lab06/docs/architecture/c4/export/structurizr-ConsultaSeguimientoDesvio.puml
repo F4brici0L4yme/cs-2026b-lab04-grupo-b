@@ -1,5 +1,5 @@
 @startuml
-title <size:24>Dynamic View: RutaSIT Arequipa - API RutaSIT</size>\n<size:24>Dinámico: consulta de seguimiento del pasajero con detección de desvío (HU-06).</size>
+title <size:24>Dynamic View: RutaSIT Arequipa - API RutaSIT</size>\n<size:24>Dinámico de extremo a extremo (HU-06): ingesta GPS, consulta del pasajero, alerta de desvío y panel del operador.</size>
 
 set separator none
 left to right direction
@@ -16,7 +16,7 @@ left to right direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA (tiempo estimado de llegada) para planificar su viaje.", $tags="", $link="")
 Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
 
 System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
@@ -34,7 +34,7 @@ System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
   ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Rutas, paraderos, estado de flota, alertas e historial de 7 días; posiciones en tablas de series temporales (un esquema por módulo).", $tags="", $link="")
 }
 
-Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA (tiempo estimado de llegada) para planificar su viaje.", $tags="", $link="")
 Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
 Container(RutaSITArequipa.WorkerETAAlertas, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa la telemetría de forma asíncrona: calcula el ETA y evalúa desvíos y alertas.", $tags="", $link="")
 ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola interna que desacopla la ingesta de posiciones y caché del estado reciente.", $tags="", $link="")

@@ -43,7 +43,7 @@ cinco vistas.
 | Vista | Escenario | Origen |
 |---|---|---|
 | Dinámica | Consulta de seguimiento del pasajero con detección de desvío y alerta (HU-06). | `lab05/diagrama_secuencia.puml` y `lab05/diagrama_actividades.puml` |
-| Despliegue «Producción» | VPS único (R-03), buses con rastreador (R-05) y dispositivos de usuario. | `docs/architecture/drivers.md` (R-03, R-05) y `diagramas/despliegue.py` |
+| Despliegue «Producción» | VPS único (R-03) con los cuatro contenedores y buses con rastreador GPS (R-05). | `docs/architecture/drivers.md` (R-03, R-05) y `diagramas/despliegue.py` |
 
 ## Nivel 4 (código)
 
@@ -59,3 +59,7 @@ implementa los componentes del dominio y los puertos del contenedor API:
 - Nginx (proxy) y Grafana (monitoreo) figuran en `diagramas/despliegue.py` del Lab 04,
   pero el equipo acordó dejarlos fuera de las vistas C4 del MVP; la decisión queda
   registrada en `bitacora-ia.md`.
+- Los nodos de dispositivo de usuario no se incluyen: ningún contenedor de RutaSIT se
+  ejecuta en ellos y Structurizr descarta del export los nodos sin instancias; el acceso
+  por navegador queda descrito dentro del contenedor API («sirve el mapa del pasajero y
+  el panel del operador»).

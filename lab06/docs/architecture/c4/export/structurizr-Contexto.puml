@@ -14,11 +14,11 @@ left to right direction
 !include <C4/C4>
 !include <C4/C4_Context>
 
-Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA para planificar su viaje.", $tags="", $link="")
+Person(Pasajero, "Pasajero", $descr="Consulta la ubicación de los buses y su ETA (tiempo estimado de llegada) para planificar su viaje.", $tags="", $link="")
 System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="Rastreador a bordo de cada unidad; transmite latitud, longitud y hora por red móvil 3G/4G.", $tags="", $link="")
 System(MapasabiertosOSM, "Mapas abiertos (OSM)", $descr="Servicio externo de mapas abiertos que provee los tiles y la geometría de referencia.", $tags="", $link="")
 Person(Operador, "Operador", $descr="Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos.", $tags="", $link="")
-System(RutaSITArequipa, "RutaSIT Arequipa", $descr="Seguimiento en tiempo real de los buses del SIT: ubicación, ETA y alertas de desvío.", $tags="", $link="")
+System(RutaSITArequipa, "RutaSIT Arequipa", $descr="Seguimiento en tiempo real de los buses del SIT (Sistema Integrado de Transporte): ubicación, ETA y alertas de desvío.", $tags="", $link="")
 
 Rel(Pasajero, RutaSITArequipa, "Consulta la ubicación de los buses y su ETA", $techn="", $tags="", $link="")
 Rel(Operador, RutaSITArequipa, "Supervisa la flota y administra rutas y paraderos", $techn="", $tags="", $link="")

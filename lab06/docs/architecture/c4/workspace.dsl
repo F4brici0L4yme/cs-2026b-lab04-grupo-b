@@ -3,10 +3,10 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
     !identifiers hierarchical
 
     model {
-        pasajero = person "Pasajero" "Consulta la ubicación de los buses y su ETA para planificar su viaje."
+        pasajero = person "Pasajero" "Consulta la ubicación de los buses y su ETA (tiempo estimado de llegada) para planificar su viaje."
         operador = person "Operador" "Supervisa la flota, recibe alertas de desvío y administra rutas y paraderos."
 
-        rutasit = softwareSystem "RutaSIT Arequipa" "Seguimiento en tiempo real de los buses del SIT: ubicación, ETA y alertas de desvío." {
+        rutasit = softwareSystem "RutaSIT Arequipa" "Seguimiento en tiempo real de los buses del SIT (Sistema Integrado de Transporte): ubicación, ETA y alertas de desvío." {
             app = container "API RutaSIT" "Monolito modular (Ingesta, Flota, ETA, Alertas y Rutas) que expone la API REST de consulta, sirve el mapa del pasajero y el panel del operador." "Python 3.11 / Django" {
                 presentacion = component "Presentación" "Fachada de la API y controlador de monitoreo; recibe las solicitudes REST y delega los casos de uso." "Python 3.11 / Django"
                 aplicacion = component "Aplicación" "Caso de uso de seguimiento y puertos de repositorio, GPS, notificador, estimador de ETA y reloj." "Python 3.11"
@@ -54,7 +54,7 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
                     softwareSystemInstance gps
                 }
             }
-            deploymentNode "VPS único (R-03)" "Hosting de bajo costo del MVP." "Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM" {
+            deploymentNode "VPS único (R-03)" "Servidor privado virtual (VPS) de bajo costo para el MVP (producto mínimo viable)." "Ubuntu 24.04 LTS, 2 vCPU, 4 GB RAM" {
                 containerInstance rutasit.app
                 containerInstance rutasit.worker
                 containerInstance rutasit.cache
@@ -79,7 +79,7 @@ workspace "RutaSIT Arequipa" "Modelo C4 del seguimiento en tiempo real de los bu
             autolayout lr
         }
 
-        dynamic rutasit.app "ConsultaSeguimientoDesvio" "Dinámico: consulta de seguimiento del pasajero con detección de desvío (HU-06)." {
+        dynamic rutasit.app "ConsultaSeguimientoDesvio" "Dinámico de extremo a extremo (HU-06): ingesta GPS, consulta del pasajero, alerta de desvío y panel del operador." {
             gps -> rutasit.app.presentacion "Envía la posición de cada unidad cada 10 s"
             pasajero -> rutasit.app.presentacion "Consulta la ubicación y el ETA de su bus"
             rutasit.app.presentacion -> rutasit.app.aplicacion "Delega consultar_seguimiento(bus, paradero)"
