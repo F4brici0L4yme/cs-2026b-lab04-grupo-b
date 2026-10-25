@@ -213,3 +213,18 @@ git pull --ff-only origin master
 git tag v0.5-diseno
 git push origin v0.5-diseno
 ```
+
+## Patrones de diseño (Lab 07)
+
+Refactor de `consultar_seguimiento` hacia 6 patrones GoF (ver `lab07/`).
+
+| Olor | Patrón | Prueba |
+|---|---|---|
+| `if/elif` ETA | Strategy + Factory | `test_open_closed_nuevo_algoritmo_sin_modificar_servicio` |
+| SDK GPS distintos | Adapter | `test_adapter_unifica_gps` |
+| Reintentos duplicados | Decorator | `test_decorator_reintentos_solo_timeout` |
+| Condicionales estado | State | `test_state_impide_transiciones_invalidas` |
+| Avisos a mano | Observer | `test_observer_nuevo_suscriptor_sin_tocar_servicio` |
+| LLM no confiable | Strategy + Decorator + Chain | `test_chain_bloquea_salida_invalida` |
+
+Métricas: consultar C(18)→A(5), promedio B(7.0)→A(1.69), SLOC 89→239. Pruebas: `30 passed, 1 xfailed`. ADR: `lab07/docs/architecture/adr/005-patrones-de-diseno.md`.

@@ -1,0 +1,39 @@
+@startuml
+title RutaSIT - IA aislada: Strategy + Decorator + Chain
+skinparam classAttributeIconSize 0
+
+interface ProveedorLLM <<Strategy>> {
+  +completar(prompt) : str
+}
+class AdaptadorLLMFalso <<Adapter>> {
+  +completar(prompt) : str
+}
+class ConCache <<Decorator>> {
+  +completar(prompt) : str
+}
+ProveedorLLM <|.. AdaptadorLLMFalso
+ProveedorLLM <|.. ConCache
+ConCache --> ProveedorLLM : envuelve
+AdaptadorLLMFalso --> ClienteLLMFalso
+
+abstract class Guardrail <<Handler>> {
+  +validar(texto) : str
+}
+class SinPrecios <<ConcreteHandler>> {
+}
+class SinAfirmacionesProhibidas <<ConcreteHandler>> {
+}
+class LongitudMaxima <<ConcreteHandler>> {
+}
+Guardrail <|-- SinPrecios
+Guardrail <|-- SinAfirmacionesProhibidas
+Guardrail <|-- LongitudMaxima
+SinPrecios --> SinAfirmacionesProhibidas : siguiente
+SinAfirmacionesProhibidas --> LongitudMaxima : siguiente
+
+class ServicioSeguimiento <<Client>> {
+  +explicar_retraso(evento) : str
+}
+ServicioSeguimiento --> ProveedorLLM
+ServicioSeguimiento --> Guardrail
+@enduml

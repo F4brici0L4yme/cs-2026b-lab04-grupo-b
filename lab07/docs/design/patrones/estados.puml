@@ -1,0 +1,30 @@
+@startuml
+title RutaSIT - State del Bus (Lab 05)
+skinparam classAttributeIconSize 0
+
+abstract class EstadoBus <<State>> {
+  +iniciar(bus)
+}
+class EnEspera <<ConcreteState>> {
+  +iniciar(bus)
+}
+class EnRuta <<ConcreteState>> {
+}
+class EnParadero <<ConcreteState>> {
+}
+class Desviado <<ConcreteState>> {
+}
+class FueraDeServicio <<ConcreteState>> {
+}
+EstadoBus <|-- EnEspera
+EstadoBus <|-- EnRuta
+EstadoBus <|-- EnParadero
+EstadoBus <|-- Desviado
+EstadoBus <|-- FueraDeServicio
+
+class Bus <<Context>> {
+  +estado : str
+  +cambiar_a(estado)
+}
+Bus --> EstadoBus : delega
+@enduml

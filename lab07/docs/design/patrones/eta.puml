@@ -1,0 +1,51 @@
+@startuml
+title RutaSIT - ETA y GPS: Strategy + Adapter + Factory + Decorator
+skinparam classAttributeIconSize 0
+
+interface EstrategiaETA <<Strategy>> {
+  +calcular(distancia_m) : float
+}
+class EstimadorBase <<ConcreteStrategy>> {
+  +calcular(distancia_m) : float
+}
+class EstimadorHoraPunta <<ConcreteStrategy>> {
+  +calcular(distancia_m) : float
+}
+EstrategiaETA <|.. EstimadorBase
+EstrategiaETA <|.. EstimadorHoraPunta
+
+interface PuertoGPS <<Target>> {
+  +obtener_ubicacion(bus_id) : Ubicacion
+}
+class GpsAdapterA <<Adapter>> {
+  +obtener_ubicacion(bus_id) : Ubicacion
+}
+class GpsAdapterB <<Adapter>> {
+  +obtener_ubicacion(bus_id) : Ubicacion
+}
+PuertoGPS <|.. GpsAdapterA
+PuertoGPS <|.. GpsAdapterB
+GpsAdapterA --> GpsOperadorA : adapta
+GpsAdapterB --> GpsOperadorB : adapta
+
+class ConReintentos <<Decorator>> {
+  +obtener_ubicacion(bus_id) : Ubicacion
+}
+PuertoGPS <|.. ConReintentos
+ConReintentos --> PuertoGPS : envuelve
+
+class FabricaGPS <<Factory>> {
+  +crear(nombre) : PuertoGPS
+}
+class FabricaETAs <<Factory>> {
+  +crear(nombre) : EstrategiaETA
+}
+FabricaGPS ..> PuertoGPS : crea
+FabricaETAs ..> EstrategiaETA : crea
+
+class ServicioSeguimiento <<Client>> {
+  +consultar_seguimiento() : str
+}
+ServicioSeguimiento --> FabricaGPS
+ServicioSeguimiento --> FabricaETAs
+@enduml

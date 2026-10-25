@@ -1,0 +1,29 @@
+@startuml
+title RutaSIT - Observer de notificaciones
+skinparam classAttributeIconSize 0
+
+interface Suscriptor <<Observer>> {
+  +actualizar(evento, datos)
+}
+class NotificadorSMS <<ConcreteObserver>> {
+  +actualizar(evento, datos)
+}
+class PanelOperador <<ConcreteObserver>> {
+  +actualizar(evento, datos)
+}
+class Auditoria <<ConcreteObserver>> {
+  +actualizar(evento, datos)
+}
+Suscriptor <|.. NotificadorSMS
+Suscriptor <|.. PanelOperador
+
+class PublicadorEventos <<Subject>> {
+  +suscribir(evento, suscriptor)
+  +publicar(evento, datos)
+}
+PublicadorEventos --> Suscriptor : notifica
+
+class ServicioSeguimiento <<Client>> {
+}
+ServicioSeguimiento --> PublicadorEventos
+@enduml
