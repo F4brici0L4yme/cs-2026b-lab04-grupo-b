@@ -1,0 +1,180 @@
+@startuml classes_rutasit
+set namespaceSeparator none
+class "AdaptadorLLMFalso" as rutasit.ia.AdaptadorLLMFalso {
+  completar(prompt)
+}
+class "Bus" as rutasit.servicio.Bus {
+  cerca_paradero : bool
+  distancia_m : float
+  edad_s : int
+  estado : str
+  id : str
+  cambiar_a(estado_obj)
+}
+class "Bus" as rutasit.antes.servicio.Bus {
+  cerca_paradero : bool
+  distancia_m : float
+  edad_s : int
+  estado : str
+  id : str
+}
+class "ClienteLLMFalso" as rutasit.externos.ClienteLLMFalso {
+  llamadas : int
+  respuesta : str
+  completar(prompt: str) -> str
+}
+class "ConCache" as rutasit.ia.ConCache {
+  completar(prompt)
+}
+class "ConReintentos" as rutasit.eta.ConReintentos {
+  obtener_ubicacion(bus_id)
+}
+class "Desviado" as rutasit.estados.Desviado {
+  nombre : str
+  iniciar(bus)
+}
+class "EnEspera" as rutasit.estados.EnEspera {
+  nombre : str
+  iniciar(bus)
+}
+class "EnParadero" as rutasit.estados.EnParadero {
+  nombre : str
+  marcar_desvio(bus)
+  marcar_en_ruta(bus)
+}
+class "EnRuta" as rutasit.estados.EnRuta {
+  nombre : str
+  marcar_desvio(bus)
+  marcar_en_paradero(bus)
+  marcar_en_ruta(bus)
+}
+class "EstadoBus" as rutasit.estados.EstadoBus {
+  nombre : str
+  iniciar(bus)
+  marcar_desvio(bus)
+  marcar_en_paradero(bus)
+  marcar_en_ruta(bus)
+}
+class "EstimadorBase" as rutasit.eta.EstimadorBase {
+  calcular(distancia_m)
+}
+class "EstimadorHoraPunta" as rutasit.eta.EstimadorHoraPunta {
+  calcular(distancia_m)
+}
+class "EstrategiaETA" as rutasit.eta.EstrategiaETA {
+  {abstract}calcular(distancia_m: float) -> float
+}
+class "FabricaETAs" as rutasit.eta.FabricaETAs {
+  crear(nombre: str) -> EstrategiaETA
+  registrar(nombre: str, creador)
+}
+class "FabricaGPS" as rutasit.eta.FabricaGPS {
+  crear(nombre: str) -> PuertoGPS
+  registrar(nombre: str, creador)
+}
+class "FueraDeServicio" as rutasit.estados.FueraDeServicio {
+  nombre : str
+  iniciar(bus)
+}
+class "GpsAdapterA" as rutasit.eta.GpsAdapterA {
+  obtener_ubicacion(bus_id)
+}
+class "GpsAdapterB" as rutasit.eta.GpsAdapterB {
+  obtener_ubicacion(bus_id)
+}
+class "GpsOperadorA" as rutasit.externos.GpsOperadorA {
+  fallas : int
+  llamadas : int
+  realizar_lectura(bus_id: str) -> dict
+}
+class "GpsOperadorB" as rutasit.externos.GpsOperadorB {
+  fallas : int
+  llamadas : int
+  fetch_position(bus_id: str) -> tuple
+}
+class "Guardrail" as rutasit.ia.Guardrail {
+  validar(texto: str) -> str
+}
+class "LongitudMaxima" as rutasit.ia.LongitudMaxima {
+}
+class "NotificadorSMS" as rutasit.eventos.NotificadorSMS {
+  actualizar(evento, datos)
+}
+class "PanelOperador" as rutasit.eventos.PanelOperador {
+  actualizar(evento, datos)
+}
+class "Paradero" as rutasit.servicio.Paradero {
+  id : str
+  nombre : str
+}
+class "Paradero" as rutasit.antes.servicio.Paradero {
+  id : str
+  nombre : str
+}
+class "ProveedorLLM" as rutasit.ia.ProveedorLLM {
+  {abstract}completar(prompt: str) -> str
+}
+class "PublicadorEventos" as rutasit.eventos.PublicadorEventos {
+  publicar(evento: str, datos: dict)
+  suscribir(evento: str, suscriptor: Suscriptor)
+}
+class "PuertoGPS" as rutasit.eta.PuertoGPS {
+  {abstract}obtener_ubicacion(bus_id: str) -> Ubicacion
+}
+class "ServicioSeguimiento" as rutasit.servicio.ServicioSeguimiento {
+  eventos : list
+  fabrica_eta
+  fabrica_gps
+  guardrails
+  proveedor_llm
+  publicador
+  consultar_seguimiento(bus, paradero_id, proveedor, algoritmo)
+  explicar_retraso(evento, proveedor_llm)
+}
+class "ServicioSeguimiento" as rutasit.antes.servicio.ServicioSeguimiento {
+  eventos : list
+  gps_a
+  gps_b
+  llm
+  consultar_seguimiento(bus, paradero_id, proveedor, algoritmo)
+  explicar_retraso(evento, proveedor_llm)
+}
+class "SinAfirmacionesProhibidas" as rutasit.ia.SinAfirmacionesProhibidas {
+  PROHIBIDAS : list
+}
+class "SinPrecios" as rutasit.ia.SinPrecios {
+}
+class "Suscriptor" as rutasit.eventos.Suscriptor {
+  {abstract}actualizar(evento: str, datos: dict)
+}
+class "Ubicacion" as rutasit.eta.Ubicacion {
+  lat : float | None
+  lon : float | None
+  ok : bool
+}
+rutasit.estados.Desviado --|> rutasit.estados.EstadoBus
+rutasit.estados.EnEspera --|> rutasit.estados.EstadoBus
+rutasit.estados.EnParadero --|> rutasit.estados.EstadoBus
+rutasit.estados.EnRuta --|> rutasit.estados.EstadoBus
+rutasit.estados.FueraDeServicio --|> rutasit.estados.EstadoBus
+rutasit.eta.ConReintentos --|> rutasit.eta.PuertoGPS
+rutasit.eta.EstimadorBase --|> rutasit.eta.EstrategiaETA
+rutasit.eta.EstimadorHoraPunta --|> rutasit.eta.EstrategiaETA
+rutasit.eta.GpsAdapterA --|> rutasit.eta.PuertoGPS
+rutasit.eta.GpsAdapterB --|> rutasit.eta.PuertoGPS
+rutasit.eventos.NotificadorSMS --|> rutasit.eventos.Suscriptor
+rutasit.eventos.PanelOperador --|> rutasit.eventos.Suscriptor
+rutasit.ia.AdaptadorLLMFalso --|> rutasit.ia.ProveedorLLM
+rutasit.ia.ConCache --|> rutasit.ia.ProveedorLLM
+rutasit.ia.LongitudMaxima --|> rutasit.ia.Guardrail
+rutasit.ia.SinAfirmacionesProhibidas --|> rutasit.ia.Guardrail
+rutasit.ia.SinPrecios --|> rutasit.ia.Guardrail
+rutasit.antes.servicio.ServicioSeguimiento --> rutasit.externos.ClienteLLMFalso : llm
+rutasit.antes.servicio.ServicioSeguimiento --> rutasit.externos.GpsOperadorA : gps_a
+rutasit.antes.servicio.ServicioSeguimiento --> rutasit.externos.GpsOperadorB : gps_b
+rutasit.eta.FabricaETAs --* rutasit.servicio.ServicioSeguimiento : fabrica_eta
+rutasit.eta.FabricaGPS --* rutasit.servicio.ServicioSeguimiento : fabrica_gps
+rutasit.eventos.PublicadorEventos --* rutasit.servicio.ServicioSeguimiento : publicador
+rutasit.ia.ConCache --* rutasit.servicio.ServicioSeguimiento : proveedor_llm
+rutasit.ia.SinPrecios --* rutasit.servicio.ServicioSeguimiento : guardrails
+@enduml
