@@ -1,0 +1,41 @@
+@startuml
+title <size:24>Deployment View: RutaSIT Arequipa - Producción</size>\n<size:24>Un VPS; cuatro contenedores no equivalen a microservicios.</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Deployment>
+
+Deployment_Node(Producción.BusdelSIT1200unidades, "Bus del SIT (1200 unidades)", $type="Red móvil 3G/4G", $descr="Objetivo de crecimiento de la guía 08. [QA-01, QA-03]", $tags="", $link="") {
+  Deployment_Node(Producción.BusdelSIT1200unidades.RastreadorGPS, "Rastreador GPS", $type="Unidad a bordo", $descr="Posición cada 10 s; timestamp de captura. [QA-01, QA-07]", $tags="", $link="") {
+    System(Producción.BusdelSIT1200unidades.RastreadorGPS.RastreadorGPSdelosbuses_1, "Rastreador GPS de los buses", $descr="1200 unidades transmiten posición cada 10 s e ID estable. [QA-01, QA-03, QA-07]", $tags="", $link="")
+  }
+
+}
+
+Deployment_Node(Producción.VPSúnicoR03, "VPS único (R-03)", $type="Ubuntu 24.04 LTS / 2 vCPU / 4 GB RAM", $descr="Diseño heredado del Lab 06; CPU <70% aún no medido. [QA-01, QA-03, QA-04]", $tags="", $link="") {
+  Container(Producción.VPSúnicoR03.APIRutaSIT_1, "API RutaSIT", $techn="Python / Django", $descr="REST de ingesta/consulta y vista textual degradada. Lee ETA materializado, comprueba captura <=30 s y usa breaker de mapas. [QA-01, QA-02, QA-04, QA-05, QA-07]", $tags="", $link="")
+  Container(Producción.VPSúnicoR03.WorkerETAAlertas_1, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa 120 eventos/s como objetivo; geometría precargada por versión, Strategy ETA, ID estable. [QA-01, QA-03, QA-06, QA-07]", $tags="", $link="")
+  ContainerQueue(Producción.VPSúnicoR03.Colaycaché_1, "Cola y caché", $techn="Redis", $descr="Cola con AOF según ADR-003; caché ETA por bus/paradero, TTL <=2 s y memoria acotada. [QA-01, QA-03, QA-04, QA-07]", $tags="", $link="")
+  ContainerDb(Producción.VPSúnicoR03.Basededatos_1, "Base de datos", $techn="PostgreSQL", $descr="Esquemas por módulo, historial y último ETA con clave compuesta bus/paradero y captura original. [QA-01, QA-03, QA-04, QA-05, QA-07]", $tags="", $link="")
+}
+
+Rel(Producción.BusdelSIT1200unidades.RastreadorGPS.RastreadorGPSdelosbuses_1, Producción.VPSúnicoR03.APIRutaSIT_1, "Envía posición e ID estable", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.APIRutaSIT_1, Producción.VPSúnicoR03.Colaycaché_1, "Encola posiciones; lee caché ETA TTL <=2 s", $techn="Redis protocol", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.WorkerETAAlertas_1, Producción.VPSúnicoR03.Colaycaché_1, "Consume posiciones y publica ETA reciente", $techn="Redis protocol", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.APIRutaSIT_1, Producción.VPSúnicoR03.Basededatos_1, "Lee último ETA por clave; administra rutas", $techn="SQL/TCP", $tags="", $link="")
+Rel(Producción.VPSúnicoR03.WorkerETAAlertas_1, Producción.VPSúnicoR03.Basededatos_1, "Lee geometría por versión; guarda historial y último ETA", $techn="SQL/TCP", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

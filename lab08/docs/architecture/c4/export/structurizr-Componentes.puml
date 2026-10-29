@@ -1,0 +1,53 @@
+@startuml
+title <size:24>Component View: RutaSIT Arequipa - API RutaSIT</size>\n<size:24>Capas del Lab 05 refinadas con puertos, caché y resiliencia.</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+
+Person(Pasajero, "Pasajero", $descr="Consulta ubicación y ETA; recibe estado textual si fallan mapas. [QA-02, QA-04, QA-07]", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa flota y administra rutas; cambios versionan geometría. [QA-01, QA-03]", $tags="", $link="")
+
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="1200 unidades transmiten posición cada 10 s e ID estable. [QA-01, QA-03, QA-07]", $tags="", $link="")
+System(MapasabiertosOSM, "Mapas abiertos (OSM)", $descr="Proveedor externo de tiles y geometría; su caída no elimina estado textual. [QA-02]", $tags="", $link="")
+
+System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
+  Container_Boundary("RutaSITArequipa.APIRutaSIT_boundary", "API RutaSIT", $tags="") {
+    Component(RutaSITArequipa.APIRutaSIT.Presentación, "Presentación", $techn="Python / Django", $descr="DTO público de unidad y estado textual con aviso de degradación. [QA-02, QA-05, QA-07]", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Aplicación, "Aplicación", $techn="Python", $descr="Consulta ETA por puertos; comprueba vigencia, independiente del proveedor de mapas. [QA-04, QA-06, QA-07]", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Dominio, "Dominio", $techn="Python", $descr="Reglas de unidad y lectura GPS; no rejuvenece fuente obsoleta. [QA-05, QA-07]", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Infraestructura, "Infraestructura", $techn="Python", $descr="Read model, caché TTL <=2 s, adaptadores y breaker de mapas (3 fallas / 30 s). [QA-02, QA-04, QA-07]", $tags="", $link="")
+    Component(RutaSITArequipa.APIRutaSIT.Compartido, "Compartido", $techn="Python", $descr="Identificadores de unidad y tipos comunes, sin datos personales. [QA-05, QA-06]", $tags="", $link="")
+  }
+
+  ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola con AOF según ADR-003; caché ETA por bus/paradero, TTL <=2 s y memoria acotada. [QA-01, QA-03, QA-04, QA-07]", $tags="", $link="")
+  ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Esquemas por módulo, historial y último ETA con clave compuesta bus/paradero y captura original. [QA-01, QA-03, QA-04, QA-05, QA-07]", $tags="", $link="")
+}
+
+Rel(RutaSITArequipa.APIRutaSIT.Presentación, RutaSITArequipa.APIRutaSIT.Aplicación, "Invoca consulta de seguimiento", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.APIRutaSIT.Dominio, "Verifica vigencia de la captura", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Aplicación, RutaSITArequipa.APIRutaSIT.Compartido, "Usa identificadores de unidad", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Dominio, RutaSITArequipa.APIRutaSIT.Compartido, "Usa tipos comunes", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.APIRutaSIT.Aplicación, "Implementa puertos; composición en arranque", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.APIRutaSIT.Dominio, "Reconstruye lecturas sin rejuvenecerlas", $techn="", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.Colaycaché, "Lee caché ETA de corto plazo", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, RutaSITArequipa.Basededatos, "Consulta read model por bus/paradero", $techn="SQL/TCP", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT.Infraestructura, MapasabiertosOSM, "Adapta mapas con circuit breaker", $techn="HTTPS", $tags="", $link="")
+Rel(Pasajero, RutaSITArequipa.APIRutaSIT.Presentación, "Solicita seguimiento", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(Operador, RutaSITArequipa.APIRutaSIT.Presentación, "Consulta panel", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa.APIRutaSIT.Presentación, "Envía posición", $techn="HTTPS/JSON", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

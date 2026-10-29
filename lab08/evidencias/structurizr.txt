@@ -1,0 +1,27 @@
+$ docker run --rm --user 1000:1000 -v /home/brayan/Documentos/System Engineering 2026-B/Laboratorios 2026-B/Construccion de Software/cs-2026b-lab04-grupo-b/lab08/docs/architecture/c4:/usr/local/structurizr structurizr/structurizr@sha256:721136283c2f9cf1ba69037bc9de136c579d66fdcb2d771cb60546ec68def1a5 validate -w workspace.dsl
+
+exit_code=0
+
+$ docker run --rm --user 1000:1000 -v /home/brayan/Documentos/System Engineering 2026-B/Laboratorios 2026-B/Construccion de Software/cs-2026b-lab04-grupo-b/lab08/docs/architecture/c4:/usr/local/structurizr structurizr/structurizr@sha256:721136283c2f9cf1ba69037bc9de136c579d66fdcb2d771cb60546ec68def1a5 export -w workspace.dsl -f plantuml/c4plantuml -o export
+22:14:00.958 [main] INFO com.structurizr.command.ExportCommand -- Exporting workspace from workspace.dsl
+22:14:01.142 [main] INFO com.structurizr.command.ExportCommand -- Exporting with C4PlantUMLExporter
+22:14:01.246 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Contexto.puml
+22:14:01.246 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Contenedores.puml
+22:14:01.247 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Componentes.puml
+22:14:01.247 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-ActualizacionETA.puml
+22:14:01.247 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Despliegue.puml
+22:14:01.248 [main] INFO com.structurizr.command.ExportCommand -- Finished
+
+exit_code=0
+
+$ docker run --rm --user 1000:1000 -v /home/brayan/Documentos/System Engineering 2026-B/Laboratorios 2026-B/Construccion de Software/cs-2026b-lab04-grupo-b/lab08/docs/architecture/c4:/usr/local/structurizr structurizr/structurizr@sha256:721136283c2f9cf1ba69037bc9de136c579d66fdcb2d771cb60546ec68def1a5 export -w workspace.dsl -f mermaid -o export
+22:14:02.646 [main] INFO com.structurizr.command.ExportCommand -- Exporting workspace from workspace.dsl
+22:14:02.831 [main] INFO com.structurizr.command.ExportCommand -- Exporting with MermaidDiagramExporter
+22:14:02.876 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Contexto.mmd
+22:14:02.877 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Contenedores.mmd
+22:14:02.878 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Componentes.mmd
+22:14:02.878 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-ActualizacionETA.mmd
+22:14:02.878 [main] INFO com.structurizr.command.ExportCommand -- Writing /usr/local/structurizr/export/structurizr-Despliegue.mmd
+22:14:02.879 [main] INFO com.structurizr.command.ExportCommand -- Finished
+
+exit_code=0

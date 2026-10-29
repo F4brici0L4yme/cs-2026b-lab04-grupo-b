@@ -1,0 +1,18 @@
+$ /tmp/opencode-lab08-verify/bin/python -m unittest discover -s tests -v
+test_bus_en_espera_no_inicia_servicio_por_recibir_gps (test_dominio.DominioBusTests.test_bus_en_espera_no_inicia_servicio_por_recibir_gps) ... ok
+test_bus_fuera_de_servicio_no_actualiza_estado (test_dominio.DominioBusTests.test_bus_fuera_de_servicio_no_actualiza_estado) ... ok
+test_distancia_a_si_misma_es_cero (test_dominio.DominioBusTests.test_distancia_a_si_misma_es_cero) ... ok
+test_ubicacion_antigua_no_es_reciente (test_dominio.DominioBusTests.test_ubicacion_antigua_no_es_reciente) ... ok
+test_ubicacion_fuera_del_trazado_marca_desvio (test_dominio.DominioBusTests.test_ubicacion_fuera_del_trazado_marca_desvio) ... ok
+test_ubicacion_vigente_dentro_de_tolerancia_marca_en_paradero (test_dominio.DominioBusTests.test_ubicacion_vigente_dentro_de_tolerancia_marca_en_paradero) ... ok
+test_bus_en_espera_no_publica_eta_ni_alerta (test_servicios.SeguimientoServiceTests.test_bus_en_espera_no_publica_eta_ni_alerta) ... ok
+test_consulta_en_ruta_devuelve_eta (test_servicios.SeguimientoServiceTests.test_consulta_en_ruta_devuelve_eta) ... ok
+test_desvio_notifica_solo_en_la_transicion (test_servicios.SeguimientoServiceTests.test_desvio_notifica_solo_en_la_transicion) ... ok
+test_telemetria_obsoleta_no_cambia_estado_ni_notifica (test_servicios.SeguimientoServiceTests.test_telemetria_obsoleta_no_cambia_estado_ni_notifica) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+
+exit_code=0

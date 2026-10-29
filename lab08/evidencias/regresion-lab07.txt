@@ -1,0 +1,5 @@
+$ /tmp/opencode-lab08-verify/bin/python -m pytest tests -q
+................x..............                                          [100%]
+30 passed, 1 xfailed in 0.03s
+
+exit_code=0

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rutasit-lab08"
+version = "0.8.0"
+description = "ADD y fitness functions reproducibles de RutaSIT Arequipa"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5", "import-linter==2.3", "matplotlib==3.10.1", "python-docx==1.1.2", "Markdown==3.7", "Pillow>=10"]
+
+[tool.setuptools.packages.find]
+where = ["src", "."]
+include = ["rutasit8*", "fitness*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]

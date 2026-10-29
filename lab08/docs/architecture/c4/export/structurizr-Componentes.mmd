@@ -1,0 +1,54 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Component View: RutaSIT Arequipa - API RutaSIT"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Pasajero</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Consulta ubicación y ETA;<br />recibe estado textual si<br />fallan mapas. [QA-02, QA-04,<br />QA-07]</div>"]
+    style 1 fill:#08427b,stroke:#052e56,color:#ffffff
+    2["<div style='font-weight: bold'>Operador</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Supervisa flota y administra<br />rutas; cambios versionan<br />geometría. [QA-01, QA-03]</div>"]
+    style 2 fill:#08427b,stroke:#052e56,color:#ffffff
+
+    13["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>1200 unidades transmiten<br />posición cada 10 s e ID<br />estable. [QA-01, QA-03,<br />QA-07]</div>"]
+    style 13 fill:#777777,stroke:#535353,color:#ffffff
+    14["<div style='font-weight: bold'>Mapas abiertos (OSM)</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Proveedor externo de tiles y<br />geometría; su caída no<br />elimina estado textual.<br />[QA-02]</div>"]
+    style 14 fill:#777777,stroke:#535353,color:#ffffff
+
+    subgraph 3 ["RutaSIT Arequipa"]
+      style 3 fill:#ffffff,stroke:#0b4884,color:#0b4884
+
+      subgraph 4 ["API RutaSIT"]
+        style 4 fill:#ffffff,stroke:#2e6295,color:#2e6295
+
+        5["<div style='font-weight: bold'>Presentación</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python / Django]</div><div style='font-size: 80%; margin-top:10px'>DTO público de unidad y<br />estado textual con aviso de<br />degradación. [QA-02, QA-05,<br />QA-07]</div>"]
+        style 5 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        6["<div style='font-weight: bold'>Aplicación</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python]</div><div style='font-size: 80%; margin-top:10px'>Consulta ETA por puertos;<br />comprueba vigencia,<br />independiente del proveedor<br />de mapas. [QA-04, QA-06,<br />QA-07]</div>"]
+        style 6 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        7["<div style='font-weight: bold'>Dominio</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python]</div><div style='font-size: 80%; margin-top:10px'>Reglas de unidad y lectura<br />GPS; no rejuvenece fuente<br />obsoleta. [QA-05, QA-07]</div>"]
+        style 7 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        8["<div style='font-weight: bold'>Infraestructura</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python]</div><div style='font-size: 80%; margin-top:10px'>Read model, caché TTL <=2 s,<br />adaptadores y breaker de<br />mapas (3 fallas / 30 s).<br />[QA-02, QA-04, QA-07]</div>"]
+        style 8 fill:#85bbf0,stroke:#5d82a8,color:#000000
+        9["<div style='font-weight: bold'>Compartido</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python]</div><div style='font-size: 80%; margin-top:10px'>Identificadores de unidad y<br />tipos comunes, sin datos<br />personales. [QA-05, QA-06]</div>"]
+        style 9 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      end
+
+      11["<div style='font-weight: bold'>Cola y caché</div><div style='font-size: 70%; margin-top: 0px'>[Container: Redis]</div><div style='font-size: 80%; margin-top:10px'>Cola con AOF según ADR-003;<br />caché ETA por bus/paradero,<br />TTL <=2 s y memoria acotada.<br />[QA-01, QA-03, QA-04, QA-07]</div>"]
+      style 11 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      12[("<div style='font-weight: bold'>Base de datos</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Esquemas por módulo,<br />historial y último ETA con<br />clave compuesta bus/paradero<br />y captura original. [QA-01,<br />QA-03, QA-04, QA-05, QA-07]</div>")]
+      style 12 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    end
+
+    5-. "<div>Invoca consulta de<br />seguimiento</div><div style='font-size: 70%'></div>" .->6
+    6-. "<div>Verifica vigencia de la<br />captura</div><div style='font-size: 70%'></div>" .->7
+    6-. "<div>Usa identificadores de unidad</div><div style='font-size: 70%'></div>" .->9
+    7-. "<div>Usa tipos comunes</div><div style='font-size: 70%'></div>" .->9
+    8-. "<div>Implementa puertos;<br />composición en arranque</div><div style='font-size: 70%'></div>" .->6
+    8-. "<div>Reconstruye lecturas sin<br />rejuvenecerlas</div><div style='font-size: 70%'></div>" .->7
+    8-. "<div>Lee caché ETA de corto plazo</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+    8-. "<div>Consulta read model por<br />bus/paradero</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->12
+    8-. "<div>Adapta mapas con circuit<br />breaker</div><div style='font-size: 70%'>[HTTPS]</div>" .->14
+    1-. "<div>Solicita seguimiento</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+    2-. "<div>Consulta panel</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+    13-. "<div>Envía posición</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->5
+
+  end

@@ -1,0 +1,174 @@
+E5 — rama temporal aislada, violaciones reales y restauración
+
+$ git init -b main
+Initialized empty Git repository in /tmp/opencode/lab08-violacion-q68r909g/.git/
+exit_code=0
+
+$ git add .
+exit_code=0
+
+$ git -c user.name=Prueba local Lab08 -c user.email=lab08@example.invalid commit -m Base temporal para prueba estructural
+[main (root-commit) 5c9c1ca] Base temporal para prueba estructural
+ 12 files changed, 208 insertions(+)
+ create mode 100644 .importlinter
+ create mode 100644 src/rutasit8/__init__.py
+ create mode 100644 src/rutasit8/aplicacion/__init__.py
+ create mode 100644 src/rutasit8/aplicacion/puertos.py
+ create mode 100644 src/rutasit8/aplicacion/seguimiento.py
+ create mode 100644 src/rutasit8/arranque.py
+ create mode 100644 src/rutasit8/dominio.py
+ create mode 100644 src/rutasit8/infraestructura/__init__.py
+ create mode 100644 src/rutasit8/infraestructura/cache.py
+ create mode 100644 src/rutasit8/infraestructura/memoria.py
+ create mode 100644 src/rutasit8/infraestructura/resiliencia.py
+ create mode 100644 src/rutasit8/presentacion.py
+exit_code=0
+
+$ git switch -c test/lab08-violaciones
+Switched to a new branch 'test/lab08-violaciones'
+exit_code=0
+
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 11 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) KEPT
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) KEPT
+
+Contracts: 2 kept, 0 broken.
+exit_code=0
+
+Violación introducida en src/rutasit8/dominio.py: from rutasit8.aplicacion import seguimiento
+
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 12 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) BROKEN
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) KEPT
+
+Contracts: 1 kept, 1 broken.
+
+
+----------------
+Broken contracts
+----------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05)
+-----------------------------------------------------------------------
+
+rutasit8.dominio is not allowed to import rutasit8.aplicacion:
+
+- rutasit8.dominio -> rutasit8.aplicacion.seguimiento (l.26)
+
+
+exit_code=1
+
+$ git restore src/rutasit8/dominio.py
+exit_code=0
+
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 11 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) KEPT
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) KEPT
+
+Contracts: 2 kept, 0 broken.
+exit_code=0
+
+Violación introducida en src/rutasit8/aplicacion/seguimiento.py: from rutasit8.infraestructura import memoria
+
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 12 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) BROKEN
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) BROKEN
+
+Contracts: 0 kept, 2 broken.
+
+
+----------------
+Broken contracts
+----------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05)
+-----------------------------------------------------------------------
+
+rutasit8.aplicacion is not allowed to import rutasit8.infraestructura:
+
+- rutasit8.aplicacion.seguimiento -> rutasit8.infraestructura.memoria (l.39)
+
+
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado)
+---------------------------------------------------------------------------
+
+rutasit8.aplicacion is not allowed to import rutasit8.infraestructura:
+
+-   rutasit8.aplicacion.seguimiento -> rutasit8.infraestructura.memoria (l.39)
+
+
+rutasit8.presentacion is not allowed to import rutasit8.infraestructura:
+
+-   rutasit8.presentacion -> rutasit8.aplicacion.seguimiento (l.5)
+    rutasit8.aplicacion.seguimiento -> rutasit8.infraestructura.memoria (l.39)
+
+
+exit_code=1
+
+$ git restore src/rutasit8/aplicacion/seguimiento.py
+exit_code=0
+
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 11 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) KEPT
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) KEPT
+
+Contracts: 2 kept, 0 broken.
+exit_code=0
+
+$ git status --short
+exit_code=0

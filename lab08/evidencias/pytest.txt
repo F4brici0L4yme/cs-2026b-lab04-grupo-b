@@ -1,0 +1,36 @@
+$ /tmp/opencode-lab08-verify/bin/python -m pytest lab08/tests -v
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.5, pluggy-1.7.0 -- /tmp/opencode-lab08-verify/bin/python
+cachedir: .pytest_cache
+rootdir: /home/brayan/Documentos/System Engineering 2026-B/Laboratorios 2026-B/Construccion de Software/cs-2026b-lab04-grupo-b/lab08
+configfile: pyproject.toml
+collecting ... collected 24 items
+
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[False-7] PASSED [  4%]
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[False-19] PASSED [  8%]
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[False-42] PASSED [ 12%]
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[True-7] PASSED [ 16%]
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[True-19] PASSED [ 20%]
+lab08/tests/test_fitness.py::test_ff03_1200_buses_eta_menos_15s[True-42] PASSED [ 25%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[7-0] PASSED [ 29%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[7-0.2] PASSED [ 33%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[7-0.8] PASSED [ 37%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[19-0] PASSED [ 41%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[19-0.2] PASSED [ 45%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[19-0.8] PASSED [ 50%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[42-0] PASSED [ 54%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[42-0.2] PASSED [ 58%]
+lab08/tests/test_fitness.py::test_ff04_consultas_en_rafaga_y_cache_fria[42-0.8] PASSED [ 62%]
+lab08/tests/test_fitness.py::test_controles_negativos_detectan_regresion_rendimiento PASSED [ 66%]
+lab08/tests/test_fitness.py::test_ff05_mapas_caidos_sin_pantallas_vacias PASSED [ 70%]
+lab08/tests/test_fitness.py::test_ff06_cache_no_rejuvenece_lectura_obsoleta PASSED [ 75%]
+lab08/tests/test_fitness.py::test_ff07_dto_publico_sin_datos_personales PASSED [ 79%]
+lab08/tests/test_fitness.py::test_cache_ttl_clave_compuesta_y_datos_mas_recientes PASSED [ 83%]
+lab08/tests/test_fitness.py::test_cache_acotada_y_ausencia_no_cacheada PASSED [ 87%]
+lab08/tests/test_fitness.py::test_lectura_futura_no_es_actual PASSED     [ 91%]
+lab08/tests/test_fitness.py::test_breaker_abre_sondea_reabre_y_recupera PASSED [ 95%]
+lab08/tests/test_fitness.py::test_fallback_sin_lectura_y_con_lectura_vencida PASSED [100%]
+
+============================== 24 passed in 0.75s ==============================
+
+exit_code=0

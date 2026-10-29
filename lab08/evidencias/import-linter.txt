@@ -1,0 +1,18 @@
+$ /tmp/opencode-lab08-verify/bin/lint-imports --config .importlinter --no-cache
+=============
+Import Linter
+=============
+
+---------
+Contracts
+---------
+
+Analyzed 11 files, 11 dependencies.
+-----------------------------------
+
+FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05) KEPT
+FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado) KEPT
+
+Contracts: 2 kept, 0 broken.
+
+exit_code=0

@@ -1,0 +1,33 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Dynamic View: RutaSIT Arequipa"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 3 ["RutaSIT Arequipa"]
+      style 3 fill:#ffffff,stroke:#0b4884,color:#0b4884
+
+      10["<div style='font-weight: bold'>Worker ETA/Alertas</div><div style='font-size: 70%; margin-top: 0px'>[Container: Celery]</div><div style='font-size: 80%; margin-top:10px'>Procesa 120 eventos/s como<br />objetivo; geometría<br />precargada por versión,<br />Strategy ETA, ID estable.<br />[QA-01, QA-03, QA-06, QA-07]</div>"]
+      style 10 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      11["<div style='font-weight: bold'>Cola y caché</div><div style='font-size: 70%; margin-top: 0px'>[Container: Redis]</div><div style='font-size: 80%; margin-top:10px'>Cola con AOF según ADR-003;<br />caché ETA por bus/paradero,<br />TTL <=2 s y memoria acotada.<br />[QA-01, QA-03, QA-04, QA-07]</div>"]
+      style 11 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      12[("<div style='font-weight: bold'>Base de datos</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Esquemas por módulo,<br />historial y último ETA con<br />clave compuesta bus/paradero<br />y captura original. [QA-01,<br />QA-03, QA-04, QA-05, QA-07]</div>")]
+      style 12 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      4["<div style='font-weight: bold'>API RutaSIT</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / Django]</div><div style='font-size: 80%; margin-top:10px'>REST de ingesta/consulta y<br />vista textual degradada. Lee<br />ETA materializado, comprueba<br />captura <=30 s y usa breaker<br />de mapas. [QA-01, QA-02,<br />QA-04, QA-05, QA-07]</div>"]
+      style 4 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    end
+
+    1["<div style='font-weight: bold'>Pasajero</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Consulta ubicación y ETA;<br />recibe estado textual si<br />fallan mapas. [QA-02, QA-04,<br />QA-07]</div>"]
+    style 1 fill:#08427b,stroke:#052e56,color:#ffffff
+    13["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>1200 unidades transmiten<br />posición cada 10 s e ID<br />estable. [QA-01, QA-03,<br />QA-07]</div>"]
+    style 13 fill:#777777,stroke:#535353,color:#ffffff
+
+    13-. "<div>1. Envía posición con ID<br />estable y timestamp</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->4
+    4-. "<div>2. Valida y encola posición</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+    10-. "<div>3. Consume posición</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+    10-. "<div>4. Usa geometría vigente y<br />guarda ETA materializado</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->12
+    10-. "<div>5. Publica lectura reciente</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+    1-. "<div>6. Consulta bus/paradero</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->4
+    4-. "<div>7. Lee ETA y comprueba<br />captura <=30 s</div><div style='font-size: 70%'>[Redis protocol]</div>" .->11
+
+  end

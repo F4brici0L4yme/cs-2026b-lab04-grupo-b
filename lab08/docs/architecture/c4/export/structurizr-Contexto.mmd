@@ -1,0 +1,23 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["System Context View: RutaSIT Arequipa"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Pasajero</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Consulta ubicación y ETA;<br />recibe estado textual si<br />fallan mapas. [QA-02, QA-04,<br />QA-07]</div>"]
+    style 1 fill:#08427b,stroke:#052e56,color:#ffffff
+    13["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>1200 unidades transmiten<br />posición cada 10 s e ID<br />estable. [QA-01, QA-03,<br />QA-07]</div>"]
+    style 13 fill:#777777,stroke:#535353,color:#ffffff
+    14["<div style='font-weight: bold'>Mapas abiertos (OSM)</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Proveedor externo de tiles y<br />geometría; su caída no<br />elimina estado textual.<br />[QA-02]</div>"]
+    style 14 fill:#777777,stroke:#535353,color:#ffffff
+    2["<div style='font-weight: bold'>Operador</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Supervisa flota y administra<br />rutas; cambios versionan<br />geometría. [QA-01, QA-03]</div>"]
+    style 2 fill:#08427b,stroke:#052e56,color:#ffffff
+    3["<div style='font-weight: bold'>RutaSIT Arequipa</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Seguimiento de 1200 buses; 50<br />000 consultas en hora punta.<br />Un VPS, monolito modular.<br />[QA-01, QA-02, QA-03, QA-04,<br />QA-05, QA-06, QA-07]</div>"]
+    style 3 fill:#1168bd,stroke:#0b4884,color:#ffffff
+
+    1-. "<div>Consulta ubicación y ETA;<br />recibe aviso si hay<br />degradación</div><div style='font-size: 70%'></div>" .->3
+    2-. "<div>Supervisa flota y versiona<br />rutas/paraderos</div><div style='font-size: 70%'></div>" .->3
+    13-. "<div>Envía posición cada 10 s</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->3
+    3-. "<div>Solicita mapa con protección<br />ante fallas</div><div style='font-size: 70%'>[HTTPS]</div>" .->14
+
+  end

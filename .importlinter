@@ -1,0 +1,20 @@
+[importlinter]
+root_package = rutasit8
+
+[importlinter:contract:capas]
+name = FF-01 Capas internas sin dependencias hacia fuera (ADR-001; UML Lab 05)
+type = layers
+layers =
+    rutasit8.arranque
+    rutasit8.presentacion | rutasit8.infraestructura
+    rutasit8.aplicacion
+    rutasit8.dominio
+
+[importlinter:contract:puertos]
+name = FF-02 Casos de uso y presentacion no conocen adaptadores (ADR-005 refinado)
+type = forbidden
+source_modules =
+    rutasit8.aplicacion
+    rutasit8.presentacion
+forbidden_modules =
+    rutasit8.infraestructura

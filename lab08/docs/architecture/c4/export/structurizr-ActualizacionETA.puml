@@ -1,0 +1,38 @@
+@startuml
+title <size:24>Dynamic View: RutaSIT Arequipa</size>\n<size:24>Captura GPS y actualización de ETA, conservando timestamp [QA-01, QA-07].</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Container>
+
+System_Boundary("RutaSITArequipa_boundary", "RutaSIT Arequipa", $tags="") {
+  Container(RutaSITArequipa.WorkerETAAlertas, "Worker ETA/Alertas", $techn="Celery", $descr="Procesa 120 eventos/s como objetivo; geometría precargada por versión, Strategy ETA, ID estable. [QA-01, QA-03, QA-06, QA-07]", $tags="", $link="")
+  ContainerQueue(RutaSITArequipa.Colaycaché, "Cola y caché", $techn="Redis", $descr="Cola con AOF según ADR-003; caché ETA por bus/paradero, TTL <=2 s y memoria acotada. [QA-01, QA-03, QA-04, QA-07]", $tags="", $link="")
+  ContainerDb(RutaSITArequipa.Basededatos, "Base de datos", $techn="PostgreSQL", $descr="Esquemas por módulo, historial y último ETA con clave compuesta bus/paradero y captura original. [QA-01, QA-03, QA-04, QA-05, QA-07]", $tags="", $link="")
+  Container(RutaSITArequipa.APIRutaSIT, "API RutaSIT", $techn="Python / Django", $descr="REST de ingesta/consulta y vista textual degradada. Lee ETA materializado, comprueba captura <=30 s y usa breaker de mapas. [QA-01, QA-02, QA-04, QA-05, QA-07]", $tags="", $link="")
+}
+
+Person(Pasajero, "Pasajero", $descr="Consulta ubicación y ETA; recibe estado textual si fallan mapas. [QA-02, QA-04, QA-07]", $tags="", $link="")
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="1200 unidades transmiten posición cada 10 s e ID estable. [QA-01, QA-03, QA-07]", $tags="", $link="")
+
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa.APIRutaSIT, "1: Envía posición con ID estable y timestamp", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT, RutaSITArequipa.Colaycaché, "2: Valida y encola posición", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Colaycaché, "3: Consume posición", $techn="Redis protocol", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Basededatos, "4: Usa geometría vigente y guarda ETA materializado", $techn="SQL/TCP", $tags="", $link="")
+Rel(RutaSITArequipa.WorkerETAAlertas, RutaSITArequipa.Colaycaché, "5: Publica lectura reciente", $techn="Redis protocol", $tags="", $link="")
+Rel(Pasajero, RutaSITArequipa.APIRutaSIT, "6: Consulta bus/paradero", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RutaSITArequipa.APIRutaSIT, RutaSITArequipa.Colaycaché, "7: Lee ETA y comprueba captura <=30 s", $techn="Redis protocol", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

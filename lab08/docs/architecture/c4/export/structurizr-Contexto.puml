@@ -1,0 +1,30 @@
+@startuml
+title <size:24>System Context View: RutaSIT Arequipa</size>\n<size:24>Sistema, actores y dependencias externas [QA-01..07].</size>
+
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
+
+!include <C4/C4>
+!include <C4/C4_Context>
+
+Person(Pasajero, "Pasajero", $descr="Consulta ubicación y ETA; recibe estado textual si fallan mapas. [QA-02, QA-04, QA-07]", $tags="", $link="")
+System(RastreadorGPSdelosbuses, "Rastreador GPS de los buses", $descr="1200 unidades transmiten posición cada 10 s e ID estable. [QA-01, QA-03, QA-07]", $tags="", $link="")
+System(MapasabiertosOSM, "Mapas abiertos (OSM)", $descr="Proveedor externo de tiles y geometría; su caída no elimina estado textual. [QA-02]", $tags="", $link="")
+Person(Operador, "Operador", $descr="Supervisa flota y administra rutas; cambios versionan geometría. [QA-01, QA-03]", $tags="", $link="")
+System(RutaSITArequipa, "RutaSIT Arequipa", $descr="Seguimiento de 1200 buses; 50 000 consultas en hora punta. Un VPS, monolito modular. [QA-01, QA-02, QA-03, QA-04, QA-05, QA-06, QA-07]", $tags="", $link="")
+
+Rel(Pasajero, RutaSITArequipa, "Consulta ubicación y ETA; recibe aviso si hay degradación", $techn="", $tags="", $link="")
+Rel(Operador, RutaSITArequipa, "Supervisa flota y versiona rutas/paraderos", $techn="", $tags="", $link="")
+Rel(RastreadorGPSdelosbuses, RutaSITArequipa, "Envía posición cada 10 s", $techn="HTTPS/JSON", $tags="", $link="")
+Rel(RutaSITArequipa, MapasabiertosOSM, "Solicita mapa con protección ante fallas", $techn="HTTPS", $tags="", $link="")
+
+SHOW_LEGEND(true)
+hide stereotypes
+@enduml

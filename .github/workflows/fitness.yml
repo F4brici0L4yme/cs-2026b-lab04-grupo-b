@@ -1,0 +1,40 @@
+name: fitness-functions
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  arquitectura:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: lab08/pyproject.toml
+      - name: Instalar herramientas
+        run: python -m pip install -e './lab08[dev]'
+      - name: Contratos, calidad y regresiones Labs 05 y 07
+        run: python lab08/scripts/verificar.py
+      - name: Demostrar detección y reversión de violaciones
+        run: python lab08/scripts/probar_violaciones.py
+      - name: Reproducir evidencia cuantitativa
+        run: python -m fitness.experimentos
+      - name: Validar y exportar modelo C4
+        run: python lab08/scripts/modelo.py
+      - name: Publicar evidencia de la ejecución
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencia-lab08
+          path: |
+            lab08/evidencias/
+            lab08/docs/architecture/c4/export/

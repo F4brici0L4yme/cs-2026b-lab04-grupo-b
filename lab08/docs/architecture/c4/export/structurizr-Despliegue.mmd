@@ -1,0 +1,38 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["Deployment View: RutaSIT Arequipa - Producción"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 39 ["Bus del SIT (1200 unidades)"]
+      style 39 fill:#ffffff,stroke:#444444,color:#444444
+
+      subgraph 40 ["Rastreador GPS"]
+        style 40 fill:#ffffff,stroke:#444444,color:#444444
+
+        41["<div style='font-weight: bold'>Rastreador GPS de los buses</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>1200 unidades transmiten<br />posición cada 10 s e ID<br />estable. [QA-01, QA-03,<br />QA-07]</div>"]
+        style 41 fill:#777777,stroke:#535353,color:#ffffff
+      end
+
+    end
+
+    subgraph 42 ["VPS único (R-03)"]
+      style 42 fill:#ffffff,stroke:#444444,color:#444444
+
+      43["<div style='font-weight: bold'>API RutaSIT</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / Django]</div><div style='font-size: 80%; margin-top:10px'>REST de ingesta/consulta y<br />vista textual degradada. Lee<br />ETA materializado, comprueba<br />captura <=30 s y usa breaker<br />de mapas. [QA-01, QA-02,<br />QA-04, QA-05, QA-07]</div>"]
+      style 43 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      45["<div style='font-weight: bold'>Worker ETA/Alertas</div><div style='font-size: 70%; margin-top: 0px'>[Container: Celery]</div><div style='font-size: 80%; margin-top:10px'>Procesa 120 eventos/s como<br />objetivo; geometría<br />precargada por versión,<br />Strategy ETA, ID estable.<br />[QA-01, QA-03, QA-06, QA-07]</div>"]
+      style 45 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      46["<div style='font-weight: bold'>Cola y caché</div><div style='font-size: 70%; margin-top: 0px'>[Container: Redis]</div><div style='font-size: 80%; margin-top:10px'>Cola con AOF según ADR-003;<br />caché ETA por bus/paradero,<br />TTL <=2 s y memoria acotada.<br />[QA-01, QA-03, QA-04, QA-07]</div>"]
+      style 46 fill:#438dd5,stroke:#2e6295,color:#ffffff
+      49[("<div style='font-weight: bold'>Base de datos</div><div style='font-size: 70%; margin-top: 0px'>[Container: PostgreSQL]</div><div style='font-size: 80%; margin-top:10px'>Esquemas por módulo,<br />historial y último ETA con<br />clave compuesta bus/paradero<br />y captura original. [QA-01,<br />QA-03, QA-04, QA-05, QA-07]</div>")]
+      style 49 fill:#438dd5,stroke:#2e6295,color:#ffffff
+    end
+
+    41-. "<div>Envía posición e ID estable</div><div style='font-size: 70%'>[HTTPS/JSON]</div>" .->43
+    43-. "<div>Encola posiciones; lee caché<br />ETA TTL <=2 s</div><div style='font-size: 70%'>[Redis protocol]</div>" .->46
+    45-. "<div>Consume posiciones y publica<br />ETA reciente</div><div style='font-size: 70%'>[Redis protocol]</div>" .->46
+    43-. "<div>Lee último ETA por clave;<br />administra rutas</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->49
+    45-. "<div>Lee geometría por versión;<br />guarda historial y último ETA</div><div style='font-size: 70%'>[SQL/TCP]</div>" .->49
+
+  end

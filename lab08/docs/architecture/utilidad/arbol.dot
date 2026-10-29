@@ -1,0 +1,28 @@
+digraph Utilidad {
+  graph [rankdir=LR, bgcolor="white", pad="0.3", nodesep="0.25", ranksep="0.55", label="RutaSIT Arequipa — Lab 08 / árbol de utilidad", labelloc=t, fontsize=19];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, fillcolor="#edf2f7", color="#6a7b8c", margin="0.15,0.10"];
+  edge [color="#6a7b8c"];
+  utilidad [label="Utilidad\nRutaSIT: 1200 buses", fillcolor="#173c5e", fontcolor=white];
+  rendimiento [label="Rendimiento", fillcolor="#b9472c", fontcolor=white];
+  disponibilidad [label="Disponibilidad", fillcolor="#b9472c", fontcolor=white];
+  seguridad [label="Seguridad", fillcolor="#b9472c", fontcolor=white];
+  modificabilidad [label="Modificabilidad", fillcolor="#b9472c", fontcolor=white];
+  utilidad -> {rendimiento disponibilidad seguridad modificabilidad};
+  ingesta [label="Tiempo real / crecimiento"];
+  consulta [label="Latencia de lectura"];
+  fallas [label="Fallas externas"];
+  frescura [label="Pérdida de señal"];
+  privacidad [label="Minimización de datos"];
+  extension [label="Algoritmo intercambiable"];
+  rendimiento -> {ingesta consulta}; disponibilidad -> {fallas frescura};
+  seguridad -> privacidad; modificabilidad -> extension;
+  qa01 [label="(H,H) QA-01: 120 eventos/s; p95 ETA ≤15 s\n100% procesados al cierre de cada minuto +15 s"];
+  qa03 [label="(H,H) QA-03: 300→600→1200 buses; p95 ≤15 s\nCPU <70%: pendiente medición del VPS"];
+  qa04 [label="(H,H) QA-04: 50 000 consultas/h + pico ×5\np95 API ≤2000 ms incluso con caché fría"];
+  qa02 [label="(H,M) QA-02: mapas caen 20 min\n0 vistas vacías; recuperación ≤300 s"];
+  qa07 [label="(H,M) QA-07: señal >30 s / desorden\n0 ETA obsoletos como actuales; 0 retrocesos"];
+  qa05 [label="(M,L) QA-05: 100 consultas públicas\n0 campos personales del conductor"];
+  qa06 [label="(M,L) QA-06: nueva estrategia ETA\n0 líneas modificadas en el servicio"];
+  ingesta -> {qa01 qa03}; consulta -> qa04; fallas -> qa02;
+  frescura -> qa07; privacidad -> qa05; extension -> qa06;
+}
