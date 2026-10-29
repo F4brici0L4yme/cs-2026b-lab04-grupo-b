@@ -228,3 +228,31 @@ Refactor de `consultar_seguimiento` hacia 6 patrones GoF (ver `lab07/`).
 | LLM no confiable | Strategy + Decorator + Chain | `test_chain_bloquea_salida_invalida` |
 
 Métricas: consultar C(18)→A(5), promedio B(7.0)→A(1.69), SLOC 89→239. Pruebas: `30 passed, 1 xfailed`. ADR: `lab07/docs/architecture/adr/005-patrones-de-diseno.md`.
+
+## Diseño de la arquitectura (Lab 08)
+
+[![fitness-functions](https://github.com/F4brici0L4yme/cs-2026b-lab04-grupo-b/actions/workflows/fitness.yml/badge.svg)](https://github.com/F4brici0L4yme/cs-2026b-lab04-grupo-b/actions/workflows/fitness.yml)
+
+Evolución de RutaSIT a **1200 buses** y **50 000 consultas de ETA en hora punta**,
+mediante tres iteraciones ADD. [Laboratorio completo](lab08/README.md).
+
+![Árbol de utilidad](lab08/docs/architecture/utilidad/arbol.png)
+
+| Iteración | Escenario | Táctica | Evidencia (simulación/prototipo) | ¿Cumple? |
+|---|---|---|---|---|
+| 1 | QA-01/03 | Reducir trabajo por evento y precargar geometría | p95 ráfaga 99,919→7,616 s | QA-01 sí bajo supuestos; CPU pendiente |
+| 2 | QA-04/07 | Read model indexado + caché TTL 2 s | p95 pico 130,788 ms; caché fría 256,663 ms | Sí bajo supuestos; validar servicio real |
+| 3 | QA-02 | Circuit breaker + respuesta textual | 0 pantallas vacías; 3600→42 llamadas en caída | Sí en prototipo secuencial |
+
+- [ADR-006](lab08/docs/architecture/adr/006-ingesta.md),
+  [ADR-007](lab08/docs/architecture/adr/007-consultas-eta.md),
+  [ADR-008](lab08/docs/architecture/adr/008-disponibilidad-mapas.md).
+- [C4 actualizado](lab08/docs/architecture/c4/README.md),
+  [ATAM-lite y riesgos](lab08/docs/architecture/atam-lite.md),
+  [evidencia ejecutada](lab08/evidencias/resultados.md).
+- [Fuente versionada del informe](lab08/docs/informe.md). El PDF y el DOCX se
+  generan localmente en `lab08/informe/` (ignorado por Git); ver
+  [instrucciones](lab08/README.md#ejecutar-desde-la-raíz-del-repositorio).
+- Verificación local: 24 pruebas y 2 contratos aprobados. El badge refleja el
+  estado remoto cuando se publique el workflow. [Pendientes de entrega](lab08/entrega.md):
+  intercambio E3, PR individuales revisados, Action verde y `v0.8-arquitectura`.
