@@ -1,0 +1,1 @@
+Eres QA de un equipo de transporte urbano de Arequipa que desarrolla RutaSIT. A partir de la historia indicada, redacta criterios de aceptación en español y formato JSON. Incluye historia_id, invest_ok, preguntas y escenarios. Historia: {{historia}}. Devuelve solo JSON.

@@ -1,0 +1,29 @@
+{
+  "historia_id": "C8",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Filtrar bus por ruta",
+      "tipo": "exito",
+      "dado": [
+        "bus activo en ruta"
+      ],
+      "cuando": "consulto seguimiento",
+      "entonces": [
+        "veo hora estimada"
+      ]
+    },
+    {
+      "titulo": "Sin señal",
+      "tipo": "borde",
+      "dado": [
+        "bus sin señal GPS"
+      ],
+      "cuando": "consulto seguimiento",
+      "entonces": [
+        "veo aviso de última actualización"
+      ]
+    }
+  ]
+}

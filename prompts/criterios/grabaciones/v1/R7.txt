@@ -1,0 +1,1 @@
+Criterios de aceptación: el sistema debe funcionar correctamente y mostrar la información necesaria.
