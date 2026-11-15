@@ -114,7 +114,7 @@ def guardar(output: Path, relative: Path, prompt: str, dry_run: bool, overwrite:
 
 def tareas_a(output: Path, dry_run: bool, overwrite: bool) -> None:
     cases = leer_historias()
-    for version in ("v1", "v2", "v3"):
+    for version in ("v1", "v2", "v3", "v3.1"):
         template = (ROOT / f"prompts/criterios/{version}.txt").read_text(encoding="utf-8")
         for case in cases:
             prompt = template.replace("{{id}}", case["id"]).replace("{{historia}}", case["historia"])

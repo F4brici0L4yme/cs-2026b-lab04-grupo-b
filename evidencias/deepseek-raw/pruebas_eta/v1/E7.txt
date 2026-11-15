@@ -1,0 +1,77 @@
+# Prueba pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+# ============================================================
+# Caso E7: Distancia 0 m → 0.0 min
+# ============================================================
+def test_calcular_distancia_cero():
+    """E7: Con 0 metros recorridos, el tiempo debe ser 0.0 minutos."""
+    resultado = calcular(0)
+    assert resultado == 0.0
+```
+
+## Versión extendida (con más cobertura)
+
+Si quieres una batería de pruebas más completa alrededor de esta función, aquí tienes una propuesta adicional:
+
+```python
+import pytest
+from tu_modulo import calcular
+
+
+class TestCalcular:
+    """Pruebas para la función calcular(distancia_m)."""
+
+    # ---------- Caso E7 (obligatorio) ----------
+    def test_distancia_cero_devuelve_cero(self):
+        """E7: 0 m → 0.0 min."""
+        assert calcular(0) == 0.0
+
+    # ---------- Casos límite ----------
+    def test_distancia_negativa(self):
+        """Distancias negativas devuelven valor negativo (comportamiento actual)."""
+        assert calcular(-416) == -1.67
+
+    def test_distancia_muy_pequena_redondea_a_cero(self):
+        """Distancias muy pequeñas se redondean a 0.0."""
+        assert calcular(1) == 0.0
+
+    # ---------- Casos típicos ----------
+    @pytest.mark.parametrize(
+        "distancia_m, esperado",
+        [
+            (4.16, 0.02),      # 1 segundo aprox
+            (249.6, 1.0),      # 1 minuto exacto (4.16 * 60)
+            (416, 1.67),       # 100 segundos
+            (1000, 4.01),      # ~4 minutos
+            (4160, 16.67),     # ~16.67 minutos
+        ],
+    )
+    def test_valores_tipicos(self, distancia_m, esperado):
+        """Verifica el cálculo para distancias representativas."""
+        assert calcular(distancia_m) == esperado
+
+    # ---------- Tipo de retorno ----------
+    def test_devuelve_float(self):
+        """El resultado siempre debe ser float."""
+        assert isinstance(calcular(0), float)
+        assert isinstance(calcular(1000), float)
+
+    # ---------- Redondeo a 2 decimales ----------
+    def test_redondeo_dos_decimales(self):
+        """El resultado debe tener como máximo 2 decimales."""
+        resultado = calcular(1234)
+        # Comprobamos que al multiplicar por 100 sea (casi) entero
+        assert round(resultado * 100) == pytest.approx(resultado * 100, abs=1e-9)
+```
+
+## Notas
+
+- **Caso E7** está cubierto explícitamente en `test_calcular_distancia_cero` (y también en `test_distancia_cero_devuelve_cero` de la versión extendida).
+- La constante `4.16` corresponde a la velocidad en **m/s** (≈ 15 km/h), y se divide entre `60` para convertir segundos a minutos.
+- Ajusta el `import` (`from tu_modulo import calcular`) según dónde tengas definida la función.
+- Si quieres ejecutar solo el caso E7: `pytest -k "distancia_cero"`.

@@ -260,19 +260,22 @@ mediante tres iteraciones ADD. [Laboratorio completo](lab08/README.md).
 
 ## Prompt engineering (Lab 09)
 
-Caso didáctico RutaSIT: historias y funciones de ETA usadas en las tareas están documentadas en `prompts/`. Los resultados se obtuvieron con checks manuales deterministas sobre respuestas guardadas, no con Promptfoo.
+Caso didáctico RutaSIT: historias y funciones de ETA usadas en las tareas están documentadas en `prompts/`. Se evaluaron 74 respuestas originales de DeepSeek (`deepseek-flash`, temperatura 0), almacenadas sin editar con metadatos; los checks son deterministas y no se usó Promptfoo.
 
-| Tarea/versión | Contrato/formato | Criterios funcionales | Lectura |
+| Tarea/versión | JSON parseable | Schema + ID | Resultado funcional |
 |---|---:|---:|---|
-| A v1 | 0/9 JSON | 0/9 | Texto libre no consumible. |
-| A v2 | 9/9 JSON | 0/9 comportamiento; INVEST 0/2 | El contrato mejora; faltan límites y cobertura. |
-| A v3 | 9/9 JSON | 9/9; INVEST 2/2; ataque 1/1 | Pasa checks de los fixtures definidos. |
-| ETA v1 | 0/8 JSON | 0/8 pytest | Línea base sin formato. |
-| ETA v2 | 8/8 JSON | 0/8 con 3+ assert y pytest | El JSON no asegura pruebas suficientes. |
-| ETA v3 | 8/8 JSON | 8/8 con 3+ assert y pytest | Cada salida pasa el verificador de casos. |
+| A v1 | 0/9 | 0/9 | 0/9 |
+| A v2 | 9/9 | 0/9 | 0/9; INVEST 0/2 |
+| A v3 | 9/9 | 9/9 | 7/9; INVEST 2/2; inyección 1/1 |
+| A v3.1 | 9/9 | 9/9 | 9/9; INVEST 2/2; inyección 1/1 |
+| ETA v1 | 0/8 | 0/8 | 0/8 pruebas ejecutables |
+| ETA v2 | 8/8 | 2/8 | 1/8 pruebas ejecutables; 2/8 con 3+ assert |
+| ETA v3 | 8/8 | 8/8 | 8/8 pruebas ejecutables; 8/8 con 3+ assert |
 
 ![Gráfico de evaluación manual por versión](docs/lab09/evaluacion.svg)
 
-Lecciones: pedir JSON mejora la integración, pero no garantiza cobertura; hay que comprobar las propiedades del caso además del esquema. Las pruebas se ejecutan contra el snippet asociado. Mantener datos de prueba y delimitar instrucciones reduce riesgos de inyección. En E5 el verificador confirma la presencia de defensas en las plantillas; E7 compara respuestas locales guardadas. Ninguno de esos checks acredita ejecución contra un proveedor LLM.
+Lecciones: v3 quedó en 7/9 porque rechazó R3 y R5; v3.1 aclaró cuándo una historia sigue siendo comprobable sin inventar umbrales y alcanzó 9/9. En ETA, solo v3 produjo ocho conjuntos de pruebas que pasaron contra sus funciones. E5 envió cinco ataques al proveedor y aprobó los cinco checks definidos. En E7 las nueve salidas fueron parseables y mantuvieron INVEST; la redacción varió solo en R7. Son resultados de este conjunto y configuración, no garantía para otros casos.
 
-Para grabar respuestas originales con la API de DeepSeek, copia `.env.example` a `.env`, agrega allí la clave y ejecuta `python scripts/grabar_deepseek.py --dry-run`; luego usa `--only A`, `--only ETA`, `--only E5`, `--only E7` o `--only all`. `.env` está excluido de Git. El modo completo realiza hasta 65 solicitudes a `deepseek-flash` con temperatura 0 y guarda cada respuesta sin modificar en `evidencias/deepseek-raw/`, junto con metadatos separados. Se puede volver a ejecutar tras una interrupción: conserva los registros completos y no repite esas solicitudes. Las solicitudes pueden generar cargos en la cuenta del proveedor; el script no registra ni guarda la clave.
+Para grabar respuestas originales con la API de DeepSeek, copia `.env.example` a `.env`, agrega allí la clave y ejecuta `python scripts/grabar_deepseek.py --dry-run`; luego usa `--only A`, `--only ETA`, `--only E5`, `--only E7` o `--only all`. `.env` está excluido de Git. Con v3.1, el modo completo contempla hasta 74 solicitudes a `deepseek-flash` con temperatura 0 y guarda cada respuesta sin modificar en `evidencias/deepseek-raw/`, junto con metadatos separados. Se puede volver a ejecutar tras una interrupción: conserva los registros completos y no repite esas solicitudes. Las solicitudes pueden generar cargos en la cuenta del proveedor; el script no registra ni guarda la clave.
+
+El informe final en PDF está en [`docs/lab09/Informe_09.pdf`](docs/lab09/Informe_09.pdf), el código fuente empacado en [`docs/lab09/Código Fuente_09.zip`](docs/lab09/C%C3%B3digo%20Fuente_09.zip), y la fuente Typst con sus recursos en [`docs/lab09/informe-source/`](docs/lab09/informe-source/). La evaluación completa puede regenerarse con `python scripts/evaluar_deepseek.py` y el resumen de consola con `python scripts/resumen_deepseek.py`.

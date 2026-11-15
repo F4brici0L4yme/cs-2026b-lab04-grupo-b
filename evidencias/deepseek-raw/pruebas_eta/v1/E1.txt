@@ -1,0 +1,74 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+# ============================================================
+# Caso E1: Distancia 1000 m → 2.0 min
+# ============================================================
+def test_calcular_1000m_devuelve_2_minutos():
+    """E1: 1000 m deben equivaler a 2.0 minutos."""
+    resultado = calcular(1000)
+    assert resultado == 2.0
+
+
+# ============================================================
+# Pruebas adicionales de robustez
+# ============================================================
+def test_calcular_0m_devuelve_0():
+    """Distancia cero debe devolver 0.0."""
+    assert calcular(0) == 0.0
+
+
+def test_calcular_500m_devuelve_1_minuto():
+    """500 m ≈ 1.0 min (500 / 8.33 / 60 ≈ 1.0004 → 1.0)."""
+    assert calcular(500) == 1.0
+
+
+def test_calcular_833m_devuelve_1_67():
+    """833 m ≈ 1.67 min (833 / 8.33 / 60 ≈ 1.6667 → 1.67)."""
+    assert calcular(833) == 1.67
+
+
+def test_calcular_redondea_a_dos_decimales():
+    """El resultado debe tener como máximo 2 decimales."""
+    resultado = calcular(1234)
+    # Verifica que el redondeo a 2 decimales sea idempotente
+    assert resultado == round(resultado, 2)
+
+
+def test_calcular_devuelve_float():
+    """El tipo de retorno debe ser float."""
+    assert isinstance(calcular(1000), float)
+
+
+@pytest.mark.parametrize(
+    "distancia_m, esperado",
+    [
+        (1000, 2.0),      # E1
+        (0, 0.0),
+        (500, 1.0),
+        (833, 1.67),
+        (1666, 3.33),
+        (2499, 5.0),
+    ],
+)
+def test_calcular_parametrizado(distancia_m, esperado):
+    """Verifica varios valores de distancia con sus resultados esperados."""
+    assert calcular(distancia_m) == esperado
+```
+
+## Notas
+
+- **Caso E1** está cubierto tanto en `test_calcular_1000m_devuelve_2_minutos` como en el test parametrizado.
+- La fórmula `1000 / 8.33 / 60 = 2.0008...` se redondea a `2.0`, por lo que la aserción con `==` es segura.
+- Si prefieres tolerancia por posibles cambios de precisión, puedes usar `pytest.approx`:
+
+```python
+def test_calcular_1000m_con_tolerancia():
+    assert calcular(1000) == pytest.approx(2.0, abs=1e-2)
+```
+
+- Ajusta el `import` (`from tu_modulo import calcular`) al nombre real del archivo donde está definida la función.

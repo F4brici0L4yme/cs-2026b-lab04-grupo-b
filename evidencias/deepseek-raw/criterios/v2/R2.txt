@@ -1,0 +1,74 @@
+{
+  "historia_id": "RutaSIT-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Cómo se determina la ubicación en tiempo real del bus (GPS, estimación)?",
+    "¿Qué precisión se requiere en la estimación del tiempo de llegada (ETA)?",
+    "¿El aviso debe enviarse solo si la pasajera tiene la app abierta o también en segundo plano?",
+    "¿Qué canales de notificación se usarán (push, SMS, correo)?",
+    "¿Cómo se define el paradero de la pasajera (seleccionado manualmente, geolocalización)?",
+    "¿Qué sucede si el bus se retrasa o adelanta después de enviado el aviso?",
+    "¿Se debe considerar el tráfico en tiempo real para el cálculo del ETA?",
+    "¿Cuántos avisos se deben enviar por viaje (uno solo, recordatorios)?",
+    "¿Qué hacer si la pasajera está en un paradero con múltiples rutas?",
+    "¿Se requiere autenticación o configuración previa de la pasajera?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-01",
+      "titulo": "Aviso exitoso cuando el bus está a menos de 5 minutos",
+      "dado": "Una pasajera ha configurado su paradero y tiene las notificaciones activadas",
+      "cuando": "El sistema detecta que el bus asignado está a 4 minutos y 59 segundos del paradero",
+      "entonces": "Se envía una notificación push a la pasajera indicando que el bus llegará en menos de 5 minutos"
+    },
+    {
+      "id": "ESC-02",
+      "titulo": "No se envía aviso si el bus está a más de 5 minutos",
+      "dado": "Una pasajera ha configurado su paradero y tiene las notificaciones activadas",
+      "cuando": "El sistema detecta que el bus está a 5 minutos y 1 segundo o más del paradero",
+      "entonces": "No se envía ninguna notificación de aviso"
+    },
+    {
+      "id": "ESC-03",
+      "titulo": "Aviso con estimación imprecisa por tráfico",
+      "dado": "Una pasajera espera en su paradero y el bus está a 6 minutos según el GPS, pero el tráfico se congestiona",
+      "cuando": "El sistema recalcula el ETA y determina que el bus estará a 4 minutos",
+      "entonces": "Se envía la notificación push a la pasajera"
+    },
+    {
+      "id": "ESC-04",
+      "titulo": "Notificación en segundo plano",
+      "dado": "Una pasajera tiene la app cerrada pero con notificaciones push habilitadas",
+      "cuando": "El bus está a menos de 5 minutos de su paradero",
+      "entonces": "La pasajera recibe la notificación push en su dispositivo"
+    },
+    {
+      "id": "ESC-05",
+      "titulo": "Sin aviso si la pasajera no ha configurado paradero",
+      "dado": "Una pasajera no ha seleccionado ningún paradero de interés",
+      "cuando": "Un bus pasa cerca de su ubicación actual",
+      "entonces": "No se envía ninguna notificación"
+    },
+    {
+      "id": "ESC-06",
+      "titulo": "Aviso único por viaje",
+      "dado": "Una pasajera ya recibió el aviso para un bus específico en su paradero",
+      "cuando": "El bus continúa acercándose y el ETA sigue siendo menor a 5 minutos",
+      "entonces": "No se envían notificaciones adicionales para ese mismo bus y paradero"
+    },
+    {
+      "id": "ESC-07",
+      "titulo": "Aviso para múltiples rutas en el mismo paradero",
+      "dado": "Una pasajera está en un paradero donde pasan dos rutas que ha configurado",
+      "cuando": "El bus de una de las rutas está a menos de 5 minutos",
+      "entonces": "Se envía una notificación indicando la ruta y el tiempo estimado"
+    },
+    {
+      "id": "ESC-08",
+      "titulo": "Cancelación de aviso si el bus se desvía",
+      "dado": "Se envió un aviso porque el bus estaba a 4 minutos",
+      "cuando": "El bus se desvía de la ruta y ya no pasará por el paradero",
+      "entonces": "Se envía una notificación de cancelación o actualización a la pasajera"
+    }
+  ]
+}

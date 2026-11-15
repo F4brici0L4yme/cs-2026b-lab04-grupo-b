@@ -1,0 +1,57 @@
+{
+  "historia_id": "RutaSIT-ETA-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Dónde se muestra la última actualización de la ubicación del bus?",
+    "¿Qué formato debe tener la marca de tiempo (hora local, 12/24h, fecha)?",
+    "¿Qué umbral de antigüedad se considera 'ETA útil' vs 'ETA no confiable'?",
+    "¿Qué debe mostrarse si no hay datos de ubicación disponibles?",
+    "¿La marca de tiempo debe actualizarse en tiempo real sin recargar la pantalla?",
+    "¿Debe mostrarse la zona horaria o asumirse la de Arequipa (UTC-5)?",
+    "¿Qué comportamiento se espera si el bus está fuera de servicio o la señal GPS se pierde?"
+  ],
+  "escenarios": [
+    {
+      "id": "CA-01",
+      "titulo": "Mostrar marca de última actualización con datos recientes",
+      "dado": "que el pasajero está viendo el detalle de un bus con ubicación disponible",
+      "cuando": "la ubicación fue actualizada hace menos de 2 minutos",
+      "entonces": "se muestra la hora de última actualización en formato HH:mm (24h, hora de Arequipa) junto a un indicador visual de 'actualizado'"
+    },
+    {
+      "id": "CA-02",
+      "titulo": "Advertir cuando la ETA puede no ser útil",
+      "dado": "que el pasajero consulta la ETA de un bus",
+      "cuando": "la última actualización de ubicación tiene más de 5 minutos de antigüedad",
+      "entonces": "se muestra la marca de tiempo y una advertencia visible indicando que la ETA puede no ser confiable"
+    },
+    {
+      "id": "CA-03",
+      "titulo": "Actualización automática de la marca de tiempo",
+      "dado": "que el pasajero mantiene abierta la pantalla de seguimiento del bus",
+      "cuando": "llega una nueva ubicación desde el backend",
+      "entonces": "la marca de última actualización se refresca automáticamente sin recargar la página"
+    },
+    {
+      "id": "CA-04",
+      "titulo": "Sin datos de ubicación disponibles",
+      "dado": "que el bus no reporta ubicación (GPS apagado o sin señal)",
+      "cuando": "el pasajero abre el detalle del bus",
+      "entonces": "se muestra 'Última actualización: no disponible' y no se presenta una ETA como válida"
+    },
+    {
+      "id": "CA-05",
+      "titulo": "Formato y zona horaria consistente",
+      "dado": "que se muestra la marca de última actualización",
+      "cuando": "el dispositivo del pasajero tiene una zona horaria distinta a la de Arequipa",
+      "entonces": "la hora se muestra en zona horaria de Arequipa (UTC-5) con formato HH:mm y etiqueta 'hora local Arequipa'"
+    },
+    {
+      "id": "CA-06",
+      "titulo": "Accesibilidad de la información de actualización",
+      "dado": "que el pasajero usa lector de pantalla",
+      "cuando": "se muestra la marca de última actualización y la advertencia de ETA",
+      "entonces": "el texto es accesible mediante etiquetas ARIA y el indicador de estado no depende solo del color"
+    }
+  ]
+}

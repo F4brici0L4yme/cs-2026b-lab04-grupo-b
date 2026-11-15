@@ -1,0 +1,69 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+class TestCalcular:
+    """Pruebas para la función calcular(distancia_m)."""
+
+    # --- Caso solicitado: E5 ---
+    def test_e5_distancia_250m_devuelve_0_5_min(self):
+        """E5: 250 m deben equivaler a 0.5 minutos."""
+        resultado = calcular(250)
+        assert resultado == 0.5
+
+    # --- Casos adicionales de referencia ---
+    def test_distancia_cero_devuelve_cero(self):
+        """0 m deben dar 0.0 minutos."""
+        assert calcular(0) == 0.0
+
+    def test_distancia_500m_devuelve_1_min(self):
+        """500 m ≈ 1.0 minuto (500 / 8.33 / 60 ≈ 1.0004)."""
+        assert calcular(500) == 1.0
+
+    def test_distancia_1000m_devuelve_2_min(self):
+        """1000 m ≈ 2.0 minutos."""
+        assert calcular(1000) == 2.0
+
+    def test_resultado_redondeado_a_dos_decimales(self):
+        """El resultado debe tener como máximo 2 decimales."""
+        resultado = calcular(123)
+        # Verifica que al multiplicar por 100 sea (casi) entero
+        assert resultado == round(resultado, 2)
+
+    def test_tipo_de_retorno_es_float(self):
+        """La función debe devolver un float."""
+        assert isinstance(calcular(250), float)
+
+    def test_distancia_negativa(self):
+        """Una distancia negativa devuelve un valor negativo (comportamiento actual)."""
+        assert calcular(-250) == -0.5
+
+    # --- Prueba parametrizada ---
+    @pytest.mark.parametrize(
+        "distancia_m, esperado",
+        [
+            (0, 0.0),
+            (250, 0.5),
+            (500, 1.0),
+            (1000, 2.0),
+            (2500, 5.0),
+            (83.3, 0.17),   # 83.3 / 8.33 / 60 ≈ 0.1667 → 0.17
+        ],
+    )
+    def test_calcular_parametrizado(self, distancia_m, esperado):
+        """Verifica varios valores de distancia contra el resultado esperado."""
+        assert calcular(distancia_m) == esperado
+```
+
+## Notas
+
+- **Caso E5** está cubierto explícitamente en `test_e5_distancia_250m_devuelve_0_5_min`.
+- La fórmula `250 / 8.33 / 60 ≈ 0.5002` se redondea a `0.5`, por lo que la aserción con `==` es segura.
+- Ajusta el `import` (`from tu_modulo import calcular`) a la ruta real de tu proyecto.
+- Si quieres ejecutar solo el caso E5:
+  ```bash
+  pytest -k "e5" -v
+  ```

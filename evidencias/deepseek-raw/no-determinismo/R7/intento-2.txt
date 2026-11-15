@@ -1,0 +1,1 @@
+{"historia_id":"R7","invest_ok":false,"preguntas":["¿Qué tiempo máximo de respuesta o de actualización define que el seguimiento sea 'rápido'?","¿Qué acciones concretas debe poder realizar el usuario para considerar el seguimiento 'fácil de usar'?","¿Qué elementos o criterios determinan que la interfaz sea 'moderna' de forma verificable?"],"escenarios":[]}

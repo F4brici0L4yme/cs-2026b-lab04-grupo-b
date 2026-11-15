@@ -1,0 +1,4 @@
+{
+  "caso_id": "E3",
+  "pruebas_pytest": "import pytest\nfrom modulo import calcular\n\n\ndef test_caso_E3_distancia_1000m():\n    \"\"\"Caso E3: 1000 m deben devolver 4.01 min.\"\"\"\n    resultado = calcular(1000)\n    assert resultado == 4.01, (\n        f\"Se esperaba 4.01 min para 1000 m, pero se obtuvo {resultado}\"\n    )\n\n\ndef test_caso_E3_tipo_float():\n    \"\"\"El resultado debe ser numérico (float/int) y no None.\"\"\"\n    resultado = calcular(1000)\n    assert isinstance(resultado, (int, float)), (\n        f\"Se esperaba un valor numérico, se obtuvo {type(resultado)}\"\n    )\n\n\ndef test_caso_E3_redondeo_dos_decimales():\n    \"\"\"El resultado debe estar redondeado a 2 decimales.\"\"\"\n    resultado = calcular(1000)\n    assert round(resultado, 2) == resultado, (\n        f\"El resultado {resultado} no está redondeado a 2 decimales\"\n    )\n"
+}

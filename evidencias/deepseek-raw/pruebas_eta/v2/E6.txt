@@ -1,0 +1,6 @@
+{
+  "caso_id": "E6",
+  "pruebas": [
+    "import pytest\nfrom modulo import calcular\n\n\ndef test_calcular_distancia_cero():\n    \"\"\"E6: Distancia 0 m debe devolver 0.0 min.\"\"\"\n    resultado = calcular(0)\n    assert resultado == 0.0, f\"Se esperaba 0.0 min para 0 m, se obtuvo {resultado}\"\n    assert isinstance(resultado, float), f\"Se esperaba float, se obtuvo {type(resultado)}\"\n"
+  ]
+}

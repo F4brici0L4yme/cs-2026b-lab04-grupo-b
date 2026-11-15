@@ -1,0 +1,4 @@
+{
+  "caso_id": "E5",
+  "pruebas": "import pytest\nfrom modulo import calcular\n\n\ndef test_calcular_250m_retorna_0_5_min():\n    \"\"\"E5: 250 m deben equivaler a 0.5 minutos.\"\"\"\n    resultado = calcular(250)\n    assert resultado == 0.5, f\"Se esperaba 0.5 min para 250 m, se obtuvo {resultado}\"\n\n\ndef test_calcular_250m_tipo_float():\n    \"\"\"E5: el resultado debe ser numérico (float) y con 2 decimales.\"\"\"\n    resultado = calcular(250)\n    assert isinstance(resultado, float)\n    assert round(resultado, 2) == resultado\n\n\ndef test_calcular_250m_valor_exacto():\n    \"\"\"E5: verificación exacta del valor esperado 0.5 min.\"\"\"\n    assert calcular(250) == pytest.approx(0.5, abs=1e-9)\n"
+}

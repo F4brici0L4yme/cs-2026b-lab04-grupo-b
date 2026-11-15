@@ -1,0 +1,47 @@
+# Criterios de aceptación
+
+**Historia:** Como pasajero quiero saber cuándo se actualizó por última vez la ubicación del bus para juzgar si la ETA sigue siendo útil.
+
+---
+
+## CA1 — Mostrar la hora de última actualización
+**Dado** que el pasajero está viendo el detalle de un bus con ubicación y ETA disponibles,
+**cuando** la pantalla carga o se refresca,
+**entonces** el sistema muestra la marca temporal de la última actualización de la ubicación del bus, en formato legible (p. ej. "Actualizado hace 2 min" o "Última actualización: 14:32").
+
+## CA2 — Actualización en tiempo real
+**Dado** que el pasajero está en la pantalla de seguimiento del bus,
+**cuando** llega una nueva posición del bus,
+**entonces** la marca de última actualización se actualiza automáticamente sin que el pasajero tenga que recargar la pantalla.
+
+## CA3 — Indicador de antigüedad relativa
+**Dado** que el pasajero ve la marca de última actualización,
+**cuando** el tiempo transcurrido desde la última posición supera un umbral definido (p. ej. 2 minutos),
+**entonces** el sistema muestra un indicador visual de advertencia (color/icono) junto a la ETA o a la marca temporal, señalando que la información puede estar desactualizada.
+
+## CA4 — ETA marcada como no fiable
+**Dado** que la última actualización de la ubicación supera el umbral máximo de frescura (p. ej. 5 minutos),
+**cuando** el pasajero consulta la ETA,
+**entonces** el sistema muestra la ETA con una advertencia explícita (p. ej. "ETA poco fiable: ubicación desactualizada") o la oculta, según la regla de negocio definida.
+
+## CA5 — Sin datos de ubicación
+**Dado** que el bus no tiene ninguna posición registrada,
+**cuando** el pasajero abre el detalle del bus,
+**entonces** el sistema muestra un mensaje del tipo "Sin datos de ubicación recientes" en lugar de una marca temporal vacía o incorrecta.
+
+## CA6 — Zona horaria y formato
+**Dado** que el pasajero consulta la marca de última actualización,
+**cuando** se muestra la hora,
+**entonces** esta se presenta en la zona horaria del dispositivo del pasajero y respeta el formato de fecha/hora configurado en el sistema (localización).
+
+## CA7 — Accesibilidad
+**Dado** que el pasajero usa un lector de pantalla,
+**cuando** se anuncia la marca de última actualización,
+**entonces** el texto se expone con una etiqueta accesible que incluye el valor temporal y, si aplica, la advertencia de desactualización.
+
+---
+
+### Notas para refinamiento
+- Definir con negocio los **umbrales exactos** de frescura (advertencia y no fiable).
+- Definir si la marca temporal se muestra en formato **absoluto, relativo o ambos**.
+- Aclarar la **frecuencia de refresco** esperada y el comportamiento ante pérdida de conexión.

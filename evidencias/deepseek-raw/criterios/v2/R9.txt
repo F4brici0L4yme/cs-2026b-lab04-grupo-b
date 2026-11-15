@@ -1,0 +1,75 @@
+{
+  "historia_id": "RutaSIT-FILTRO-RUTA-001",
+  "invest_ok": false,
+  "preguntas": [
+    "¿El filtro por ruta debe ser por código de ruta, nombre de ruta o ambos?",
+    "¿Se debe permitir seleccionar múltiples rutas a la vez o solo una?",
+    "¿Qué información debe mostrarse por cada bus filtrado (placa, empresa, tiempo estimado, etc.)?",
+    "¿El filtro debe aplicarse en tiempo real sobre los buses activos o sobre una lista estática?",
+    "¿Qué debe ocurrir si no hay buses para la ruta seleccionada?",
+    "¿Se requiere persistencia del filtro entre sesiones o al recargar la página?",
+    "¿Debe haber validación de rutas inexistentes o inactivas?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-01",
+      "titulo": "Filtrar buses por ruta existente con resultados",
+      "dado": "que el pasajero está en la pantalla de listado de buses y existen rutas activas con buses en circulación",
+      "cuando": "el pasajero selecciona una ruta específica en el filtro",
+      "entonces": "el sistema muestra únicamente los buses que pertenecen a esa ruta",
+      "criterios": [
+        "La lista se actualiza sin recargar la página",
+        "Cada bus mostrado incluye al menos placa y ruta",
+        "El filtro seleccionado se refleja visualmente"
+      ]
+    },
+    {
+      "id": "ESC-02",
+      "titulo": "Filtrar por ruta sin buses disponibles",
+      "dado": "que el pasajero está en la pantalla de listado de buses y selecciona una ruta activa sin buses en circulación",
+      "cuando": "se aplica el filtro",
+      "entonces": "el sistema muestra un mensaje indicando que no hay buses disponibles para esa ruta",
+      "criterios": [
+        "El mensaje es claro y en español",
+        "No se muestran buses de otras rutas",
+        "Se ofrece opción para limpiar el filtro"
+      ]
+    },
+    {
+      "id": "ESC-03",
+      "titulo": "Limpiar filtro de ruta",
+      "dado": "que el pasajero tiene aplicado un filtro por ruta",
+      "cuando": "el pasajero elimina o limpia el filtro",
+      "entonces": "el sistema vuelve a mostrar todos los buses disponibles",
+      "criterios": [
+        "La lista completa se restaura",
+        "El control de filtro queda sin selección",
+        "No se pierde el estado de otros filtros si existen"
+      ]
+    },
+    {
+      "id": "ESC-04",
+      "titulo": "Seleccionar ruta inexistente o inactiva",
+      "dado": "que el pasajero intenta filtrar por una ruta que no existe o está inactiva",
+      "cuando": "se envía la selección",
+      "entonces": "el sistema rechaza el filtro y muestra un mensaje de validación",
+      "criterios": [
+        "El mensaje indica que la ruta no es válida",
+        "No se ejecuta la consulta de buses",
+        "El filtro anterior se mantiene o se limpia según diseño"
+      ]
+    },
+    {
+      "id": "ESC-05",
+      "titulo": "Filtrar por múltiples rutas (si aplica)",
+      "dado": "que la interfaz permite seleccionar más de una ruta",
+      "cuando": "el pasajero selecciona dos o más rutas",
+      "entonces": "el sistema muestra los buses que pertenecen a cualquiera de las rutas seleccionadas",
+      "criterios": [
+        "La lista incluye buses de todas las rutas seleccionadas",
+        "No se duplican buses",
+        "El filtro múltiple se refleja visualmente"
+      ]
+    }
+  ]
+}

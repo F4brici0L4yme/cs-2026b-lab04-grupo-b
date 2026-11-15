@@ -1,0 +1,63 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+# ============================================================
+# Caso E2: Distancia 5000 m → 10.0 min
+# ============================================================
+def test_calcular_5000m_devuelve_10_minutos():
+    """Caso E2: 5000 m deben equivaler a 10.0 minutos."""
+    resultado = calcular(5000)
+    assert resultado == 10.0
+
+
+# ============================================================
+# Pruebas adicionales de robustez
+# ============================================================
+@pytest.mark.parametrize(
+    "distancia_m, esperado",
+    [
+        (0, 0.0),          # distancia cero
+        (8.33, 0.02),      # 1 segundo aprox → 0.02 min
+        (833, 1.67),       # ~100 s → 1.67 min
+        (5000, 10.0),      # caso E2
+        (10000, 20.0),     # 10 km → 20 min
+        (42195, 84.42),    # maratón ≈ 84.42 min
+    ],
+)
+def test_calcular_valores_conocidos(distancia_m, esperado):
+    """Verifica varios valores de referencia."""
+    assert calcular(distancia_m) == esperado
+
+
+def test_calcular_devuelve_float():
+    """El resultado debe ser un float (por el round)."""
+    assert isinstance(calcular(5000), float)
+
+
+def test_calcular_redondeo_dos_decimales():
+    """El resultado debe tener como máximo 2 decimales."""
+    resultado = calcular(1234)
+    # Comprobamos que al multiplicar por 100 sea (casi) entero
+    assert round(resultado * 100) == pytest.approx(resultado * 100, abs=1e-9)
+
+
+def test_calcular_es_monotona_creciente():
+    """A mayor distancia, mayor tiempo."""
+    assert calcular(1000) < calcular(2000) < calcular(5000)
+
+
+def test_calcular_distancia_negativa():
+    """Distancia negativa devuelve tiempo negativo (comportamiento actual)."""
+    assert calcular(-5000) == -10.0
+```
+
+## Notas
+
+- **Caso E2** está cubierto explícitamente en `test_calcular_5000m_devuelve_10_minutos` y también dentro del `parametrize`.
+- El cálculo `5000 / 8.33 / 60 = 10.004...` → `round(..., 2) = 10.0`, por lo que la aserción con `== 10.0` es segura.
+- Ajusta el `import` (`from tu_modulo import calcular`) al nombre real de tu archivo/módulo.
+- Si quieres ejecutar solo el caso E2: `pytest -k "5000m"`.

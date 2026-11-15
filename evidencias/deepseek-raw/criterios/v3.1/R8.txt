@@ -1,0 +1,1 @@
+{"historia_id":"R8","invest_ok":false,"preguntas":["¿Qué necesidad del usuario o del negocio debe cubrir esta caché (por ejemplo, mostrar la ubicación más reciente de un bus a los pasajeros)?","¿Qué resultado observable espera un actor cuando la caché contiene o no contiene coordenadas?"],"escenarios":[]}

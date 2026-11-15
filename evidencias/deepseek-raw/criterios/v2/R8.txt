@@ -1,0 +1,80 @@
+{
+  "historia_id": "RutaSIT-CACHE-REDIS-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Cuál es la estructura exacta de la clave Redis para las coordenadas normalizadas (prefijo, separadores, versión)?",
+    "¿Qué formato y precisión deben tener las coordenadas almacenadas (latitud/longitud, decimales, sistema de referencia)?",
+    "¿Cuál es el TTL (time to live) esperado para las entradas de caché y debe ser configurable?",
+    "¿Qué política de invalidación se requiere cuando una ruta o parada se actualiza en la base de datos fuente?",
+    "¿Qué comportamiento debe tener el sistema ante fallos de conexión con Redis (fallback a BD, error, reintentos)?",
+    "¿Se requiere normalización de coordenadas (redondeo, deduplicación, orden) antes de almacenar? ¿Con qué reglas?",
+    "¿Qué métricas o logs deben registrarse para monitorear aciertos/fallos de caché?",
+    "¿Existen límites de tamaño o número máximo de entradas por ruta/parada en la caché?"
+  ],
+  "escenarios": [
+    {
+      "id": "CA-01",
+      "titulo": "Almacenamiento exitoso de coordenadas normalizadas en Redis",
+      "dado": "que el servicio de rutas obtiene coordenadas válidas de una parada",
+      "cuando": "se solicita almacenar en caché las coordenadas normalizadas",
+      "entonces": "se crea una clave Redis con el formato definido y se guardan latitud y longitud con la precisión especificada, y la operación retorna éxito",
+      "tipo": "funcional"
+    },
+    {
+      "id": "CA-02",
+      "titulo": "Recuperación de coordenadas desde caché",
+      "dado": "que existe una entrada válida en Redis para una parada",
+      "cuando": "el servicio solicita las coordenadas de esa parada",
+      "entonces": "se devuelven las coordenadas almacenadas sin consultar la base de datos fuente y se registra un acierto de caché",
+      "tipo": "funcional"
+    },
+    {
+      "id": "CA-03",
+      "titulo": "Expiración por TTL",
+      "dado": "que una entrada de coordenadas fue almacenada con un TTL configurado",
+      "cuando": "transcurre el tiempo TTL sin renovación",
+      "entonces": "la entrada ya no está disponible en Redis y la siguiente solicitud consulta la fuente y repuebla la caché",
+      "tipo": "funcional"
+    },
+    {
+      "id": "CA-04",
+      "titulo": "Invalidación tras actualización de coordenadas",
+      "dado": "que las coordenadas de una parada se actualizan en la base de datos fuente",
+      "cuando": "se completa la actualización",
+      "entonces": "la entrada correspondiente en Redis se elimina o actualiza para evitar datos obsoletos",
+      "tipo": "funcional"
+    },
+    {
+      "id": "CA-05",
+      "titulo": "Normalización de coordenadas antes de almacenar",
+      "dado": "que se reciben coordenadas con formato o precisión variable",
+      "cuando": "se van a almacenar en caché",
+      "entonces": "se aplican las reglas de normalización definidas (redondeo y formato) y se almacena el valor normalizado",
+      "tipo": "funcional"
+    },
+    {
+      "id": "CA-06",
+      "titulo": "Manejo de fallo de conexión con Redis",
+      "dado": "que Redis no está disponible",
+      "cuando": "el servicio intenta leer o escribir coordenadas en caché",
+      "entonces": "el sistema aplica la política definida (fallback a base de datos o error controlado) sin afectar la disponibilidad del servicio y registra el incidente",
+      "tipo": "no funcional"
+    },
+    {
+      "id": "CA-07",
+      "titulo": "Registro de métricas de caché",
+      "dado": "que se realizan operaciones de lectura/escritura en la caché de coordenadas",
+      "cuando": "ocurre un acierto o fallo de caché",
+      "entonces": "se incrementan las métricas correspondientes y se registran logs con información suficiente para monitoreo",
+      "tipo": "no funcional"
+    },
+    {
+      "id": "CA-08",
+      "titulo": "Validación de datos inválidos",
+      "dado": "que se reciben coordenadas fuera de rango o con formato inválido",
+      "cuando": "se intenta almacenar en caché",
+      "entonces": "la operación se rechaza, no se escribe en Redis y se registra un error de validación",
+      "tipo": "funcional"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "historia_id": "RutaSIT-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Qué roles pueden consultar los buses fuera de servicio?",
+    "¿Qué motivos de fuera de servicio se deben mostrar?",
+    "¿Se requiere filtrar por ruta, fecha o turno?",
+    "¿La consulta debe ser en tiempo real o puede tener retraso?",
+    "¿Qué información mínima debe mostrarse por bus (placa, código, ruta, motivo, hora)?",
+    "¿Debe permitirse exportar o descargar el listado?",
+    "¿Qué ocurre si no hay buses fuera de servicio?"
+  ],
+  "escenarios": [
+    {
+      "id": "CA-01",
+      "titulo": "Consulta exitosa de buses fuera de servicio",
+      "dado": "que el operador ha iniciado sesión con permisos de consulta",
+      "cuando": "accede a la sección de buses fuera de servicio",
+      "entonces": "el sistema muestra un listado con los buses fuera de servicio y su motivo",
+      "criterios": [
+        "Se muestra al menos: placa o código del bus, ruta asignada, motivo y hora de registro",
+        "El listado corresponde a la información vigente del sistema",
+        "La respuesta se presenta en un tiempo menor a 3 segundos"
+      ]
+    },
+    {
+      "id": "CA-02",
+      "titulo": "Filtro por ruta",
+      "dado": "que el operador está en la sección de buses fuera de servicio",
+      "cuando": "selecciona una ruta específica en el filtro",
+      "entonces": "el sistema muestra solo los buses fuera de servicio asociados a esa ruta",
+      "criterios": [
+        "El filtro por ruta está disponible",
+        "Los resultados se actualizan sin recargar la página",
+        "Si no hay coincidencias, se muestra un mensaje informativo"
+      ]
+    },
+    {
+      "id": "CA-03",
+      "titulo": "Visualización del motivo",
+      "dado": "que existe al menos un bus fuera de servicio",
+      "cuando": "el operador consulta el listado",
+      "entonces": "cada bus muestra su motivo de fuera de servicio de forma legible",
+      "criterios": [
+        "El motivo se muestra como texto descriptivo",
+        "No se muestran motivos vacíos o nulos",
+        "Los motivos corresponden a los registrados por el sistema"
+      ]
+    },
+    {
+      "id": "CA-04",
+      "titulo": "Sin buses fuera de servicio",
+      "dado": "que no hay buses fuera de servicio registrados",
+      "cuando": "el operador consulta la sección",
+      "entonces": "el sistema muestra un mensaje indicando que no hay buses fuera de servicio",
+      "criterios": [
+        "Se muestra un mensaje claro y no una tabla vacía sin contexto",
+        "No se generan errores en la interfaz"
+      ]
+    },
+    {
+      "id": "CA-05",
+      "titulo": "Control de acceso",
+      "dado": "que un usuario sin permisos intenta acceder a la consulta",
+      "cuando": "ingresa a la sección de buses fuera de servicio",
+      "entonces": "el sistema deniega el acceso",
+      "criterios": [
+        "Se muestra un mensaje de acceso no autorizado",
+        "No se expone información de buses fuera de servicio"
+      ]
+    }
+  ]
+}

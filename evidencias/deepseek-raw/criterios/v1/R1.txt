@@ -1,0 +1,88 @@
+# Criterios de Aceptación
+
+**Historia:** Como pasajero quiero ver la ubicación y ETA de un bus de mi ruta para decidir si camino al paradero.
+
+---
+
+## Escenario 1: Visualizar la ubicación del bus en el mapa
+
+```gherkin
+Dado que el pasajero ha seleccionado una ruta
+Y hay al menos un bus activo en esa ruta
+Cuando el pasajero abre la vista de seguimiento del bus
+Entonces el sistema muestra la ubicación actual del bus sobre el mapa
+Y la posición del bus se actualiza automáticamente cada 15 segundos o menos
+Y se muestra la última hora de actualización de la posición
+```
+
+## Escenario 2: Visualizar el ETA del bus
+
+```gherkin
+Dado que el pasajero está viendo la ubicación de un bus de su ruta
+Cuando el sistema calcula el tiempo estimado de llegada
+Entonces se muestra el ETA en minutos junto al bus en el mapa
+Y el ETA se recalcula con cada actualización de posición
+Y se indica claramente si el ETA es una estimación
+```
+
+## Escenario 3: Ver el ETA respecto a un paradero específico
+
+```gherkin
+Dado que el pasajero ha seleccionado un paradero de su ruta
+Cuando consulta el ETA del bus
+Entonces el sistema muestra el tiempo estimado para llegar a ese paradero
+Y muestra la distancia restante en metros o kilómetros
+```
+
+## Escenario 4: Sin buses activos en la ruta
+
+```gherkin
+Dado que el pasajero ha seleccionado una ruta
+Y no hay buses activos en ese momento
+Cuando abre la vista de seguimiento
+Entonces el sistema muestra un mensaje indicando que no hay buses disponibles
+Y sugiere consultar más tarde o elegir otra ruta
+```
+
+## Escenario 5: Pérdida de conexión durante el seguimiento
+
+```gherkin
+Dado que el pasajero está viendo la ubicación y ETA de un bus
+Cuando se pierde la conexión a internet
+Entonces el sistema muestra un aviso de que los datos pueden estar desactualizados
+Y conserva la última ubicación y ETA conocidos con su marca de tiempo
+Y reintenta la conexión automáticamente
+```
+
+## Escenario 6: Múltiples buses en la misma ruta
+
+```gherkin
+Dado que hay más de un bus activo en la ruta seleccionada
+Cuando el pasajero abre la vista de seguimiento
+Entonces el sistema muestra todos los buses activos en el mapa
+Y muestra el ETA de cada uno
+Y resalta el bus con menor ETA al paradero seleccionado
+```
+
+## Escenario 7: Decisión de caminar al paradero
+
+```gherkin
+Dado que el pasajero ve el ETA del próximo bus
+Cuando el ETA es mayor al tiempo estimado de caminata al paradero
+Entonces el pasajero puede tomar la decisión informada de caminar
+Y el sistema muestra el tiempo estimado de caminata al paradero (opcional, si hay integración con mapas)
+```
+
+---
+
+## Criterios no funcionales (transversales)
+
+| Criterio | Descripción |
+|---|---|
+| **Rendimiento** | El mapa y el ETA deben cargar en menos de 3 segundos en conexión 3G. |
+| **Precisión** | El ETA debe tener un margen de error menor a ±2 minutos en condiciones normales de tráfico. |
+| **Disponibilidad** | La vista debe funcionar en iOS y Android (app) y en navegadores móviles (web). |
+| **Accesibilidad** | La información de ubicación y ETA debe ser legible por lectores de pantalla. |
+| **Privacidad** | No se debe mostrar información personal del conductor ni identificadores sensibles del bus. |
+
+¿Quieres que ajuste el nivel de detalle, agregue escenarios de borde (bus detenido, ruta desviada, etc.) o lo adapte a un formato específico (Jira, Azure DevOps)?

@@ -1,0 +1,89 @@
+{
+  "historia_id": "HU-ACCESIBILIDAD-PARADERO-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Qué criterios definen que un paradero es accesible (rampa, plataforma, señalización, espacio de giro, etc.)?",
+    "¿La información de accesibilidad proviene de una fuente oficial validada o de reportes de usuarios?",
+    "¿Con qué frecuencia se actualiza el estado de accesibilidad de cada paradero?",
+    "¿Se debe mostrar el nivel de accesibilidad (total, parcial, no accesible) o solo un indicador binario?",
+    "¿Qué hacer si no existe información de accesibilidad para un paradero?",
+    "¿La accesibilidad debe evaluarse por paradero individual o también por la ruta completa?",
+    "¿Se requiere mostrar detalles específicos (tipo de rampa, ancho de paso, presencia de obstáculos) o solo un resumen?",
+    "¿Qué dispositivos y tamaños de pantalla deben soportar la visualización de esta información?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-001",
+      "titulo": "Paradero accesible identificado correctamente",
+      "dado": "que la pasajera con movilidad reducida consulta el paradero de su ruta en RutaSIT",
+      "cuando": "el paradero cuenta con información de accesibilidad validada como accesible",
+      "entonces": "RutaSIT muestra un indicador claro de accesibilidad (por ejemplo, ícono y texto 'Accesible') junto al paradero",
+      "criterios": [
+        "El indicador debe ser visible sin necesidad de interacción adicional",
+        "El texto debe ser legible y contar con contraste suficiente",
+        "El ícono debe incluir texto alternativo para lectores de pantalla"
+      ]
+    },
+    {
+      "id": "ESC-002",
+      "titulo": "Paradero no accesible identificado correctamente",
+      "dado": "que la pasajera consulta el paradero de su ruta",
+      "cuando": "el paradero está registrado como no accesible",
+      "entonces": "RutaSIT muestra un indicador claro de 'No accesible' junto al paradero",
+      "criterios": [
+        "El indicador debe diferenciarse visualmente del estado accesible (color, ícono y texto)",
+        "No debe inducir a error ni ambigüedad",
+        "Debe incluir texto alternativo accesible"
+      ]
+    },
+    {
+      "id": "ESC-003",
+      "titulo": "Información de accesibilidad no disponible",
+      "dado": "que la pasajera consulta un paradero sin datos de accesibilidad registrados",
+      "cuando": "RutaSIT no cuenta con información validada para ese paradero",
+      "entonces": "RutaSIT muestra el estado 'Sin información de accesibilidad' de forma explícita",
+      "criterios": [
+        "No debe asumirse ni mostrarse como accesible por defecto",
+        "Debe ofrecerse un enlace o medio para reportar información si aplica",
+        "El mensaje debe ser claro y no alarmista"
+      ]
+    },
+    {
+      "id": "ESC-004",
+      "titulo": "Detalle de accesibilidad del paradero",
+      "dado": "que la pasajera visualiza un paradero con información de accesibilidad",
+      "cuando": "selecciona el paradero o el indicador de accesibilidad",
+      "entonces": "RutaSIT muestra el detalle de las características de accesibilidad disponibles (por ejemplo, rampa, plataforma, espacio de giro)",
+      "criterios": [
+        "El detalle debe listar solo características registradas y validadas",
+        "Debe indicar la fecha de última actualización de la información",
+        "La información debe ser comprensible para el usuario final"
+      ]
+    },
+    {
+      "id": "ESC-005",
+      "titulo": "Accesibilidad en la planificación del viaje",
+      "dado": "que la pasajera planifica un viaje en RutaSIT",
+      "cuando": "la ruta incluye paraderos con distinto estado de accesibilidad",
+      "entonces": "RutaSIT muestra el estado de accesibilidad de los paraderos de origen y destino en el resumen del viaje",
+      "criterios": [
+        "El estado debe ser visible antes de confirmar el viaje",
+        "Debe permitir identificar rápidamente si el paradero de destino es accesible",
+        "La información debe mantenerse consistente con la mostrada en el detalle del paradero"
+      ]
+    },
+    {
+      "id": "ESC-006",
+      "titulo": "Accesibilidad de la interfaz para la pasajera",
+      "dado": "que la pasajera con movilidad reducida utiliza RutaSIT",
+      "cuando": "navega por la información de paraderos y accesibilidad",
+      "entonces": "la interfaz cumple con criterios básicos de accesibilidad (tamaño de texto, contraste, navegación por teclado y lectores de pantalla)",
+      "criterios": [
+        "Los controles deben ser operables mediante teclado",
+        "Los íconos deben tener texto alternativo",
+        "El contraste de color debe cumplir con WCAG 2.1 AA",
+        "El tamaño de texto debe ser ajustable sin pérdida de funcionalidad"
+      ]
+    }
+  ]
+}

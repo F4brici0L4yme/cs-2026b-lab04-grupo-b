@@ -1,0 +1,57 @@
+{
+  "historia_id": "RutaSIT-SEGUIMIENTO-RAPIDO-MODERNO-FACIL",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Qué se entiende por 'seguimiento rápido' en términos medibles (por ejemplo, latencia máxima de actualización de posición en el mapa)?",
+    "¿Qué elementos visuales o de interacción definen 'moderno' para los usuarios de RutaSIT (por ejemplo, diseño responsive, animaciones suaves, modo oscuro)?",
+    "¿Qué criterios de usabilidad se consideran para 'fácil de usar' (por ejemplo, número máximo de pasos para ver la ubicación del bus, claridad de iconos, accesibilidad)?",
+    "¿En qué dispositivos y navegadores debe funcionar el seguimiento (móviles, tablets, escritorio; Chrome, Safari, etc.)?",
+    "¿Qué información debe mostrarse en el seguimiento (posición del bus, ruta, tiempo estimado de llegada, paradas)?",
+    "¿Cómo se manejarán situaciones de pérdida de conexión o datos desactualizados?",
+    "¿Existen requisitos de accesibilidad (WCAG) que deban cumplirse?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-01",
+      "titulo": "Actualización rápida de la posición del bus",
+      "dado": "que el usuario ha abierto la pantalla de seguimiento de un bus en la app RutaSIT",
+      "cuando": "el bus se desplaza y el sistema recibe nuevas coordenadas GPS",
+      "entonces": "la posición del bus en el mapa se actualiza en un tiempo máximo de 3 segundos desde la recepción del dato, sin recargar la página"
+    },
+    {
+      "id": "ESC-02",
+      "titulo": "Interfaz moderna y responsive",
+      "dado": "que el usuario accede al seguimiento desde un dispositivo móvil o de escritorio",
+      "cuando": "carga la pantalla de seguimiento",
+      "entonces": "la interfaz se adapta al tamaño de pantalla, utiliza componentes visuales actuales (iconos claros, tipografía legible, colores con contraste adecuado) y no presenta elementos obsoletos o desalineados"
+    },
+    {
+      "id": "ESC-03",
+      "titulo": "Facilidad de uso para ver la ubicación del bus",
+      "dado": "que el usuario es nuevo en la app y desea ver dónde está su bus",
+      "cuando": "ingresa a la app y selecciona una ruta",
+      "entonces": "puede visualizar la ubicación del bus en el mapa en no más de 3 pasos (por ejemplo: abrir app, seleccionar ruta, ver mapa) y sin necesidad de instrucciones previas"
+    },
+    {
+      "id": "ESC-04",
+      "titulo": "Indicador de actualización en tiempo real",
+      "dado": "que el usuario está viendo el seguimiento",
+      "cuando": "los datos de posición se actualizan",
+      "entonces": "se muestra un indicador visual sutil (por ejemplo, un pulso o marca de tiempo) que confirma que la información está actualizada, sin interrumpir la visualización"
+    },
+    {
+      "id": "ESC-05",
+      "titulo": "Manejo de pérdida de conexión",
+      "dado": "que el usuario está en la pantalla de seguimiento y se pierde la conexión a internet",
+      "cuando": "el sistema no puede obtener nuevas posiciones",
+      "entonces": "se muestra un mensaje claro y no intrusivo indicando que los datos pueden estar desactualizados, y se reintenta la conexión automáticamente"
+    },
+    {
+      "id": "ESC-06",
+      "titulo": "Accesibilidad básica",
+      "dado": "que el usuario utiliza un lector de pantalla o tiene dificultades visuales",
+      "cuando": "navega por la pantalla de seguimiento",
+      "entonces": "los elementos interactivos tienen etiquetas accesibles, el contraste de color cumple con WCAG AA y el mapa ofrece una alternativa textual con la ubicación del bus"
+    }
+  ]
+}
