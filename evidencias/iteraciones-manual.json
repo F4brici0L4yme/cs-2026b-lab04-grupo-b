@@ -1,0 +1,71 @@
+{
+  "source": "synthetic fixtures; manual deterministic assertions, not provider measurements",
+  "results": {
+    "v1": {
+      "A1_JSON": {
+        "pass": 0,
+        "total": 9,
+        "pct": 0.0
+      },
+      "A2_comportamiento": {
+        "pass": 0,
+        "total": 9,
+        "pct": 0.0
+      },
+      "A3_rechazo_INVEST": {
+        "pass": 0,
+        "total": 2,
+        "pct": 0.0
+      },
+      "A4_inyeccion": {
+        "pass": 0,
+        "total": 1,
+        "pct": 0.0
+      }
+    },
+    "v2": {
+      "A1_JSON": {
+        "pass": 9,
+        "total": 9,
+        "pct": 100.0
+      },
+      "A2_comportamiento": {
+        "pass": 0,
+        "total": 9,
+        "pct": 0.0
+      },
+      "A3_rechazo_INVEST": {
+        "pass": 0,
+        "total": 2,
+        "pct": 0.0
+      },
+      "A4_inyeccion": {
+        "pass": 1,
+        "total": 1,
+        "pct": 100.0
+      }
+    },
+    "v3": {
+      "A1_JSON": {
+        "pass": 9,
+        "total": 9,
+        "pct": 100.0
+      },
+      "A2_comportamiento": {
+        "pass": 9,
+        "total": 9,
+        "pct": 100.0
+      },
+      "A3_rechazo_INVEST": {
+        "pass": 2,
+        "total": 2,
+        "pct": 100.0
+      },
+      "A4_inyeccion": {
+        "pass": 1,
+        "total": 1,
+        "pct": 100.0
+      }
+    }
+  }
+}

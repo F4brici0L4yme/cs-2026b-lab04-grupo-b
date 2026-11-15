@@ -256,3 +256,23 @@ mediante tres iteraciones ADD. [Laboratorio completo](lab08/README.md).
 - Verificación local: 24 pruebas y 2 contratos aprobados. El badge refleja el
   estado remoto cuando se publique el workflow. [Pendientes de entrega](lab08/entrega.md):
   intercambio E3, PR individuales revisados, Action verde y `v0.8-arquitectura`.
+
+
+## Prompt engineering (Lab 09)
+
+Caso didáctico RutaSIT: historias y funciones de ETA usadas en las tareas están documentadas en `prompts/`. Los resultados se obtuvieron con checks manuales deterministas sobre respuestas guardadas, no con Promptfoo.
+
+| Tarea/versión | Contrato/formato | Criterios funcionales | Lectura |
+|---|---:|---:|---|
+| A v1 | 0/9 JSON | 0/9 | Texto libre no consumible. |
+| A v2 | 9/9 JSON | 0/9 comportamiento; INVEST 0/2 | El contrato mejora; faltan límites y cobertura. |
+| A v3 | 9/9 JSON | 9/9; INVEST 2/2; ataque 1/1 | Pasa checks de los fixtures definidos. |
+| ETA v1 | 0/8 JSON | 0/8 pytest | Línea base sin formato. |
+| ETA v2 | 8/8 JSON | 0/8 con 3+ assert y pytest | El JSON no asegura pruebas suficientes. |
+| ETA v3 | 8/8 JSON | 8/8 con 3+ assert y pytest | Cada salida pasa el verificador de casos. |
+
+![Gráfico de evaluación manual por versión](docs/lab09/evaluacion.svg)
+
+Lecciones: pedir JSON mejora la integración, pero no garantiza cobertura; hay que comprobar las propiedades del caso además del esquema. Las pruebas se ejecutan contra el snippet asociado. Mantener datos de prueba y delimitar instrucciones reduce riesgos de inyección. En E5 el verificador confirma la presencia de defensas en las plantillas; E7 compara respuestas locales guardadas. Ninguno de esos checks acredita ejecución contra un proveedor LLM.
+
+Para grabar respuestas originales con la API de DeepSeek, define `DEEPSEEK_API_KEY` solo en el entorno local y ejecuta `python scripts/grabar_deepseek.py --dry-run`; después usa `--only A`, `--only ETA`, `--only E5`, `--only E7` o `--only all`. El modo completo realiza hasta 65 solicitudes a `deepseek-flash` con temperatura 0 y guarda cada respuesta sin modificar en `evidencias/deepseek-raw/`, junto con metadatos separados. Se puede volver a ejecutar tras una interrupción: conserva los registros completos y no repite esas solicitudes. Las solicitudes pueden generar cargos en la cuenta del proveedor; el script no registra ni guarda la clave.

@@ -1,0 +1,9 @@
+{
+  "historia_id": "R7",
+  "invest_ok": false,
+  "preguntas": [
+    "¿Qué tarea de seguimiento quiere completar el pasajero?",
+    "¿Qué medida define una respuesta rápida?"
+  ],
+  "escenarios": []
+}

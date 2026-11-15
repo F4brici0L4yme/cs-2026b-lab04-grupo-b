@@ -1,0 +1,17 @@
+name: Lab 09 manual evaluation checks
+on:
+  pull_request:
+    paths: ['lab07/src/rutasit/generador_prompt.py', 'tests/**', 'prompts/**', 'scripts/**', '.github/workflows/lab09-manual.yml']
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install pytest jsonschema
+      - run: PYTHONPATH=lab07/src pytest -q tests/test_generador_prompt.py
+      - run: python scripts/evaluar_e1_manual.py
+      - run: python scripts/evaluar_e4_manual.py
+      - run: python scripts/evaluar_redteam.py
+      - run: python scripts/revisar_no_determinismo.py

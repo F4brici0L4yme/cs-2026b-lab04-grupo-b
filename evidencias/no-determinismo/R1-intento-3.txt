@@ -1,0 +1,29 @@
+{
+  "historia_id": "R1",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Consultar el bus",
+      "tipo": "exito",
+      "dado": [
+        "existe un bus activo en su ruta"
+      ],
+      "cuando": "el pasajero solicita seguimiento",
+      "entonces": [
+        "se presentan ubicación y ETA"
+      ]
+    },
+    {
+      "titulo": "Dato GPS antiguo",
+      "tipo": "borde",
+      "dado": [
+        "la última ubicación está desactualizada"
+      ],
+      "cuando": "el pasajero revisa la ETA",
+      "entonces": [
+        "se muestra un aviso de actualización"
+      ]
+    }
+  ]
+}

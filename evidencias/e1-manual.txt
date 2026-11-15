@@ -1,0 +1,21 @@
+E1 check: synthetic fixtures; offline only, not Promptfoo/live LLM
+v1: 0/9 (0.0%)
+v1/R1: FAIL
+v1/R2: FAIL
+v1/R3: FAIL
+v1/R4: FAIL
+v1/R5: FAIL
+v1/R6: FAIL
+v1/R7: FAIL
+v1/R8: FAIL
+v1/R9: FAIL
+v3/R1: PASS
+v3/R2: PASS
+v3/R3: PASS
+v3/R4: PASS
+v3/R5: PASS
+v3/R6: PASS
+v3/R7: PASS
+v3/R8: PASS
+v3/R9: PASS
+v3: 9/9 (100.0%)

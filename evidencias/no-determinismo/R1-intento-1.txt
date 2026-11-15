@@ -1,0 +1,29 @@
+{
+  "historia_id": "R1",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "ETA consultable",
+      "tipo": "exito",
+      "dado": [
+        "un bus está activo en la ruta elegida"
+      ],
+      "cuando": "el pasajero consulta el seguimiento",
+      "entonces": [
+        "se muestra su ubicación y ETA"
+      ]
+    },
+    {
+      "titulo": "Ubicación desactualizada",
+      "tipo": "borde",
+      "dado": [
+        "la ubicación no es reciente"
+      ],
+      "cuando": "el pasajero consulta el bus",
+      "entonces": [
+        "se indica cuándo se actualizó por última vez"
+      ]
+    }
+  ]
+}

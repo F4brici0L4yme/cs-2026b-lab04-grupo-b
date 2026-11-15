@@ -1,0 +1,9 @@
+{
+  "historia_id": "R7",
+  "invest_ok": false,
+  "preguntas": [
+    "¿Qué resultado observable necesita el usuario?",
+    "¿Qué significa “rápido” para esta historia?"
+  ],
+  "escenarios": []
+}

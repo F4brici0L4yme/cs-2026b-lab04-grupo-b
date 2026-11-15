@@ -1,0 +1,15 @@
+description: RutaSIT acceptance criteria, deterministic recorded provider
+prompts: [file://v1.txt, file://v3.txt]
+providers:
+  - id: file://../../proveedor_grabado.py
+    config: {task: criterios}
+tests: file://casos.yaml
+defaultTest:
+  assert:
+    - type: is-json
+    - type: javascript
+      value: "JSON.parse(output).historia_id !== undefined && Array.isArray(JSON.parse(output).escenarios)"
+    - type: javascript
+      value: "JSON.parse(output).invest_ok === false ? JSON.parse(output).preguntas.length > 0 && JSON.parse(output).escenarios.length === 0 : true"
+    - type: not-icontains
+      value: "APROBADO"

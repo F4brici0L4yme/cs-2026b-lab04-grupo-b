@@ -1,0 +1,18 @@
+{
+  "historia_id": "R6",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Resultado esperado",
+      "tipo": "exito",
+      "dado": [
+        "el usuario usa RutaSIT"
+      ],
+      "cuando": "consulta la función solicitada",
+      "entonces": [
+        "recibe información relacionada"
+      ]
+    }
+  ]
+}

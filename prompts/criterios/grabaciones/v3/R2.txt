@@ -1,0 +1,29 @@
+{
+  "historia_id": "R2",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Necesidad cubierta",
+      "tipo": "exito",
+      "dado": [
+        "el usuario tiene una ruta seleccionada"
+      ],
+      "cuando": "consulta la función descrita",
+      "entonces": [
+        "ve información relacionada con su necesidad"
+      ]
+    },
+    {
+      "titulo": "Información no disponible",
+      "tipo": "borde",
+      "dado": [
+        "la información solicitada no está disponible"
+      ],
+      "cuando": "consulta la función",
+      "entonces": [
+        "ve un aviso de que no hay datos disponibles"
+      ]
+    }
+  ]
+}
