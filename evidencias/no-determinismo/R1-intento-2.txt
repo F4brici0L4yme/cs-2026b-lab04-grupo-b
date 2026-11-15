@@ -1,0 +1,29 @@
+{
+  "historia_id": "R1",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Ver llegada estimada",
+      "tipo": "exito",
+      "dado": [
+        "el pasajero seleccionó una ruta con un bus activo"
+      ],
+      "cuando": "abre el seguimiento",
+      "entonces": [
+        "observa ubicación y tiempo estimado"
+      ]
+    },
+    {
+      "titulo": "Sin posición reciente",
+      "tipo": "borde",
+      "dado": [
+        "no se recibió una posición reciente"
+      ],
+      "cuando": "consulta el bus",
+      "entonces": [
+        "ve un aviso sobre la antigüedad del dato"
+      ]
+    }
+  ]
+}

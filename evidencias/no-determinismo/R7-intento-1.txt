@@ -1,0 +1,9 @@
+{
+  "historia_id": "R7",
+  "invest_ok": false,
+  "preguntas": [
+    "¿Qué acción concreta debe realizar el pasajero?",
+    "¿Cómo se medirá que el seguimiento es fácil?"
+  ],
+  "escenarios": []
+}

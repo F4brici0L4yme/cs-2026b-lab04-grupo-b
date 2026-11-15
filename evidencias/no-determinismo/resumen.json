@@ -1,0 +1,40 @@
+{
+  "casos": [
+    "R1",
+    "R7",
+    "R9"
+  ],
+  "repeticiones": 3,
+  "evaluacion": {
+    "R1": {
+      "todas_json": true,
+      "invest_consistente": true,
+      "numero_escenarios": [
+        2,
+        2,
+        2
+      ],
+      "formato_estable": true
+    },
+    "R7": {
+      "todas_json": true,
+      "invest_consistente": true,
+      "numero_escenarios": [
+        0,
+        0,
+        0
+      ],
+      "formato_estable": true
+    },
+    "R9": {
+      "todas_json": true,
+      "invest_consistente": true,
+      "numero_escenarios": [
+        2,
+        2,
+        2
+      ],
+      "formato_estable": true
+    }
+  }
+}

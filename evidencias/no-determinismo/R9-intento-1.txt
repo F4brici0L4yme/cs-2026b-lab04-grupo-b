@@ -1,0 +1,29 @@
+{
+  "historia_id": "R9",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Filtrar por ruta",
+      "tipo": "exito",
+      "dado": [
+        "hay buses asociados a distintas rutas"
+      ],
+      "cuando": "el pasajero elige una ruta",
+      "entonces": [
+        "solo ve los buses de esa ruta"
+      ]
+    },
+    {
+      "titulo": "Ruta sin buses activos",
+      "tipo": "borde",
+      "dado": [
+        "la ruta seleccionada no tiene buses activos"
+      ],
+      "cuando": "filtra los buses",
+      "entonces": [
+        "se informa que no hay buses activos"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "historia_id": "R9",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Mostrar buses de la ruta",
+      "tipo": "exito",
+      "dado": [
+        "existen buses en varias rutas"
+      ],
+      "cuando": "el pasajero selecciona su ruta",
+      "entonces": [
+        "la lista se limita a esa ruta"
+      ]
+    },
+    {
+      "titulo": "Sin coincidencias",
+      "tipo": "borde",
+      "dado": [
+        "ningún bus activo pertenece a la ruta elegida"
+      ],
+      "cuando": "aplica el filtro",
+      "entonces": [
+        "se muestra un estado sin resultados"
+      ]
+    }
+  ]
+}

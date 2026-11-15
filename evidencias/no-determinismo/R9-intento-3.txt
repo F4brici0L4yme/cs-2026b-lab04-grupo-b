@@ -1,0 +1,29 @@
+{
+  "historia_id": "R9",
+  "invest_ok": true,
+  "preguntas": [],
+  "escenarios": [
+    {
+      "titulo": "Selección de ruta",
+      "tipo": "exito",
+      "dado": [
+        "hay buses en más de una ruta"
+      ],
+      "cuando": "el pasajero filtra por una ruta",
+      "entonces": [
+        "aparecen los buses de la ruta seleccionada"
+      ]
+    },
+    {
+      "titulo": "Filtro vacío",
+      "tipo": "borde",
+      "dado": [
+        "la ruta no tiene buses disponibles"
+      ],
+      "cuando": "el pasajero aplica el filtro",
+      "entonces": [
+        "ve que no hay buses disponibles"
+      ]
+    }
+  ]
+}
