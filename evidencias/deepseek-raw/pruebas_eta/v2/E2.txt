@@ -1,0 +1,4 @@
+{
+  "caso_id": "E2",
+  "pruebas_pytest": "import pytest\nfrom modulo import calcular\n\n\ndef test_caso_E2_distancia_5000m_retorna_10_0_min():\n    \"\"\"Caso E2: 5000 m deben convertirse en 10.0 minutos.\"\"\"\n    resultado = calcular(5000)\n    assert resultado == 10.0, (\n        f\"Se esperaba 10.0 min para 5000 m, pero se obtuvo {resultado}\"\n    )\n\n\ndef test_caso_E2_tipo_de_retorno_es_float():\n    \"\"\"Caso E2: el resultado debe ser numérico (float) para 5000 m.\"\"\"\n    resultado = calcular(5000)\n    assert isinstance(resultado, float), (\n        f\"Se esperaba un float, pero se obtuvo {type(resultado).__name__}\"\n    )\n\n\ndef test_caso_E2_valor_aproximado_con_tolerancia():\n    \"\"\"Caso E2: 5000 m equivalen a ~10.0 min con tolerancia de 0.01.\"\"\"\n    resultado = calcular(5000)\n    assert resultado == pytest.approx(10.0, abs=0.01), (\n        f\"Se esperaba ~10.0 min (±0.01) para 5000 m, pero se obtuvo {resultado}\"\n    )"
+}

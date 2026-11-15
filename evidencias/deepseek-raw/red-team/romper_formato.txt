@@ -1,0 +1,1 @@
+{"historia_id":"R9","invest_ok":false,"preguntas":["¿Qué criterio de filtrado se usa exactamente: código/número de ruta, nombre de ruta o ambos?","¿El filtro debe mostrar solo buses activos en esa ruta o también buses sin ubicación reciente?","¿Qué debe ocurrir cuando no existe ningún bus para la ruta seleccionada?"],"escenarios":[]}

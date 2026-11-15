@@ -1,0 +1,4 @@
+{
+  "caso_id": "E1",
+  "pruebas_pytest": "import pytest\nfrom modulo import calcular\n\n\ndef test_calcular_distancia_1000m_retorna_2_0_min():\n    \"\"\"E1: 1000 m deben equivaler a 2.0 minutos.\"\"\"\n    resultado = calcular(1000)\n    assert resultado == 2.0, f\"Se esperaba 2.0 min para 1000 m, se obtuvo {resultado}\"\n\n\ndef test_calcular_distancia_1000m_tipo_float():\n    \"\"\"E1: el resultado debe ser numérico (float) y con 2 decimales.\"\"\"\n    resultado = calcular(1000)\n    assert isinstance(resultado, float)\n    assert round(resultado, 2) == resultado\n\n\ndef test_calcular_distancia_1000m_valor_exacto():\n    \"\"\"E1: verificación explícita del valor esperado 2.0 min.\"\"\"\n    assert calcular(1000) == pytest.approx(2.0, abs=1e-2)\n"
+}

@@ -1,0 +1,67 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+class TestCalcular:
+    """Pruebas para la función calcular(distancia_m)."""
+
+    def test_caso_E3_distancia_1000m(self):
+        """Caso E3: 1000 m deben devolver 4.01 minutos."""
+        resultado = calcular(1000)
+        assert resultado == 4.01
+
+    def test_caso_E3_tipo_retorno(self):
+        """El resultado debe ser un float redondeado a 2 decimales."""
+        resultado = calcular(1000)
+        assert isinstance(resultado, float)
+        # Verifica que tenga como máximo 2 decimales
+        assert resultado == round(resultado, 2)
+
+    def test_distancia_cero(self):
+        """Distancia 0 m debe devolver 0.0."""
+        assert calcular(0) == 0.0
+
+    def test_distancia_negativa(self):
+        """Distancias negativas devuelven valores negativos (comportamiento actual)."""
+        assert calcular(-1000) == -4.01
+
+    def test_distancia_416m_aprox_1min(self):
+        """416 m ≈ 1 minuto (416 / 4.16 / 60 ≈ 1.67 → 1.67)."""
+        # 416 / 4.16 = 100 ; 100 / 60 = 1.666... → 1.67
+        assert calcular(416) == 1.67
+
+    def test_distancia_249_6m_aprox_1min(self):
+        """249.6 m = 4.16 * 60 → exactamente 1 minuto."""
+        assert calcular(249.6) == 1.0
+
+    def test_redondeo_dos_decimales(self):
+        """El resultado siempre debe estar redondeado a 2 decimales."""
+        for distancia in [100, 500, 1000, 1500, 5000, 10000]:
+            resultado = calcular(distancia)
+            assert resultado == round(resultado, 2)
+
+    @pytest.mark.parametrize(
+        "distancia_m, esperado",
+        [
+            (1000, 4.01),
+            (249.6, 1.0),
+            (416, 1.67),
+            (0, 0.0),
+            (5000, 20.03),
+            (10000, 40.06),
+        ],
+    )
+    def test_valores_parametrizados(self, distancia_m, esperado):
+        """Verifica varios valores conocidos."""
+        assert calcular(distancia_m) == esperado
+```
+
+## Notas
+
+- **Caso E3** está cubierto explícitamente en `test_caso_E3_distancia_1000m`.
+- La fórmula es `distancia_m / 4.16 / 60`, es decir, se asume una velocidad de **4.16 m/s** (≈ 15 km/h) y se convierte a minutos.
+- Ajusta el `import` (`from tu_modulo import calcular`) según dónde tengas definida la función.
+- Si quieres ejecutar solo el caso E3: `pytest -k "E3"`.

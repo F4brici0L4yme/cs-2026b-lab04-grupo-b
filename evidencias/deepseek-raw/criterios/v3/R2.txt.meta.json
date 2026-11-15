@@ -1,0 +1,19 @@
+{
+  "provider": "DeepSeek API",
+  "model_requested": "deepseek-flash",
+  "model_returned": "deepseek-flash",
+  "request_id": "a27d9024-bf41-4585-9236-6b15fac14fac",
+  "created_utc": "2026-11-15T22:21:57.805630+00:00",
+  "temperature": 0,
+  "thinking": "disabled",
+  "usage": {
+    "prompt_tokens": 397,
+    "completion_tokens": 301,
+    "total_tokens": 698,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 269
+  }
+}

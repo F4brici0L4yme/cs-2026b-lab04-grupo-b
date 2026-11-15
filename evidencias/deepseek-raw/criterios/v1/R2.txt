@@ -1,0 +1,90 @@
+# Criterios de Aceptación
+
+**Historia:** Como pasajera quiero recibir un aviso cuando el bus esté a menos de cinco minutos de mi paradero para salir a tiempo.
+
+---
+
+## Escenario 1: Notificación al cumplirse el umbral de 5 minutos
+
+**Dado** que una pasajera tiene configurado un paradero de interés y las notificaciones activadas
+**Y** el bus se encuentra a 6 minutos o más de distancia de su paradero
+**Cuando** el tiempo estimado de llegada del bus pasa a ser de 5 minutos o menos
+**Entonces** el sistema le envía una notificación push a su dispositivo
+**Y** la notificación indica el número/línea del bus y el tiempo estimado de llegada
+**Y** la notificación se envía una sola vez por bus y por trayecto (sin duplicados)
+
+---
+
+## Escenario 2: No se notifica si el bus está fuera del umbral
+
+**Dado** que una pasajera tiene configurado un paradero de interés
+**Cuando** el tiempo estimado de llegada del bus es mayor a 5 minutos
+**Entonces** el sistema no le envía ninguna notificación de proximidad
+
+---
+
+## Escenario 3: La pasajera no tiene el paradero configurado
+
+**Dado** que una pasajera no ha configurado ningún paradero de interés
+**Cuando** cualquier bus se aproxima a menos de 5 minutos de algún paradero
+**Entonces** el sistema no le envía notificaciones de proximidad
+
+---
+
+## Escenario 4: Notificaciones desactivadas
+
+**Dado** que una pasajera tiene configurado un paradero pero desactivó las notificaciones
+**Cuando** el bus está a 5 minutos o menos de su paradero
+**Entonces** el sistema no le envía la notificación
+**Y** el estado de la configuración se respeta sin errores
+
+---
+
+## Escenario 5: Permiso de notificaciones denegado en el dispositivo
+
+**Dado** que una pasajera tiene configurado su paradero
+**Pero** no ha otorgado permisos de notificación a la aplicación
+**Cuando** el bus está a 5 minutos o menos
+**Entonces** el sistema no puede mostrar la notificación push
+**Y** la aplicación muestra (o mantiene visible) un aviso indicando que debe activar los permisos para recibir alertas
+
+---
+
+## Escenario 6: Actualización del tiempo estimado en tiempo real
+
+**Dado** que una pasajera está esperando la notificación
+**Cuando** el tiempo estimado de llegada se actualiza (por tráfico, retrasos o adelantos)
+**Entonces** el sistema recalcula la proximidad con el dato más reciente
+**Y** dispara la notificación en el momento en que el ETA real cruza el umbral de 5 minutos
+
+---
+
+## Escenario 7: Múltiples buses hacia el mismo paradero
+
+**Dado** que una pasajera tiene configurado un paradero al que llegan varias líneas de bus
+**Cuando** más de un bus está a 5 minutos o menos
+**Entonces** recibe una notificación por cada bus que cruza el umbral
+**Y** cada notificación identifica claramente la línea del bus correspondiente
+
+---
+
+## Escenario 8: El bus deja de estar disponible o se cancela
+
+**Dado** que una pasajera recibió la notificación de proximidad
+**Cuando** el bus se cancela, desvía su ruta o deja de reportar posición
+**Entonces** el sistema no envía notificaciones adicionales para ese bus
+**Y** (opcional) notifica a la pasajera si el servicio se ve afectado
+
+---
+
+## Criterios no funcionales (transversales)
+
+- **Latencia:** la notificación se envía en un máximo de 30 segundos desde que el ETA cruza el umbral de 5 minutos.
+- **Precisión:** el ETA mostrado en la notificación no debe diferir en más de ±1 minuto del ETA del sistema en el momento del envío.
+- **Disponibilidad:** el servicio de notificaciones debe funcionar al menos el 99% del tiempo en horario de operación.
+- **Privacidad:** la ubicación del paradero de la pasajera solo se usa para el cálculo de proximidad y no se comparte con terceros.
+- **Multiplataforma:** la notificación se entrega en las apps iOS y Android soportadas.
+
+---
+
+¿Quieres que ajuste el umbral (por ejemplo, configurable por la usuaria), agregue escenarios de zona horaria/idioma, o los redacte en formato Gherkin puro para tu herramienta de gestión (Jira, Azure DevOps, etc.)?

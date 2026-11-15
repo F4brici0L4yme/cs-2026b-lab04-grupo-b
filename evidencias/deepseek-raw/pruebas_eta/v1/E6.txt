@@ -1,0 +1,69 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+# ============================================================
+# Caso E6: Distancia 0 m → 0.0 min
+# ============================================================
+def test_calcular_distancia_cero():
+    """E6: Con 0 metros el tiempo debe ser 0.0 minutos."""
+    resultado = calcular(0)
+    assert resultado == 0.0
+
+
+# ============================================================
+# Pruebas adicionales de robustez
+# ============================================================
+def test_calcular_tipo_retorno_float():
+    """El resultado debe ser un float (por el round)."""
+    assert isinstance(calcular(0), float)
+
+
+def test_calcular_distancia_positiva():
+    """500 m ≈ 1.0 min (500 / 8.33 / 60 ≈ 1.0004)."""
+    assert calcular(500) == 1.0
+
+
+def test_calcular_distancia_un_minuto_exacto():
+    """8.33 * 60 = 499.8 m → 1.0 min."""
+    assert calcular(499.8) == 1.0
+
+
+def test_calcular_redondeo_dos_decimales():
+    """Verifica que el redondeo sea a 2 decimales."""
+    resultado = calcular(1000)
+    # 1000 / 8.33 / 60 ≈ 2.0008 → 2.0
+    assert resultado == 2.0
+    # Comprobamos que no tenga más de 2 decimales
+    assert resultado == round(resultado, 2)
+
+
+def test_calcular_distancia_grande():
+    """10000 m ≈ 20.01 min."""
+    assert calcular(10000) == 20.01
+
+
+@pytest.mark.parametrize(
+    "distancia_m, esperado",
+    [
+        (0, 0.0),
+        (8.33, 0.02),      # 1 segundo ≈ 0.02 min
+        (499.8, 1.0),      # 1 minuto
+        (999.6, 2.0),      # 2 minutos
+        (4998.0, 10.0),    # 10 minutos
+    ],
+)
+def test_calcular_parametrizado(distancia_m, esperado):
+    """Tabla de casos representativos."""
+    assert calcular(distancia_m) == esperado
+```
+
+## Notas
+
+- **Caso E6** está cubierto explícitamente en `test_calcular_distancia_cero`.
+- La fórmula usa `8.33` como velocidad en m/s (≈ 30 km/h), por lo que `8.33 * 60 = 499.8 m` equivale a 1 minuto.
+- Se añade `test_calcular_tipo_retorno_float` porque `round(0, 2)` devuelve `0` (int) en Python, no `0.0`. Si tu implementación devuelve `0` en lugar de `0.0`, ese test fallará y te avisará de la inconsistencia de tipos. Si prefieres que `0` sea aceptable, cambia la aserción a `resultado == 0`.
+- Ajusta el `import` a la ruta real de tu módulo.

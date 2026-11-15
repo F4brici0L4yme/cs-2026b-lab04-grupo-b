@@ -1,0 +1,81 @@
+# Criterios de Aceptación
+
+**Historia de Usuario:** Como operador quiero consultar los buses fuera de servicio y su motivo para reorganizar la cobertura de la ruta.
+
+---
+
+## Escenario 1: Consulta exitosa de buses fuera de servicio
+
+**Dado** que el operador ha iniciado sesión en el sistema
+**Y** existen buses registrados con estado "fuera de servicio"
+**Cuando** el operador accede al listado de buses fuera de servicio
+**Entonces** el sistema muestra una lista con todos los buses en ese estado
+**Y** para cada bus se visualiza: identificador del bus, placa, ruta asignada y motivo de la novedad
+**Y** la información se presenta de forma clara y legible
+
+---
+
+## Escenario 2: Visualización del motivo de la novedad
+
+**Dado** que el operador consulta el listado de buses fuera de servicio
+**Cuando** selecciona un bus específico
+**Entonces** el sistema muestra el detalle del motivo por el cual el bus está fuera de servicio
+**Y** el motivo corresponde a una categoría válida (ej. falla mecánica, mantenimiento, accidente, novedad operativa)
+**Y** se muestra la fecha y hora en que el bus pasó a estado "fuera de servicio"
+
+---
+
+## Escenario 3: Listado vacío
+
+**Dado** que el operador consulta el listado de buses fuera de servicio
+**Y** no existen buses en ese estado
+**Cuando** se carga la consulta
+**Entonces** el sistema muestra un mensaje indicando que no hay buses fuera de servicio
+**Y** no se presentan errores en la pantalla
+
+---
+
+## Escenario 4: Filtrado de la consulta
+
+**Dado** que el operador se encuentra en el listado de buses fuera de servicio
+**Cuando** aplica filtros por ruta, motivo o rango de fechas
+**Entonces** el sistema muestra únicamente los buses que cumplen con los criterios seleccionados
+**Y** el listado se actualiza sin recargar la página de forma incorrecta
+
+---
+
+## Escenario 5: Actualización de la información
+
+**Dado** que un bus cambia su estado a "fuera de servicio" o vuelve a "en servicio"
+**Cuando** el operador consulta o refresca el listado
+**Entonces** el sistema refleja el estado actualizado del bus
+**Y** el bus que retornó a servicio deja de aparecer en el listado
+
+---
+
+## Escenario 6: Control de acceso
+
+**Dado** que un usuario sin rol de operador intenta acceder al listado de buses fuera de servicio
+**Cuando** realiza la consulta
+**Entonces** el sistema deniega el acceso
+**Y** muestra un mensaje de permisos insuficientes
+
+---
+
+## Escenario 7: Disponibilidad de la información
+
+**Dado** que el operador consulta el listado de buses fuera de servicio
+**Cuando** la consulta se ejecuta correctamente
+**Entonces** el sistema responde en un tiempo menor a 3 segundos
+**Y** la información mostrada corresponde a los datos vigentes del sistema
+
+---
+
+## Criterios técnicos / no funcionales
+
+- La consulta debe estar disponible desde cualquier dispositivo con acceso al sistema (web/escritorio).
+- El listado debe permitir ordenamiento por placa, ruta y fecha de novedad.
+- Los datos deben provenir de la fuente oficial de estado de flota, sin duplicados.
+- Debe registrarse en log la consulta realizada (usuario, fecha y hora) para auditoría.
+
+¿Quieres que ajuste el nivel de detalle, agregue criterios en formato Gherkin puro o incluya validaciones adicionales (por ejemplo, exportación a Excel o notificaciones)?

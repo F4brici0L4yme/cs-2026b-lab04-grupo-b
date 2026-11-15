@@ -1,0 +1,58 @@
+# Criterios de Aceptación — Alerta de desvío de ruta GPS
+
+**Historia:** Como operador quiero recibir una alerta cuando una ubicación GPS reciente indique que el bus se desvió de la ruta para informar al centro de control.
+
+---
+
+## Escenario 1: Alerta generada por desvío confirmado
+**Dado** que un bus tiene una ruta activa asignada con su trazado geográfico definido
+**Y** el bus reporta una ubicación GPS reciente (dentro de la ventana de vigencia configurada, p. ej. últimos 2 minutos)
+**Cuando** la ubicación se encuentra fuera del corredor de tolerancia de la ruta (p. ej. más de 100 metros del trazado)
+**Y** el desvío se mantiene de forma consecutiva en al menos N lecturas GPS (p. ej. 3 lecturas) para evitar falsos positivos
+**Entonces** el sistema genera una alerta de desvío de ruta
+**Y** la alerta se muestra al operador en su panel de monitoreo en un tiempo ≤ 30 segundos desde la confirmación del desvío
+**Y** la alerta incluye: identificador del bus, ruta afectada, ubicación actual (latitud/longitud), distancia al trazado, fecha y hora del evento.
+
+## Escenario 2: No se genera alerta si el GPS está desactualizado
+**Dado** que un bus tiene una ruta activa asignada
+**Cuando** la última ubicación GPS recibida tiene una antigüedad mayor a la ventana de vigencia configurada (p. ej. más de 5 minutos)
+**Entonces** el sistema **no** genera alerta de desvío
+**Y** registra el evento como "sin datos GPS recientes" para trazabilidad.
+
+## Escenario 3: No se genera alerta si el bus está dentro de la ruta
+**Dado** que un bus tiene una ruta activa asignada
+**Cuando** sus ubicaciones GPS recientes se encuentran dentro del corredor de tolerancia de la ruta
+**Entonces** el sistema no genera ninguna alerta de desvío.
+
+## Escenario 4: Alerta única por evento de desvío (anti-duplicados)
+**Dado** que ya se generó una alerta de desvío para un bus en una ruta
+**Cuando** el bus continúa fuera de la ruta en lecturas GPS posteriores
+**Entonces** el sistema no genera alertas duplicadas mientras el desvío permanezca activo
+**Y** solo genera una nueva alerta si el bus regresa a la ruta y vuelve a desviarse.
+
+## Escenario 5: Cierre de la alerta al retomar la ruta
+**Dado** que existe una alerta de desvío activa para un bus
+**Cuando** una ubicación GPS reciente indica que el bus volvió al corredor de tolerancia de la ruta
+**Entonces** el sistema marca la alerta como "resuelta" automáticamente
+**Y** registra la hora de resolución y la duración del desvío.
+
+## Escenario 6: Notificación al centro de control
+**Dado** que el operador recibe una alerta de desvío
+**Cuando** el operador la revisa
+**Entonces** puede notificar al centro de control desde la misma alerta (acción "Informar al centro de control")
+**Y** el sistema registra quién notificó, a qué hora y el estado de la notificación.
+
+## Escenario 7: Configuración de parámetros
+**Dado** que el administrador del sistema accede a la configuración de alertas
+**Cuando** modifica los parámetros de tolerancia (distancia máxima al trazado, número de lecturas consecutivas, vigencia del GPS)
+**Entonces** el sistema aplica los nuevos valores a las alertas generadas a partir de ese momento
+**Y** registra en auditoría el cambio realizado (usuario, fecha, valores anteriores y nuevos).
+
+---
+
+### Criterios no funcionales sugeridos
+- **Latencia:** la alerta debe generarse y mostrarse en ≤ 30 s desde la confirmación del desvío.
+- **Disponibilidad:** el motor de evaluación de desvíos debe operar de forma continua durante la operación del servicio.
+- **Trazabilidad:** toda alerta (generada, resuelta o descartada) debe quedar registrada con su evidencia GPS asociada.
+
+¿Quieres que ajuste los umbrales (metros, lecturas, tiempos) a los valores reales de tu operación o que agregue escenarios para notificaciones push/SMS/email?

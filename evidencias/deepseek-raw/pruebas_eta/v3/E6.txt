@@ -1,0 +1,1 @@
+{"caso_id":"E6","pruebas":"import pytest\nfrom modulo import calcular\n\ndef test_calcular_caso_normal():\n    assert calcular(833.0) == 1.67\n    assert calcular(416.5) == 0.83\n    assert calcular(1666.0) == 3.33\n\ndef test_calcular_caso_borde_cero():\n    assert calcular(0) == 0.0\n    assert calcular(0.0) == 0.0\n    assert isinstance(calcular(0), float)\n"}

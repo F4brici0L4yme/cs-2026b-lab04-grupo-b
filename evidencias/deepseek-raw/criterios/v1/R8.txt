@@ -1,0 +1,81 @@
+# Criterios de Aceptación: Implementar caché Redis normalizada para almacenar coordenadas
+
+## CA-01: Conexión y configuración de Redis
+- **Dado** que el servicio se inicia con la configuración de Redis definida (host, puerto, credenciales, TTL),
+- **Cuando** el servicio arranca,
+- **Entonces** debe establecer conexión con Redis correctamente y registrar el estado de la conexión en los logs.
+- **Y** si Redis no está disponible al arrancar, el servicio debe registrar el error y aplicar la política de degradación definida (fallback a fuente original).
+
+## CA-02: Estructura normalizada de las claves
+- **Dado** un par de coordenadas (latitud, longitud) a almacenar,
+- **Cuando** se genera la clave de caché,
+- **Entonces** debe seguir el formato normalizado definido: `coords:{lat}:{lon}` (o el esquema acordado).
+- **Y** las coordenadas deben normalizarse antes de generar la clave:
+  - Redondeo a la precisión definida (ej. 6 decimales).
+  - Formato numérico consistente (punto decimal, sin ceros innecesarios).
+  - Orden fijo: latitud primero, longitud después.
+- **Y** dos coordenadas equivalentes (ej. `40.7128` y `40.71280`) deben producir la misma clave.
+
+## CA-03: Almacenamiento de coordenadas
+- **Dado** que se recibe una coordenada que no está en caché,
+- **Cuando** se obtiene el dato desde la fuente original,
+- **Entonces** el sistema debe almacenarlo en Redis usando la clave normalizada.
+- **Y** el valor debe almacenarse en formato JSON con al menos: `lat`, `lon`, `timestamp`, y los campos de negocio requeridos.
+- **Y** debe aplicarse el TTL configurado (por defecto el definido en configuración, ej. 24h).
+
+## CA-04: Recuperación desde caché (cache hit)
+- **Dado** que existe una coordenada almacenada en Redis con clave normalizada,
+- **Cuando** se solicita esa coordenada,
+- **Entonces** el sistema debe devolver el valor desde Redis sin consultar la fuente original.
+- **Y** debe registrar un evento de `cache_hit` en las métricas.
+- **Y** el tiempo de respuesta debe ser menor al umbral definido (ej. < 10 ms en p95).
+
+## CA-05: Fallback en cache miss
+- **Dado** que una coordenada no existe en Redis,
+- **Cuando** se solicita,
+- **Entonces** el sistema debe consultar la fuente original, devolver el resultado y almacenarlo en caché (write-through o cache-aside según diseño).
+- **Y** debe registrar un evento de `cache_miss` en las métricas.
+
+## CA-06: Degradación ante fallo de Redis
+- **Dado** que Redis no está disponible o responde con timeout,
+- **Cuando** se realiza una operación de lectura o escritura en caché,
+- **Entonces** el sistema debe continuar operando consultando la fuente original.
+- **Y** no debe propagar el error al cliente.
+- **Y** debe registrar el fallo y emitir una métrica/alerta de `redis_unavailable`.
+
+## CA-07: Invalidación y actualización
+- **Dado** que una coordenada cambia en la fuente original,
+- **Cuando** se actualiza o invalida explícitamente,
+- **Entonces** el sistema debe eliminar o sobrescribir la entrada en Redis usando la clave normalizada.
+- **Y** debe existir un mecanismo documentado de invalidación (por TTL, por evento o por endpoint administrativo).
+
+## CA-08: Concurrencia y consistencia
+- **Dado** múltiples solicitudes simultáneas para la misma coordenada no cacheada,
+- **Cuando** se procesan en paralelo,
+- **Entonces** el sistema debe evitar "cache stampede" mediante el mecanismo definido (lock distribuido, single-flight o similar).
+- **Y** las escrituras concurrentes sobre la misma clave no deben corromper el valor almacenado.
+
+## CA-09: Observabilidad
+- **Dado** el uso del caché en producción,
+- **Cuando** se consultan las métricas,
+- **Entonces** deben estar disponibles al menos: `cache_hits`, `cache_misses`, `cache_errors`, `cache_latency` y `hit_ratio`.
+- **Y** los logs deben incluir la clave normalizada (o su hash) para trazabilidad, sin exponer datos sensibles.
+
+## CA-10: Pruebas y cobertura
+- **Dado** el código implementado,
+- **Cuando** se ejecuta la suite de pruebas,
+- **Entonces** deben existir pruebas unitarias e integración que cubran:
+  - Normalización de claves (incluyendo casos borde: negativos, cero, precisión).
+  - Hit, miss y fallback.
+  - Comportamiento ante Redis caído.
+  - Expiración por TTL.
+- **Y** la cobertura de las clases/módulos de caché debe ser ≥ 80%.
+
+## CA-11: Configurabilidad
+- **Dado** el despliegue en distintos entornos,
+- **Cuando** se modifican parámetros de configuración (host, puerto, TTL, precisión de redondeo, prefijo de clave),
+- **Entonces** el sistema debe aplicarlos sin cambios de código, vía variables de entorno o archivo de configuración.
+
+---
+
+¿Quieres que ajuste algún criterio al stack específico (por ejemplo, Spring Data Redis, Node.js con ioredis, Python con redis-py) o al esquema exacto de claves que ya tengas definido?

@@ -1,0 +1,88 @@
+# Criterios de Aceptación
+
+**Historia de Usuario:** Como pasajera con movilidad reducida quiero identificar si el paradero de mi ruta es accesible para planificar un viaje adecuado.
+
+---
+
+## Escenario 1: Visualización del indicador de accesibilidad en el paradero
+
+**Dado** que la pasajera consulta la información de un paradero de su ruta
+**Cuando** se muestra el detalle del paradero
+**Entonces** el sistema debe mostrar un indicador visual de accesibilidad (por ejemplo: ícono de silla de ruedas, etiqueta "Accesible" / "No accesible")
+**Y** el indicador debe ser visible sin necesidad de acciones adicionales (sin scroll excesivo ni clics extra)
+
+---
+
+## Escenario 2: Paradero accesible
+
+**Dado** que un paradero cuenta con condiciones de accesibilidad registradas (rampa, plataforma a nivel, espacio para silla de ruedas, etc.)
+**Cuando** la pasajera visualiza el paradero
+**Entonces** el sistema debe mostrarlo como "Accesible"
+**Y** debe permitir ver el detalle de las facilidades disponibles (tipo de rampa, señalización, etc.)
+
+---
+
+## Escenario 3: Paradero no accesible
+
+**Dado** que un paradero no cuenta con condiciones de accesibilidad
+**Cuando** la pasajera visualiza el paradero
+**Entonces** el sistema debe mostrarlo como "No accesible"
+**Y** debe indicar de forma clara que no es apto para personas con movilidad reducida
+
+---
+
+## Escenario 4: Información de accesibilidad no disponible
+
+**Dado** que un paradero no tiene información de accesibilidad registrada
+**Cuando** la pasajera visualiza el paradero
+**Entonces** el sistema debe mostrar el estado "Sin información de accesibilidad"
+**Y** no debe asumir ni mostrar el paradero como accesible por defecto
+
+---
+
+## Escenario 5: Filtro de paraderos accesibles en la ruta
+
+**Dado** que la pasajera está planificando un viaje en una ruta
+**Cuando** aplica el filtro "Solo paraderos accesibles"
+**Entonces** el sistema debe listar únicamente los paraderos marcados como accesibles dentro de esa ruta
+**Y** debe indicar cuántos paraderos accesibles hay disponibles
+
+---
+
+## Escenario 6: Accesibilidad en el planificador de viaje
+
+**Dado** que la pasajera consulta un plan de viaje
+**Cuando** el sistema muestra las opciones de ruta
+**Entonces** cada opción debe indicar si el paradero de origen y destino son accesibles
+**Y** debe permitir priorizar o filtrar opciones que incluyan paraderos accesibles
+
+---
+
+## Escenario 7: Accesibilidad de la información (diseño inclusivo)
+
+**Dado** que la pasajera utiliza la aplicación
+**Cuando** se muestra el indicador de accesibilidad
+**Entonces** este no debe depender únicamente del color (debe incluir texto e ícono)
+**Y** debe ser compatible con lectores de pantalla (etiqueta accesible)
+**Y** debe cumplir con un contraste mínimo de acuerdo con WCAG 2.1 AA
+
+---
+
+## Escenario 8: Actualización de la información de accesibilidad
+
+**Dado** que la información de accesibilidad de un paradero es actualizada por el operador
+**Cuando** la pasajera vuelve a consultar el paradero
+**Entonces** el sistema debe reflejar el estado actualizado
+**Y** debe mostrar la fecha de última actualización de dicha información
+
+---
+
+## Criterios técnicos / no funcionales
+
+- La información de accesibilidad debe cargarse junto con el detalle del paradero en un tiempo ≤ 2 segundos en condiciones normales de red.
+- El estado de accesibilidad debe provenir de una fuente de datos oficial y trazable.
+- La funcionalidad debe estar disponible tanto en la versión web como en la app móvil.
+
+---
+
+¿Quieres que ajuste el nivel de detalle, agregue criterios de negocio (por ejemplo, definición exacta de "accesible" según normativa local) o los formatee en Gherkin para una herramienta específica (Jira, Azure DevOps)?

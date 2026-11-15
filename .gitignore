@@ -2,6 +2,9 @@
 .venv/
 __pycache__/
 *.pyc
+.env
+.env.*
+!.env.example
 
 # Salidas temporales
 capture_logs/

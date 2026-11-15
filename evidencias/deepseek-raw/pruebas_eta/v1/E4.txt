@@ -1,0 +1,73 @@
+# Pruebas pytest para la función `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # Ajusta el import según tu estructura
+
+
+# ============================================================
+# Caso E4: Distancia 2000 m → 8.01 min
+# ============================================================
+def test_calcular_2000m_devuelve_8_01():
+    """Caso E4: 2000 m deben convertirse en 8.01 minutos."""
+    resultado = calcular(2000)
+    assert resultado == 8.01
+
+
+# ============================================================
+# Pruebas adicionales de robustez
+# ============================================================
+def test_calcular_0m_devuelve_0():
+    """Distancia cero debe devolver 0.0."""
+    assert calcular(0) == 0.0
+
+
+def test_calcular_416m_devuelve_1_67():
+    """416 m ≈ 1 minuto (416 / 4.16 / 60 ≈ 1.6667 → 1.67)."""
+    assert calcular(416) == 1.67
+
+
+def test_calcular_1000m_devuelve_4_01():
+    """1000 m ≈ 4.01 minutos."""
+    assert calcular(1000) == 4.01
+
+
+def test_calcular_devuelve_float():
+    """El resultado debe ser de tipo float."""
+    assert isinstance(calcular(2000), float)
+
+
+def test_calcular_redondea_a_dos_decimales():
+    """El resultado debe tener como máximo 2 decimales."""
+    resultado = calcular(1234)
+    # Verifica que al multiplicar por 100 sea (casi) entero
+    assert round(resultado, 2) == resultado
+
+
+@pytest.mark.parametrize(
+    "distancia_m, esperado",
+    [
+        (2000, 8.01),   # Caso E4
+        (0, 0.0),
+        (416, 1.67),
+        (832, 3.33),
+        (1000, 4.01),
+        (5000, 20.03),
+    ],
+)
+def test_calcular_parametrizado(distancia_m, esperado):
+    """Verifica múltiples distancias con sus resultados esperados."""
+    assert calcular(distancia_m) == esperado
+
+
+def test_calcular_distancia_negativa():
+    """Una distancia negativa debe devolver un valor negativo (comportamiento actual)."""
+    assert calcular(-2000) == -8.01
+```
+
+## Notas
+
+- **Caso E4** está cubierto explícitamente en `test_calcular_2000m_devuelve_8_01` y también en la prueba parametrizada.
+- Verificación manual del caso E4: `2000 / 4.16 / 60 = 8.0128...` → `round(..., 2) = 8.01` ✅
+- Ajusta el `import` (`from tu_modulo import calcular`) según dónde tengas definida la función.
+- Si quieres ejecutar solo el caso E4: `pytest -k "2000m"`.

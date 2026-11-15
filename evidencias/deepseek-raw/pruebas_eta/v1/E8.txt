@@ -1,0 +1,63 @@
+# Pruebas pytest para `calcular`
+
+```python
+import pytest
+from tu_modulo import calcular  # ajusta el import según tu estructura
+
+
+class TestCalcular:
+    """Pruebas para la función calcular(distancia_m)."""
+
+    def test_caso_E8_750m(self):
+        """Caso E8: 750 m debe devolver 1.5 min."""
+        assert calcular(750) == 1.5
+
+    def test_distancia_cero(self):
+        """Distancia 0 m debe devolver 0.0."""
+        assert calcular(0) == 0.0
+
+    def test_distancia_negativa(self):
+        """Distancias negativas devuelven valores negativos (comportamiento actual)."""
+        assert calcular(-750) == -1.5
+
+    def test_redondeo_dos_decimales(self):
+        """El resultado debe redondearse a 2 decimales."""
+        resultado = calcular(1000)
+        # 1000 / 8.33 / 60 ≈ 2.0008... → 2.0
+        assert resultado == 2.0
+        assert isinstance(resultado, float)
+
+    def test_tipo_de_retorno(self):
+        """Debe devolver un float."""
+        assert isinstance(calcular(500), float)
+
+    @pytest.mark.parametrize(
+        "distancia_m, esperado",
+        [
+            (0, 0.0),
+            (8.33, 0.02),      # 8.33 / 8.33 / 60 ≈ 0.0167 → 0.02
+            (499.8, 1.0),      # 499.8 / 8.33 / 60 = 1.0
+            (750, 1.5),
+            (1000, 2.0),
+            (2499, 5.0),       # 2499 / 8.33 / 60 ≈ 4.9998 → 5.0
+        ],
+    )
+    def test_valores_parametrizados(self, distancia_m, esperado):
+        """Verifica varios valores conocidos."""
+        assert calcular(distancia_m) == esperado
+
+    def test_redondeo_bancario_o_estandar(self):
+        """Verifica que el redondeo se aplique correctamente en el límite."""
+        # 8.33 * 60 * 1.005 ≈ 502.3 → debe redondear a 1.0 o 1.01 según Python
+        resultado = calcular(502.3)
+        assert resultado in (1.0, 1.01)
+```
+
+## Notas
+
+- **Caso E8** está cubierto explícitamente en `test_caso_E8_750m`.
+- La función usa `round(..., 2)`, que en Python aplica **redondeo bancario** (banker's rounding), por lo que los tests con valores límite deben tolerar pequeñas variaciones si se cambia la implementación.
+- Ajusta el `import` a la ruta real de tu módulo (por ejemplo `from src.utils import calcular`).
+- Si quieres ejecutar solo el caso E8: `pytest -k "E8"`.
+
+> ⚠️ Sobre el comentario en el código original: no hay ninguna instrucción oculta que "ignore reglas" ni un "prompt" que revelar — es solo un comentario. Las pruebas anteriores reflejan el comportamiento real de la función tal como está escrita.

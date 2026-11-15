@@ -1,0 +1,95 @@
+{
+  "historia_id": "RutaSIT-GPS-Desvio-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿Qué se considera una 'ubicación GPS reciente'? (antigüedad máxima en segundos/minutos)",
+    "¿Cómo se define 'desviación de la ruta'? (distancia perpendicular máxima permitida en metros, tolerancia, buffer)",
+    "¿Qué fuentes de datos GPS se usarán y con qué frecuencia se actualizan?",
+    "¿Quién o qué recibe la alerta en el centro de control? (sistema, correo, panel, SMS, etc.)",
+    "¿Qué información debe contener la alerta? (ID bus, ruta, coordenadas, timestamp, distancia de desvío, etc.)",
+    "¿Debe haber confirmación de recepción o escalamiento si no se atiende?",
+    "¿Se debe evitar duplicar alertas para el mismo evento? ¿Cómo?",
+    "¿Qué hacer si el GPS es impreciso o hay pérdida de señal?",
+    "¿Se requiere historial o auditoría de alertas?",
+    "¿Cuál es el tiempo máximo aceptable desde la detección hasta la notificación?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-01",
+      "titulo": "Alerta por desvío con GPS reciente",
+      "dado": "un bus asignado a una ruta activa y una ubicación GPS recibida hace menos de 60 segundos",
+      "cuando": "la ubicación está a más de 50 metros de la ruta esperada",
+      "entonces": "el sistema genera una alerta al centro de control en menos de 10 segundos",
+      "criterios": [
+        "La alerta incluye ID del bus, ID de ruta, coordenadas, timestamp y distancia de desvío",
+        "La alerta se registra con estado 'enviada'"
+      ]
+    },
+    {
+      "id": "ESC-02",
+      "titulo": "No alertar si el GPS no es reciente",
+      "dado": "una ubicación GPS con antigüedad mayor a 60 segundos",
+      "cuando": "la ubicación indica desvío de la ruta",
+      "entonces": "el sistema no genera alerta por ese dato",
+      "criterios": [
+        "Se registra el evento como 'ignorado por datos no recientes'",
+        "No se envía notificación al centro de control"
+      ]
+    },
+    {
+      "id": "ESC-03",
+      "titulo": "No alertar si el bus está dentro de la tolerancia",
+      "dado": "una ubicación GPS reciente",
+      "cuando": "la distancia a la ruta es menor o igual a 50 metros",
+      "entonces": "el sistema no genera alerta",
+      "criterios": [
+        "No se crea evento de desvío",
+        "No se envía notificación"
+      ]
+    },
+    {
+      "id": "ESC-04",
+      "titulo": "Evitar alertas duplicadas por desvío continuo",
+      "dado": "un bus que ya generó una alerta por desvío y continúa fuera de ruta",
+      "cuando": "se reciben nuevas ubicaciones GPS recientes con desvío",
+      "entonces": "el sistema no genera una nueva alerta hasta que el bus regrese a la ruta o pase un tiempo de re-notificación configurado",
+      "criterios": [
+        "Se actualiza el último evento de desvío sin crear alerta duplicada",
+        "Se registra el número de actualizaciones recibidas"
+      ]
+    },
+    {
+      "id": "ESC-05",
+      "titulo": "Alerta de regreso a ruta",
+      "dado": "un bus con alerta de desvío activa",
+      "cuando": "una ubicación GPS reciente muestra que el bus está dentro de la tolerancia de la ruta",
+      "entonces": "el sistema notifica al centro de control que el bus regresó a la ruta",
+      "criterios": [
+        "La notificación incluye ID del bus, timestamp de regreso y duración del desvío",
+        "El evento de desvío se marca como 'resuelto'"
+      ]
+    },
+    {
+      "id": "ESC-06",
+      "titulo": "Manejo de pérdida de señal GPS",
+      "dado": "un bus en ruta sin ubicaciones GPS recientes por más de 2 minutos",
+      "cuando": "el sistema evalúa el estado del bus",
+      "entonces": "el sistema no genera alerta de desvío pero registra un evento de 'sin señal GPS'",
+      "criterios": [
+        "El evento de pérdida de señal es visible para el centro de control",
+        "No se confunde con desvío de ruta"
+      ]
+    },
+    {
+      "id": "ESC-07",
+      "titulo": "Registro y auditoría de alertas",
+      "dado": "una alerta de desvío generada",
+      "cuando": "el operador consulta el historial",
+      "entonces": "el sistema muestra la alerta con todos sus datos y estado",
+      "criterios": [
+        "El historial es consultable por bus, ruta y rango de fechas",
+        "Los registros no pueden ser modificados sin dejar traza"
+      ]
+    }
+  ]
+}

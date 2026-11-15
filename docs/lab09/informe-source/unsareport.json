@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/UNSAReport/UNSAReport/v1.0/schemas/unsareport.schema.json",
+  "template": "lab",
+  "templateVersion": "1.0.0",
+  "mode": "single",
+  "sessions": [],
+  "capture": {
+    "columns": 120,
+    "freezeFlags": [],
+    "prompt": "❯ ",
+    "colors": {
+      "args": "33",
+      "command": "36",
+      "prompt": "32",
+      "reset": "0"
+    }
+  },
+  "prepare": {
+    "input": {
+      "srcDir": "src",
+      "reportFile": "report.typ"
+    },
+    "output": {
+      "submissionDir": "submission",
+      "fileTemplate": "{output_type}_{lab_number}",
+      "reportWord": "Informe",
+      "codeWord": "Código Fuente"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "historia_id": "RutaSIT-001",
+  "invest_ok": true,
+  "preguntas": [
+    "¿La ubicación del bus se actualiza en tiempo real y con qué frecuencia?",
+    "¿El ETA se calcula considerando tráfico, paradas y horarios?",
+    "¿Qué sucede si no hay buses activos en la ruta?",
+    "¿Se requiere autenticación o ubicación del pasajero para ver el bus?",
+    "¿Cómo se manejan errores de red o GPS no disponible?",
+    "¿La información mostrada incluye identificación del bus y ruta?"
+  ],
+  "escenarios": [
+    {
+      "id": "ESC-01",
+      "titulo": "Visualización exitosa de ubicación y ETA",
+      "dado": "que el pasajero ha seleccionado una ruta con buses activos",
+      "cuando": "abre la pantalla de seguimiento del bus",
+      "entonces": "ve la ubicación actual del bus en un mapa y el ETA estimado en minutos",
+      "criterios": [
+        "La ubicación se muestra con un marcador en el mapa",
+        "El ETA se muestra en texto claro (ej. '5 min')",
+        "La información corresponde al bus más cercano de la ruta seleccionada"
+      ]
+    },
+    {
+      "id": "ESC-02",
+      "titulo": "Actualización periódica de la información",
+      "dado": "que el pasajero está viendo la ubicación y ETA de un bus",
+      "cuando": "transcurre el intervalo de actualización definido (ej. 30 segundos)",
+      "entonces": "la ubicación y el ETA se actualizan automáticamente sin recargar la pantalla",
+      "criterios": [
+        "La posición del marcador cambia según el movimiento del bus",
+        "El ETA se recalcula y muestra el nuevo valor",
+        "Se indica la última hora de actualización"
+      ]
+    },
+    {
+      "id": "ESC-03",
+      "titulo": "Sin buses activos en la ruta",
+      "dado": "que el pasajero selecciona una ruta sin buses en circulación",
+      "cuando": "consulta la ubicación y ETA",
+      "entonces": "se muestra un mensaje informativo indicando que no hay buses disponibles",
+      "criterios": [
+        "El mensaje es claro y en español (ej. 'No hay buses activos en este momento')",
+        "No se muestra un mapa vacío ni un ETA erróneo",
+        "Se sugiere al pasajero intentar más tarde o elegir otra ruta"
+      ]
+    },
+    {
+      "id": "ESC-04",
+      "titulo": "Error de conexión o GPS no disponible",
+      "dado": "que el pasajero intenta ver la ubicación y ETA",
+      "cuando": "ocurre un fallo de red o el GPS del bus no reporta",
+      "entonces": "se muestra un mensaje de error controlado y opción de reintentar",
+      "criterios": [
+        "El mensaje indica que no se pudo obtener la información",
+        "Se ofrece un botón 'Reintentar'",
+        "No se bloquea la aplicación ni se muestran datos desactualizados sin advertencia"
+      ]
+    },
+    {
+      "id": "ESC-05",
+      "titulo": "Identificación del bus y ruta",
+      "dado": "que el pasajero visualiza la ubicación y ETA",
+      "cuando": "observa la información del bus",
+      "entonces": "puede identificar el número o placa del bus y el nombre de la ruta",
+      "criterios": [
+        "Se muestra el identificador del bus (ej. 'Bus 12')",
+        "Se muestra el nombre o código de la ruta seleccionada",
+        "La información es consistente con la ruta elegida"
+      ]
+    }
+  ]
+}

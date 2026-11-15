@@ -1,0 +1,1 @@
+{"historia_id":"R3","invest_ok":false,"preguntas":["¿Qué criterio define que una ubicación GPS es 'reciente' (antigüedad máxima aceptable)?","¿Qué tolerancia de distancia respecto al trazado de la ruta define un 'desvío'?","¿Qué canal y formato debe tener la alerta, y a quién del centro de control debe dirigirse?"],"escenarios":[]}

@@ -1,0 +1,40 @@
+# Criterios de Aceptación
+
+**Historia:** Que el seguimiento sea rápido, moderno y fácil de usar.
+
+> ⚠️ **Nota:** La historia es muy amplia y subjetiva ("rápido", "moderno", "fácil de usar"). Los criterios siguientes la descomponen en aspectos verificables. Recomiendo validar los umbrales concretos (tiempos, métricas) con el equipo de producto y UX, ya que son los que hacen los criterios testeables.
+
+---
+
+## 1. Rapidez (rendimiento)
+
+- **CA1.1** — Dado que un usuario accede a la pantalla de seguimiento, cuando la carga, entonces el contenido principal es visible en **≤ 2 segundos** en una conexión de banda ancha estándar (≥ 10 Mbps).
+- **CA1.2** — Dado que un usuario realiza una búsqueda o filtro de seguimiento, cuando aplica el criterio, entonces los resultados se muestran en **≤ 1 segundo** para volúmenes de hasta 1.000 registros.
+- **CA1.3** — Dado que hay actualizaciones de estado en el seguimiento, cuando ocurren, entonces la interfaz se actualiza **sin recargar la página** y en **≤ 5 segundos** desde el cambio en el backend.
+- **CA1.4** — Dado que el usuario navega entre vistas de seguimiento, cuando cambia de pestaña/sección, entonces la transición responde en **≤ 500 ms** (sin bloqueo de la interfaz).
+
+## 2. Modernidad (experiencia e interfaz)
+
+- **CA2.1** — La interfaz sigue el **design system / guía de estilo vigente** de la organización (tipografía, colores, espaciados y componentes reutilizables).
+- **CA2.2** — La pantalla es **responsive** y funcional en resoluciones de escritorio (≥1280px), tablet (768–1279px) y móvil (<768px), sin pérdida de funcionalidad ni scroll horizontal.
+- **CA2.3** — La interfaz cumple **WCAG 2.1 nivel AA**: contraste de color suficiente, navegación por teclado y textos alternativos en elementos no textuales.
+- **CA2.4** — Los estados de carga, vacío y error se comunican visualmente (skeletons, mensajes claros, acciones de recuperación), sin pantallas en blanco.
+- **CA2.5** — La interfaz no presenta elementos obsoletos (pop-ups bloqueantes, tablas no adaptativas, recargas completas de página).
+
+## 3. Facilidad de uso (usabilidad)
+
+- **CA3.1** — Un usuario nuevo completa la tarea principal de seguimiento (localizar el estado de un envío/pedido) **sin ayuda externa** en su primer intento.
+- **CA3.2** — La tarea principal se completa en **≤ 3 pasos/clics** desde el inicio de sesión.
+- **CA3.3** — Los filtros y la búsqueda son visibles sin desplazamiento y conservan su estado al navegar dentro de la sección.
+- **CA3.4** — Los mensajes de error indican **qué ocurrió y cómo resolverlo**, en lenguaje claro y sin códigos técnicos.
+- **CA3.5** — En pruebas de usabilidad con **≥ 5 usuarios representativos**, al menos el **80%** completa la tarea sin errores críticos y la califica como "fácil" o "muy fácil" (escala SUS ≥ 70).
+
+---
+
+## Supuestos y dependencias
+
+- Los umbrales de tiempo (2s, 1s, 5s) son **propuestas**; deben confirmarse con el equipo de producto.
+- CA2.1 y CA2.3 dependen de que exista un design system y una guía de accesibilidad documentados.
+- CA3.5 requiere planificar sesiones de prueba de usabilidad antes del cierre de la historia.
+
+¿Quieres que ajuste los umbrales a un contexto específico (por ejemplo, seguimiento de envíos logísticos, pedidos de e-commerce o tickets de soporte)?
