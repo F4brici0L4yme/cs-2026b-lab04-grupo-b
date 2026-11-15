@@ -4,4 +4,4 @@ La integración detrás de `ProveedorLLM` añade una barrera útil: el consumido
 
 Las cinco respuestas al red team pasaron los criterios definidos para inyección directa e indirecta, extracción, formato y lenguaje. La muestra respalda las defensas probadas, aunque no cubre todas las variantes de ataque. Conservar las respuestas y metadatos permite repetir las aserciones sin volver a llamar al proveedor.
 
-El PR #4 fue aprobado y fusionado por Brayan, y `v0.9-prompts` quedó publicado sobre ese commit. El grupo debe registrar en Aula Virtual el enlace del repositorio y este informe.
+El PR #4 fue aprobado y fusionado por Brayan, y `v0.9-prompts` quedó publicado sobre ese commit. El repositorio contiene el informe, el código fuente y las evidencias de evaluación para su entrega.
