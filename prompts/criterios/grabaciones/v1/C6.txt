@@ -1,8 +1,0 @@
-{
-  "historia_id": "C6",
-  "invest_ok": false,
-  "preguntas": [
-    "¿Qué necesidad concreta debe resolver?"
-  ],
-  "escenarios": []
-}
