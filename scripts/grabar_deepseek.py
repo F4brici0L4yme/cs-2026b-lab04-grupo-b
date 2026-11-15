@@ -19,6 +19,26 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 API_URL = "https://api.deepseek.com/chat/completions"
+
+
+def cargar_env_local() -> None:
+    """Carga pares KEY=VALUE desde .env sin mostrar ni versionar secretos."""
+    env_path = ROOT / ".env"
+    if not env_path.exists():
+        return
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name, value = name.strip(), value.strip()
+        if value[:1] in ("'", '"') and value[-1:] == value[:1]:
+            value = value[1:-1]
+        if name and name not in os.environ:
+            os.environ[name] = value
+
+
+cargar_env_local()
 MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash")
 
 
@@ -35,7 +55,7 @@ def leer_historias() -> list[dict[str, str]]:
 def grabar(prompt: str) -> tuple[str, dict]:
     api_key = os.environ.get("DEEPSEEK_API_KEY")
     if not api_key:
-        raise RuntimeError("Define DEEPSEEK_API_KEY en el entorno; no la pegues en el repositorio ni en el chat.")
+        raise RuntimeError("Define DEEPSEEK_API_KEY en .env local o en el entorno; no la pegues en el repositorio ni en el chat.")
     payload = {
         "model": MODEL,
         "messages": [{"role": "user", "content": prompt}],
