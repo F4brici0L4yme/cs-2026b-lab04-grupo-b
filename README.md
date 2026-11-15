@@ -273,4 +273,4 @@ Caso didáctico RutaSIT: historias y funciones de ETA usadas en las tareas está
 
 ![Gráfico de evaluación manual por versión](docs/lab09/evaluacion.svg)
 
-Lecciones: pedir JSON mejora la integración, pero no garantiza cobertura; hay que comprobar las propiedades del caso además del esquema. Las pruebas se ejecutan contra el snippet asociado. Mantener datos ficticios y delimitar instrucciones reduce riesgos de inyección.
+Lecciones: pedir JSON mejora la integración, pero no garantiza cobertura; hay que comprobar las propiedades del caso además del esquema. Las pruebas se ejecutan contra el snippet asociado. Mantener datos de prueba y delimitar instrucciones reduce riesgos de inyección. En E5 el verificador confirma la presencia de defensas en las plantillas; E7 compara respuestas locales guardadas. Ninguno de esos checks acredita ejecución contra un proveedor LLM.
