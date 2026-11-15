@@ -1,0 +1,4 @@
+{
+  "caso_id": "E1",
+  "pruebas": "def test_eta():\n    assert calcular(1000) == 2.0"
+}

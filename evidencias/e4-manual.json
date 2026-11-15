@@ -1,0 +1,71 @@
+{
+  "source": "simulated fixtures, deterministic offline checks; not live model output",
+  "results": {
+    "v1": {
+      "json": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      },
+      "id": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      },
+      "three_asserts": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      },
+      "pytest_pass": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      }
+    },
+    "v2": {
+      "json": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      },
+      "id": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      },
+      "three_asserts": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      },
+      "pytest_pass": {
+        "pass": 0,
+        "total": 8,
+        "pct": 0.0
+      }
+    },
+    "v3": {
+      "json": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      },
+      "id": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      },
+      "three_asserts": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      },
+      "pytest_pass": {
+        "pass": 8,
+        "total": 8,
+        "pct": 100.0
+      }
+    }
+  }
+}

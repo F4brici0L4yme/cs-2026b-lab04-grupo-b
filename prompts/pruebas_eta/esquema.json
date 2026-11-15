@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "required": [
+    "caso_id",
+    "pruebas"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "caso_id": {
+      "type": "string"
+    },
+    "pruebas": {
+      "type": "string",
+      "minLength": 20
+    }
+  }
+}
