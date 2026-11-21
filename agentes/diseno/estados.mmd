@@ -1,0 +1,21 @@
+stateDiagram-v2
+    [*] --> INICIO
+    INICIO --> DECIDIENDO
+    DECIDIENDO --> VALIDANDO_CONTRATO
+    VALIDANDO_CONTRATO --> CONTRATO_INVALIDO: JSON inválido
+    CONTRATO_INVALIDO --> DECIDIENDO: agregar observación / paso disponible
+    VALIDANDO_CONTRATO --> FINALIZADO: decisión final válida
+    VALIDANDO_CONTRATO --> EVALUANDO_POLITICA: acción válida
+    EVALUANDO_POLITICA --> BLOQUEADO: ruta/comando/rol no permitido
+    BLOQUEADO --> DECIDIENDO: observación de bloqueo
+    EVALUANDO_POLITICA --> ESPERANDO_APROBACION: edición aprobable
+    ESPERANDO_APROBACION --> BLOQUEADO: humano responde n
+    ESPERANDO_APROBACION --> EJECUTANDO: humano responde s
+    EVALUANDO_POLITICA --> EJECUTANDO: acción permitida
+    EJECUTANDO --> OBSERVANDO
+    OBSERVANDO --> DECIDIENDO: herramienta devuelve observación
+    DECIDIENDO --> LIMITE_ALCANZADO: máximo de pasos
+    CONTRATO_INVALIDO --> LIMITE_ALCANZADO: máximo de pasos
+    BLOQUEADO --> LIMITE_ALCANZADO: máximo de pasos
+    FINALIZADO --> [*]
+    LIMITE_ALCANZADO --> [*]
