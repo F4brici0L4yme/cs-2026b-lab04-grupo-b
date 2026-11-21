@@ -1,0 +1,13 @@
+[project]
+name = "rutasit-agentes-lab09"
+version = "0.1.0"
+description = "Sistema multiagente seguro y reproducible para RutaSIT Arequipa"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "radon>=6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["caso_rutasit/src", "."]

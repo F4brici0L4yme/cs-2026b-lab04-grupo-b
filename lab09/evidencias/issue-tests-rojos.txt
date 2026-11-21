@@ -1,0 +1,14 @@
+E1 — reproducción inicial, antes de los cambios del agente
+Comando: python -m pytest -q lab09/tests/test_issue_*.py
+
+Resultado real:
+4 failed, 1 passed
+
+Fallos observados:
+- ISSUE-01: ETA calculada como -0.24 en vez de 0.
+- ISSUE-02: dos ubicaciones sobre segmentos del trazado curvo se marcaron como fuera de ruta; una cubre waypoints repetidos.
+- ISSUE-03: una lectura ausente devolvió estado ACTUAL en vez de SIN_DATOS.
+
+El único caso que pasó fue la ubicación que estaba lejos del trazado. Esta
+salida se obtuvo antes de aplicar los cambios y se conserva como evidencia de
+reproducción; no es una salida posterior.
