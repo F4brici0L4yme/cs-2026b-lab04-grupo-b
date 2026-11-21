@@ -1,0 +1,35 @@
+sequenceDiagram
+    actor Humano
+    participant E1 as ejecutor issue01
+    participant C as Contrato y política
+    participant H as Herramientas
+    Humano->>E1: Objetivo y límites
+    E1->>C: Paso 1: validar listar_archivos
+    C-->>E1: permitido
+    E1->>H: listar_archivos
+    H-->>E1: lab09/caso_rutasit/src/rutasit_demo/__init__.py lab09/caso_rutasit/src/rutasit_demo/seguim
+    E1->>C: Paso 2: validar ejecutar_comando
+    C-->>E1: permitido
+    E1->>H: ejecutar_comando
+    H-->>E1: código=1 F                                                                        [100%] =
+    E1->>C: Paso 3: validar leer_archivo
+    C-->>E1: permitido
+    E1->>H: leer_archivo
+    H-->>E1: # ISSUE-01: el ETA se vuelve negativo después de pasar el paradero  **Observado:** si el b
+    E1->>C: Paso 4: validar buscar
+    C-->>E1: permitido
+    E1->>H: buscar
+    H-->>E1: lab09/caso_rutasit/src/rutasit_demo/__init__.py:5:     calcular_eta_minutos, lab09/caso_ru
+    E1->>C: Paso 5: validar editar_archivo
+    C-->>E1: permitido
+    E1->>H: editar_archivo
+    H-->>E1: OK: lab09/caso_rutasit/src/rutasit_demo/seguimiento.py modificado
+    E1->>C: Paso 6: validar ejecutar_comando
+    C-->>E1: permitido
+    E1->>H: ejecutar_comando
+    H-->>E1: código=0 .                                                                        [100%] 1
+    E1->>C: Paso 7: validar ejecutar_comando
+    C-->>E1: permitido
+    E1->>H: ejecutar_comando
+    H-->>E1: código=0 lab09/caso_rutasit/src/rutasit_demo/seguimiento.py     F 22:0 esta_en_ruta - A (5
+    E1-->>Humano: Issue 01 corregido: la ETA se limita a cero cuando el bus ya pasó el paradero. Prueba de regresión ejecutada.
