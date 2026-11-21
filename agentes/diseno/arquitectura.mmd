@@ -1,0 +1,28 @@
+flowchart LR
+    HUM[Revisor humano]
+    ORQ[Orquestador / planificador]
+    EXE[Agente ejecutor<br/>ReAct]
+    REV[Agente revisor<br/>solo lectura]
+    MODEL[ModeloInteractivo<br/>o ModeloGrabado]
+    CONTRACT[Contrato JSON]
+    POLICY[Política por rol<br/>pasos, rutas, comandos]
+    TOOLS[Herramientas<br/>leer, buscar, editar, pytest]
+    MEM[(Notas del agente)]
+    TRACE[(Trazas JSONL)]
+    REPO[(Sandbox RutaSIT)]
+    TESTS[Pruebas protegidas]
+
+    ORQ --> EXE
+    ORQ --> REV
+    EXE <--> MODEL
+    REV <--> MODEL
+    EXE --> CONTRACT --> POLICY
+    REV --> CONTRACT
+    POLICY --> TOOLS
+    TOOLS <--> REPO
+    TOOLS <--> MEM
+    TOOLS --> TESTS
+    EXE --> TRACE
+    REV --> TRACE
+    TRACE --> HUM
+    HUM -->|aprueba o rechaza cada edición| POLICY

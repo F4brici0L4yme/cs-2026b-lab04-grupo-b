@@ -276,3 +276,47 @@ Caso didáctico RutaSIT: historias y funciones de ETA usadas en las tareas está
 Lecciones: pedir JSON mejora la integración, pero no garantiza cobertura; hay que comprobar las propiedades del caso además del esquema. Las pruebas se ejecutan contra el snippet asociado. Mantener datos de prueba y delimitar instrucciones reduce riesgos de inyección. En E5 el verificador confirma la presencia de defensas en las plantillas; E7 compara respuestas locales guardadas. Ninguno de esos checks acredita ejecución contra un proveedor LLM.
 
 Para grabar respuestas originales con la API de DeepSeek, define `DEEPSEEK_API_KEY` solo en el entorno local y ejecuta `python scripts/grabar_deepseek.py --dry-run`; después usa `--only A`, `--only ETA`, `--only E5`, `--only E7` o `--only all`. El modo completo realiza hasta 65 solicitudes a `deepseek-flash` con temperatura 0 y guarda cada respuesta sin modificar en `evidencias/deepseek-raw/`, junto con metadatos separados. Se puede volver a ejecutar tras una interrupción: conserva los registros completos y no repite esas solicitudes. Las solicitudes pueden generar cargos en la cuenta del proveedor; el script no registra ni guarda la clave.
+
+## Sistemas agénticos (Lab09)
+
+Entregables E1–E8 del sistema multiagente aplicado a **RutaSIT Arequipa**. El
+trabajo se organiza por entregable, sin dividirlo entre sesión presencial y
+trabajo autónomo. El mini caso ejecutable está aislado de los Labs 05–08 en
+[`lab09/caso_rutasit/`](lab09/caso_rutasit/).
+
+| Entregable | Archivos y evidencia |
+|---|---|
+| E1: lienzo e issues | [`agentes/diseno/lienzo.md`](agentes/diseno/lienzo.md), `lab09/issues/ISSUE-01.md`–`ISSUE-03.md`, pruebas protegidas en `lab09/tests/` |
+| E2: agente ReAct | `agentes/agente/`, trayectoria JSON sin API en `agentes/trayectorias/issue01.json`, traza JSONL y fuente Mermaid en `agentes/trazas/issue01.*` |
+| E3: estados y contrato | `agentes/diseno/estados.mmd`, `estados.puml`, y pruebas de `agentes/pruebas_agente/` |
+| E4: herramienta y memoria | `mapa_repo()` usa `ast`; `anotar()`/`leer_notas()` usan `agentes/notas.md`; pruebas en `agentes/pruebas_agente/test_herramientas.py` |
+| E5: coordinación | `agentes/orquestador.py`; comparación grabada para issue 02 en `agentes/trazas/` y `agentes/observacion.md` |
+| E6: aprobación humana | `agentes/delegacion.md`; use `--aprobar-ediciones` para exigir `s` o `n` antes de cada edición |
+| E7: observación | Métricas calculadas desde trazas en `agentes/observacion.md`; bitácora en `agentes/bitacora-ia.md` |
+| E8: arquitectura y README | [ADR-010](docs/architecture/adr/010-sistema-agentico.md); el tag `v1.0-agentes` queda pendiente de revisión e integración humana |
+
+Los tres issues tratan ETA negativa al pasar el paradero, distancia GPS a
+segmentos de una curva y ausencia de datos GPS. Las pruebas fallaron antes de
+los cambios y pasan después. Las decisiones grabadas se reproducen sin API:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-lab09.txt
+python -m pytest -c lab09/pyproject.toml -q lab09/tests agentes/pruebas_agente
+python -m agentes.reproducir todo
+python agentes/traza.py agentes/trazas/issue01.jsonl agentes/trazas/issue01.mmd
+```
+
+`todo` restablece cada función a su estado inicial guardado, reproduce
+ISSUE-01 en el adaptador interactivo, compara ISSUE-02 con agente único y
+actor-crítico, resuelve ISSUE-03 y deja el módulo final corregido.
+
+Para copiar decisiones desde un asistente externo en vivo, use
+`python -m agentes.ejecutar --raiz . --objetivo "Resuelve ISSUE-01" --traza agentes/trazas/manual.jsonl --interactivo --aprobar-ediciones`.
+
+Fuentes de diagramas editables: [`arquitectura.mmd`](agentes/diseno/arquitectura.mmd),
+[`estados.mmd`](agentes/diseno/estados.mmd), [`estados.puml`](agentes/diseno/estados.puml)
+y trazas Mermaid generadas desde JSONL. El informe deja espacios para pegar los
+diagramas; no contiene imágenes inventadas. La revisión del grupo, aprobación
+humana del PR, integración y etiqueta siguen pendientes. No se hicieron commits.
