@@ -1,0 +1,1 @@
+- ISSUE-03: si eta_min es None, el DTO debe marcar SIN_DATOS y no ACTUAL.
