@@ -1,0 +1,8 @@
+{
+  "decisiones": [
+    {
+      "pensamiento": "Conviene reproducir el fallo, inspeccionar la geometría, corregir el cálculo mínimo a segmentos, probar duplicados y pedir una revisión independiente.",
+      "final": "Plan: 1) ejecutar prueba del issue; 2) leer la función; 3) calcular proyección de la posición en cada segmento con manejo de longitud cero; 4) ejecutar regresiones; 5) pedir revisión de solo lectura."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "fuente": "Decisiones grabadas de OpenCode para comparar agente único y actor-crítico.",
+  "decisiones": [
+    {
+      "pensamiento": "Leo la incidencia antes de explorar el módulo.",
+      "accion": "leer_archivo",
+      "args": {"ruta": "lab09/issues/ISSUE-02.md"}
+    },
+    {
+      "pensamiento": "La prueba debe fallar con el algoritmo basado solo en waypoints.",
+      "accion": "ejecutar_comando",
+      "args": {"comando": "python -m pytest -c lab09/pyproject.toml -q lab09/tests/test_issue_02_curvas.py"}
+    },
+    {
+      "pensamiento": "Busco el cálculo de proximidad actual.",
+      "accion": "buscar",
+      "args": {"texto": "return min(hypot", "ruta": "lab09/caso_rutasit/src"}
+    },
+    {
+      "pensamiento": "Inspecciono la función y mantengo su interfaz pública.",
+      "accion": "leer_archivo",
+      "args": {"ruta": "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py"}
+    },
+    {
+      "pensamiento": "La distancia debe calcularse a cada segmento y manejar waypoints repetidos.",
+      "accion": "editar_archivo",
+      "args": {
+        "ruta": "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py",
+        "antes": "    return min(hypot(ubicacion.x_m - p.x_m, ubicacion.y_m - p.y_m) for p in trazado) <= tolerancia_m",
+        "despues": "    distancias: list[float] = []\n    for inicio, fin in zip(trazado, trazado[1:]):\n        dx = fin.x_m - inicio.x_m\n        dy = fin.y_m - inicio.y_m\n        longitud2 = dx * dx + dy * dy\n        if longitud2 == 0:\n            distancia = hypot(ubicacion.x_m - inicio.x_m, ubicacion.y_m - inicio.y_m)\n        else:\n            numerador = (ubicacion.x_m - inicio.x_m) * dx + (ubicacion.y_m - inicio.y_m) * dy\n            t = max(0.0, min(1.0, numerador / longitud2))\n            x_cercano = inicio.x_m + t * dx\n            y_cercano = inicio.y_m + t * dy\n            distancia = hypot(ubicacion.x_m - x_cercano, ubicacion.y_m - y_cercano)\n        distancias.append(distancia)\n    return min(distancias) <= tolerancia_m"
+      }
+    },
+    {
+      "pensamiento": "Ejecuto las pruebas de curva, ubicación lejana y waypoint repetido.",
+      "accion": "ejecutar_comando",
+      "args": {"comando": "python -m pytest -c lab09/pyproject.toml -q lab09/tests/test_issue_02_curvas.py"}
+    },
+    {
+      "pensamiento": "La distancia por segmentos queda cubierta por las pruebas del issue.",
+      "final": "Issue 02 corregido en una sola ejecución: se calcula distancia a segmentos y se manejan segmentos degenerados."
+    }
+  ]
+}
