@@ -12,7 +12,7 @@ def test_politica_bloquea_comandos_de_red_y_permite_pytest():
     ).permitido
     assert politica.evaluar(
         "ejecutar_comando",
-        {"comando": "python -m pytest -c lab09/pyproject.toml -q lab09/tests"},
+        {"comando": "python -m pytest -c lab10/pyproject.toml -q lab10/tests"},
         1,
         raiz,
     ).permitido
@@ -23,7 +23,7 @@ def test_politica_bloquea_tests_y_edicion_fuera_del_area():
     raiz = Path.cwd()
     assert not politica.evaluar(
         "editar_archivo",
-        {"ruta": "lab09/tests/test_x.py", "antes": "a", "despues": "b"},
+        {"ruta": "lab10/tests/test_x.py", "antes": "a", "despues": "b"},
         1,
         raiz,
     ).permitido
@@ -40,7 +40,7 @@ def test_politica_valida_aprobacion_humana():
     decision = politica.evaluar(
         "editar_archivo",
         {
-            "ruta": "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py",
+            "ruta": "lab10/caso_rutasit/src/rutasit_demo/seguimiento.py",
             "antes": "a",
             "despues": "b",
         },

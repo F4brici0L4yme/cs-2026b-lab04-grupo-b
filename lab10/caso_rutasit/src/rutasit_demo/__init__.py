@@ -1,4 +1,4 @@
-"""Casos reducidos de RutaSIT para probar el sistema agéntico del Lab09."""
+"""Casos reducidos de RutaSIT para probar el sistema agéntico del Lab10."""
 
 from .seguimiento import (
     Punto,

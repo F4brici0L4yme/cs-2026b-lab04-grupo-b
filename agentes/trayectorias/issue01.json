@@ -4,28 +4,28 @@
     {
       "pensamiento": "Primero ubico el módulo mínimo del caso para limitar la inspección.",
       "accion": "listar_archivos",
-      "args": {"ruta": "lab09/caso_rutasit/src"}
+      "args": {"ruta": "lab10/caso_rutasit/src"}
     },
     {
       "pensamiento": "Reproduzco el issue antes de tocar el código.",
       "accion": "ejecutar_comando",
-      "args": {"comando": "python -m pytest -c lab09/pyproject.toml -q lab09/tests/test_issue_01_eta.py"}
+      "args": {"comando": "python -m pytest -c lab10/pyproject.toml -q lab10/tests/test_issue_01_eta.py"}
     },
     {
       "pensamiento": "Leo el contrato esperado y el escenario reportado.",
       "accion": "leer_archivo",
-      "args": {"ruta": "lab09/issues/ISSUE-01.md"}
+      "args": {"ruta": "lab10/issues/ISSUE-01.md"}
     },
     {
       "pensamiento": "Localizo la función que convierte distancia y velocidad a ETA.",
       "accion": "buscar",
-      "args": {"texto": "calcular_eta_minutos", "ruta": "lab09/caso_rutasit/src"}
+      "args": {"texto": "calcular_eta_minutos", "ruta": "lab10/caso_rutasit/src"}
     },
     {
       "pensamiento": "La fórmula propaga una distancia negativa; la corrección debe limitarla a cero.",
       "accion": "editar_archivo",
       "args": {
-        "ruta": "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py",
+        "ruta": "lab10/caso_rutasit/src/rutasit_demo/seguimiento.py",
         "antes": "    return round(distancia_m / velocidad_m_s / 60, 2)",
         "despues": "    return round(max(0.0, distancia_m) / velocidad_m_s / 60, 2)"
       }
@@ -33,12 +33,12 @@
     {
       "pensamiento": "Verifico la regresión del issue después del cambio.",
       "accion": "ejecutar_comando",
-      "args": {"comando": "python -m pytest -c lab09/pyproject.toml -q lab09/tests/test_issue_01_eta.py"}
+      "args": {"comando": "python -m pytest -c lab10/pyproject.toml -q lab10/tests/test_issue_01_eta.py"}
     },
     {
       "pensamiento": "Reviso que el módulo siga teniendo complejidad baja.",
       "accion": "ejecutar_comando",
-      "args": {"comando": "radon cc -s lab09/caso_rutasit/src"}
+      "args": {"comando": "radon cc -s lab10/caso_rutasit/src"}
     },
     {
       "pensamiento": "La prueba del caso pasó; no edité las pruebas.",

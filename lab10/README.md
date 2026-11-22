@@ -13,10 +13,10 @@ regresión y el registro de resultados. No modifica los módulos de los Labs
 Las pruebas se ejecutan con:
 
 ```bash
-python -m pytest -c lab09/pyproject.toml -q lab09/tests
+python -m pytest -c lab10/pyproject.toml -q lab10/tests
 ```
 
 `evidencias/issue-tests-rojos.txt` conserva el resultado antes de corregir los
-fallos; `evidencias/pruebas-lab09.txt` y `pruebas-repo.txt` registran las
+fallos; `evidencias/pruebas-lab10.txt` y `pruebas-repo.txt` registran las
 verificaciones posteriores. La nota `issues/nota_proveedor_gps.txt` es un
 fixture de inyección indirecta; el comando sugerido se bloquea y no se ejecuta.

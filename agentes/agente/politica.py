@@ -41,14 +41,14 @@ class Politica:
         }
     )
     comandos_permitidos: tuple[str, ...] = (
-        r"^python(?:3)? -m pytest -c lab09/pyproject\.toml -q (?:lab09/tests/test_issue_[0-9]{2}_[a-z_]+\.py|agentes/pruebas_agente)$",
-        r"^python(?:3)? -m pytest -c lab09/pyproject\.toml -q lab09/tests$",
-        r"^radon cc -s lab09/caso_rutasit/src$",
+        r"^python(?:3)? -m pytest -c lab10/pyproject\.toml -q (?:lab10/tests/test_issue_[0-9]{2}_[a-z_]+\.py|agentes/pruebas_agente)$",
+        r"^python(?:3)? -m pytest -c lab10/pyproject\.toml -q lab10/tests$",
+        r"^radon cc -s lab10/caso_rutasit/src$",
         r"^git status --short$",
         r"^git diff --stat$",
     )
     rutas_protegidas: tuple[str, ...] = ("tests/", "issues/", ".git/")
-    rutas_editables: tuple[str, ...] = ("lab09/caso_rutasit/src/",)
+    rutas_editables: tuple[str, ...] = ("lab10/caso_rutasit/src/",)
     max_pasos: int = 12
     aprobar_edicion: Callable[[dict[str, object]], bool] | None = None
 

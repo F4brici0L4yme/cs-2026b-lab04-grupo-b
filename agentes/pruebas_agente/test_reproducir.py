@@ -2,10 +2,10 @@ from agentes.reproducir import restablecer_funcion_inicial
 
 
 def test_restaurar_funcion_no_cambia_las_otras_correcciones(tmp_path):
-    (tmp_path / "lab09/caso_rutasit/src/rutasit_demo").mkdir(parents=True)
-    (tmp_path / "lab09/caso_rutasit/fixtures").mkdir(parents=True)
-    actual = tmp_path / "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py"
-    base = tmp_path / "lab09/caso_rutasit/fixtures/seguimiento_inicial.py"
+    (tmp_path / "lab10/caso_rutasit/src/rutasit_demo").mkdir(parents=True)
+    (tmp_path / "lab10/caso_rutasit/fixtures").mkdir(parents=True)
+    actual = tmp_path / "lab10/caso_rutasit/src/rutasit_demo/seguimiento.py"
+    base = tmp_path / "lab10/caso_rutasit/fixtures/seguimiento_inicial.py"
     actual.write_text(
         "def eta():\n    return 0\n\n"
         "def ruta():\n    return True\n\n"

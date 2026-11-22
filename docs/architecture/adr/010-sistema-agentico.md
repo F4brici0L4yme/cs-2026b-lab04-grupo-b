@@ -31,7 +31,7 @@ cambio.
 Construir un mini framework Python de aproximadamente 300 líneas, con contrato
 JSON estricto, `ModeloInteractivo` y `ModeloGrabado`, herramientas de lectura,
 búsqueda, mapa AST, edición exacta, pruebas permitidas, notas y trazas JSONL.
-El ejecutor solo puede editar el módulo demostrativo de `lab09`; `tests/`,
+El ejecutor solo puede editar el módulo demostrativo de `lab10`; `tests/`,
 `issues/`, red, merge y publicación quedan fuera de sus permisos.
 
 Para ISSUE-02 se comparan agente único y actor-crítico con máximo dos rondas.

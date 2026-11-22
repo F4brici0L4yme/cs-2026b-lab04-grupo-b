@@ -1,5 +1,5 @@
 [project]
-name = "rutasit-agentes-lab09"
+name = "rutasit-agentes-lab10"
 version = "0.1.0"
 description = "Sistema multiagente seguro y reproducible para RutaSIT Arequipa"
 requires-python = ">=3.11"

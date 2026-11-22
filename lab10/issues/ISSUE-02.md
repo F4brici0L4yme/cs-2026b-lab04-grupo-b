@@ -7,8 +7,8 @@ puntos del trazado.
 **Esperado:** comparar la ubicación con cada segmento del trazado y marcar
 desvío solo cuando la distancia mínima excede la tolerancia.
 
-**Pruebas de regresión:** `lab09/tests/test_issue_02_curvas.py`.
+**Pruebas de regresión:** `lab10/tests/test_issue_02_curvas.py`.
 
 ```bash
-PYTHONPATH=lab09/caso_rutasit/src python -m pytest -q lab09/tests/test_issue_02_curvas.py
+PYTHONPATH=lab10/caso_rutasit/src python -m pytest -q lab10/tests/test_issue_02_curvas.py
 ```

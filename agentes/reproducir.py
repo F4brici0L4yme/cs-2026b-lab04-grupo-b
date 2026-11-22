@@ -15,8 +15,8 @@ from agentes.orquestador import OrquestadorActorCritico
 
 
 def restablecer_funcion_inicial(raiz: Path, nombre_funcion: str) -> None:
-    fuente = raiz / "lab09/caso_rutasit/src/rutasit_demo/seguimiento.py"
-    base = raiz / "lab09/caso_rutasit/fixtures/seguimiento_inicial.py"
+    fuente = raiz / "lab10/caso_rutasit/src/rutasit_demo/seguimiento.py"
+    base = raiz / "lab10/caso_rutasit/fixtures/seguimiento_inicial.py"
     contenido = fuente.read_text(encoding="utf-8")
     inicial = base.read_text(encoding="utf-8")
     nodo_actual = next(

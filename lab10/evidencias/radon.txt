@@ -1,4 +1,4 @@
-lab09/caso_rutasit/src/rutasit_demo/seguimiento.py
+lab10/caso_rutasit/src/rutasit_demo/seguimiento.py
     F 22:0 esta_en_ruta - A (5)
     F 16:0 calcular_eta_minutos - A (2)
     F 48:0 crear_respuesta_gps - A (2)

@@ -1,5 +1,5 @@
 E1 — reproducción inicial, antes de los cambios del agente
-Comando: python -m pytest -q lab09/tests/test_issue_*.py
+Comando: python -m pytest -q lab10/tests/test_issue_*.py
 
 Resultado real:
 4 failed, 1 passed

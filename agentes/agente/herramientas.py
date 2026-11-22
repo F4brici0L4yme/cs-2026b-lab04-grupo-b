@@ -70,7 +70,7 @@ class Herramientas:
                 continue
         return "\n".join(resultados[:40]) or "(sin coincidencias)"
 
-    def mapa_repo(self, ruta: str = "lab09/caso_rutasit/src") -> str:
+    def mapa_repo(self, ruta: str = "lab10/caso_rutasit/src") -> str:
         base = self._ruta(ruta)
         if not base.is_dir():
             return f"ERROR: no es un directorio: {ruta}"
