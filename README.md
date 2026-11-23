@@ -325,8 +325,8 @@ locales y todavía no se han enviado.
 
 ## Desarrollo asistido por IA (Lab 12)
 
-HU-12 mejora la estimación de llegada mediante la distancia restante sobre el trazado, integrada con `SeguimientoService`. El flujo documentado usa spec/plan/tasks, pruebas TDD, revisión asistida y revisión humana en Pull Request, y compuertas de pytest/cobertura, Ruff, Bandit, Radon y regresiones. En el PR #6, CI pasó y Castillo solicitó cambios; las revisiones se registran en `docs/lab12/revision-pr.md`.
+HU-12 mejora la estimación de llegada mediante la distancia restante sobre el trazado, integrada con `SeguimientoService`. El flujo usa spec/plan/tasks, pruebas TDD, revisión asistida y revisión humana en Pull Request, y compuertas de pytest/cobertura, Ruff, Bandit, Radon, allowlist y regresiones. En el PR #6, Castillo solicitó cambios; Brayan revisó las correcciones y aprobó en un comentario del PR. Los workflows `calidad` y `arquitectura` pasaron y el PR se fusionó; el registro está en `docs/lab12/revision-pr.md`.
 
-La ejecución local actual registra 8 pruebas HU-12 aprobadas con 95.77 % de cobertura; Lab 05: 10 passed; Lab 07: 30 passed, 1 xfailed; Lab 10: 5 passed. Las evidencias del análisis comparativo y de la revisión del PR se completarán después de las actividades humanas requeridas.
+La ejecución capturada registra 8 pruebas HU-12 aprobadas con 95.77 % de cobertura; Lab 05: 10 passed; Lab 07: 30 passed, 1 xfailed; Lab 10: 5 passed. El archivo `docs/lab12/experimento.csv` permanece vacío: E6 requiere mediciones reales del grupo y la tabla de demostración no cuenta como resultado. El ADR-012 sigue propuesto y falta crear la etiqueta `v1.2-ia`.
 
 Ver [spec HU-12](specs/hu-12/spec.md), [plan](specs/hu-12/plan.md), [sesión IA](docs/lab12/sesion-ia.md), [bitácora](docs/lab12/bitacora-ia.md), [experimento](docs/lab12/experimento.md) y [ADR-012](docs/architecture/adr/012-uso-de-ia.md).
