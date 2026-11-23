@@ -6,3 +6,7 @@ __pycache__/
 # Salidas temporales
 capture_logs/
 submission/
+
+# Cobertura de pruebas
+.coverage
+.coverage.*
