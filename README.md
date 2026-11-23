@@ -321,3 +321,12 @@ y trazas Mermaid generadas desde JSONL. El informe deja espacios para pegar los
 diagramas; no contiene imágenes inventadas. La revisión del grupo, aprobación
 humana del PR, integración y etiqueta siguen pendientes. Los commits E1–E8 están
 locales y todavía no se han enviado.
+
+
+## Desarrollo asistido por IA (Lab 12)
+
+HU-12 mejora la estimación de llegada mediante la distancia restante sobre el trazado, integrada con `SeguimientoService`. El flujo documentado usa spec/plan/tasks, pruebas TDD, revisión asistida y revisión humana en Pull Request, y compuertas de pytest/cobertura, Ruff, Bandit, Radon y regresiones. En el PR #6, CI pasó y Castillo solicitó cambios; las revisiones se registran en `docs/lab12/revision-pr.md`.
+
+La ejecución local actual registra 8 pruebas HU-12 aprobadas con 95.77 % de cobertura; Lab 05: 10 passed; Lab 07: 30 passed, 1 xfailed; Lab 10: 5 passed. Las evidencias del análisis comparativo y de la revisión del PR se completarán después de las actividades humanas requeridas.
+
+Ver [spec HU-12](specs/hu-12/spec.md), [plan](specs/hu-12/plan.md), [sesión IA](docs/lab12/sesion-ia.md), [bitácora](docs/lab12/bitacora-ia.md), [experimento](docs/lab12/experimento.md) y [ADR-012](docs/architecture/adr/012-uso-de-ia.md).
