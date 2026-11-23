@@ -94,3 +94,9 @@ def test_estimador_falla_si_no_existe_ruta() -> None:
 
     with pytest.raises(ValueError, match="No existe la ruta"):
         estimator.calcular_eta(bus, paradero, AHORA)
+
+
+def test_distancia_restante_rechaza_paradero_alejado_de_ruta() -> None:
+    ruta = (punto(-16.4, -71.54), punto(-16.4, -71.53))
+    with pytest.raises(ValueError, match="cerca del trazado"):
+        distancia_restante_m(ruta, punto(-16.4, -71.539), punto(-16.39, -71.52))

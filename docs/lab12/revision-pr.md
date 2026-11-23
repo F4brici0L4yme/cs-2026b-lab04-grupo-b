@@ -1,12 +1,14 @@
 # Revisión del PR — HU-12
 
-PR: pendiente de creación/publicación.
+PR #6: https://github.com/F4brici0L4yme/cs-2026b-lab04-grupo-b/pull/6
 
-## Revisión automática
-Pendiente de ejecutar en GitHub cuando el PR esté publicado.
+## Revisión automática / asistida
+Revisión independiente del agente: encontró información de estado desactualizada, falta de comparación completa E5, dependencias ausentes en el ZIP fuente y una rama sin prueba para paradero fuera del trazado.
 
 ## Revisión humana cruzada
-La guía requiere que otro integrante revise el PR usando `calidad/revision_pr.md`. Pendiente de revisión por integrante; no se atribuyen hallazgos ficticios.
+Castillo publicó su revisión el 23/11/2026 y solicitó cambios. La captura reproducible de su comentario está en `informe/images/revision-pr-castillo.png`.
 
-## Comparación y correcciones
-Se completará después de recibir ambas revisiones. CI local observado: 7 pruebas HU-12; cobertura 92.96 %; Ruff, Bandit, Radon y regresiones Lab 05/07/10 pasan.
+## Coincidencias y correcciones
+Coincidimos en los cuatro hallazgos bloqueantes: documentación del PR, comparación de compuertas E5, descripción de revisiones en README y contenido ejecutable del ZIP. También coincidimos en marcar tareas terminadas y cubrir el paradero fuera de la ruta. La revisión pidió alinear el verificador con la allowlist; se alineó con el archivo aprobado como fuente.
+
+CI inicial de la revisión: `calidad` y `arquitectura` pasaron. Se aplicaron las correcciones solicitadas y se volvió a verificar localmente; la revisión de seguimiento de Castillo queda pendiente.

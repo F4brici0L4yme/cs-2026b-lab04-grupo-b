@@ -19,7 +19,11 @@ def ejecutar(*comando: str, pythonpath: str | None = None) -> None:
 
 def verificar_dependencias() -> None:
     """Rechaza imports de terceros fuera de la allowlist del proyecto."""
-    permitidos = set(sys.stdlib_module_names) | {"rutasit"}
+    allowlist = Path("calidad/dependencias_aprobadas.txt").read_text().splitlines()
+    permitidos = set(sys.stdlib_module_names)
+    for linea in allowlist:
+        nombre = linea.split()[0].split("==")[0]
+        permitidos.add(nombre.replace("-", "_"))
     encontrados: set[str] = set()
     for archivo in Path("lab12/src").rglob("*.py"):
         arbol = ast.parse(archivo.read_text())
