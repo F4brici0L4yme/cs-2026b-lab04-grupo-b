@@ -22,8 +22,11 @@
 
 #include "sections/1-resultados.typ"
 #v(0.5em)
+#pagebreak()
 #include "sections/2-cuestionario.typ"
 #v(0.5em)
+#pagebreak()
 #include "sections/3-conclusiones.typ"
 #v(0.5em)
+#pagebreak()
 #include "sections/4-referencias.typ"
