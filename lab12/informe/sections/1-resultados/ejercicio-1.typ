@@ -16,3 +16,6 @@ En E4, Castillo revisó el PR y solicitó cambios; la revisión asistida identif
 Castillo revisó el PR y solicitó cambios. Coincidimos en los hallazgos y corregimos el estado de la documentación, la evidencia comparativa, el paquete fuente y las pruebas de borde.
 
 #figure(image("../../images/revision-pr-castillo.png", width: 96%), caption: [Captura del comentario de revisión de Castillo en el PR #6.])
+
+
+#figure(image("../../images/ci-pr-6.png", width: 96%), caption: [Estado final de los workflows `calidad` y `arquitectura` del PR #6.])

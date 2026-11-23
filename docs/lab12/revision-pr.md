@@ -11,4 +11,4 @@ Castillo publicó su revisión el 23/11/2026 y solicitó cambios. La captura rep
 ## Coincidencias y correcciones
 Coincidimos en los cuatro hallazgos bloqueantes: documentación del PR, comparación de compuertas E5, descripción de revisiones en README y contenido ejecutable del ZIP. También coincidimos en marcar tareas terminadas y cubrir el paradero fuera de la ruta. La revisión pidió alinear el verificador con la allowlist; se alineó con el archivo aprobado como fuente.
 
-CI inicial de la revisión: `calidad` y `arquitectura` pasaron. Se aplicaron las correcciones solicitadas y se volvió a verificar localmente; la revisión de seguimiento de Castillo queda pendiente.
+CI inicial y posterior a las correcciones: `calidad` y `arquitectura` pasaron en GitHub Actions. Se aplicaron las correcciones solicitadas; la revisión de seguimiento de Castillo queda pendiente. La captura de CI está incluida en el informe.
