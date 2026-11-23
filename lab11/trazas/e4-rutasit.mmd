@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant Agent as Agente Lab 10
+    participant MCP as RutaSIT MCP
+    Agent->>MCP: tools/call tiempo_llegada
+    MCP-->>Agent: resultado tiempo_llegada
+    Agent->>MCP: tools/call buses_en_ruta
+    MCP-->>Agent: resultado buses_en_ruta
+    Agent->>MCP: tools/call reportar_desvio
+    MCP-->>Agent: resultado reportar_desvio
