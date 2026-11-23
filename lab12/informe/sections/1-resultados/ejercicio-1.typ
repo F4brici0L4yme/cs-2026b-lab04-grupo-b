@@ -8,4 +8,4 @@ Las pruebas cubren una ruta curva, un bus que ya pasó el paradero, trazado insu
 
 == Evidencia pendiente
 
-E4 requiere revisión real de otro integrante y revisión automática sobre el PR. En E5, una prueba adicional falla para el borrador lineal: estima 3 minutos frente a 4 por el trazado; queda pendiente ejecutar la matriz completa de compuertas sobre ambos árboles. E6 requiere los tiempos y observaciones del experimento cruzado del grupo. Estos resultados quedan pendientes y no se sustituyen por datos estimados.
+E4 requiere revisión real de otro integrante y revisión automática sobre el PR. En E5, una prueba adicional falla para el borrador lineal: estima 3 minutos frente a 4 por el trazado; queda pendiente ejecutar la matriz completa de compuertas sobre ambos árboles. E6 requiere los tiempos y observaciones del experimento cruzado del grupo. La comparación posterior usará la evidencia de METR #cite(<metr2025>) y DORA #cite(<dora2025>). Estos resultados quedan pendientes y no se sustituyen por datos estimados.
