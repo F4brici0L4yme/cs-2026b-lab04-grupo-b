@@ -1,0 +1,13 @@
+[project]
+name = "rutasit-lab11-mcp"
+version = "1.1.0"
+description = "Servidor MCP de RutaSIT Arequipa"
+requires-python = ">=3.11"
+dependencies = ["mcp>=2,<3"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["pruebas"]
+pythonpath = ["."]
