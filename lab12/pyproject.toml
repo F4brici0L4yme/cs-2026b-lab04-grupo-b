@@ -1,0 +1,17 @@
+[project]
+name = "rutasit-lab12"
+version = "0.1.0"
+description = "Mejora de ETA sobre el trazado para RutaSIT"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5", "pytest-cov==6.0.0", "ruff==0.11.2", "bandit==1.8.3", "radon==6.0.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["../lab05/src", "src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
