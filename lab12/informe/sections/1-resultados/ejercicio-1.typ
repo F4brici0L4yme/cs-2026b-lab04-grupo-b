@@ -8,7 +8,7 @@ Las pruebas cubren una ruta curva, un bus que ya pasó el paradero, trazado insu
 
 == Evidencia pendiente
 
-En E4, Castillo revisó el PR y solicitó cambios; la revisión asistida identificó los mismos puntos. Se aplicaron las correcciones y queda pendiente la revisión de seguimiento de Castillo. En E5, la misma prueba funcional falla para el borrador lineal (3 min) y pasa para el estimador por ruta (4 min); Ruff, Bandit, Radon y dependencias aprobadas pasan en ambos. La cobertura se exige al módulo final. E6 requiere los tiempos y observaciones del experimento cruzado del grupo. La comparación posterior usará la evidencia de METR #cite(<metr2025>) y DORA #cite(<dora2025>). Estos resultados quedan pendientes y no se sustituyen por datos estimados.
+En E4, Castillo revisó el PR y solicitó cambios; la revisión asistida identificó los mismos puntos. Se aplicaron las correcciones y queda pendiente la revisión de seguimiento de Castillo. En E5, la misma prueba funcional falla para el borrador lineal (3 min) y pasa para el estimador por ruta (4 min); Ruff, Bandit, Radon y dependencias aprobadas pasan en ambos. La cobertura se exige al módulo final. E6 presenta una tabla de demostración con datos ficticios claramente marcados; no se usan como evidencia ni como resultados del grupo. Faltan las mediciones reales del experimento cruzado. La comparación posterior usará la evidencia de METR #cite(<metr2025>) y DORA #cite(<dora2025>). Estos resultados quedan pendientes y no se sustituyen por datos estimados.
 
 
 == Revisión cruzada del PR

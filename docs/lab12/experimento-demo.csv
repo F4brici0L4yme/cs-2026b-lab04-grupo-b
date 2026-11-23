@@ -1,0 +1,7 @@
+integrante,tarea,modo,minutos,iteraciones_ia,compuertas_primer_intento,defectos_revision,comprende_codigo
+Rodrigo,T-A (paradero fuera de ruta),con_IA,28,3,5/7,2,si
+Rodrigo,T-B (bus ya pasó el paradero),sin_IA,35,N/A,4/7,1,si
+Brayan,T-A (paradero fuera de ruta),sin_IA,32,N/A,4/7,2,si
+Brayan,T-B (bus ya pasó el paradero),con_IA,24,2,6/7,1,si
+Castillo,T-A (paradero fuera de ruta),con_IA,30,3,5/7,1,si
+Castillo,T-B (bus ya pasó el paradero),sin_IA,38,N/A,4/7,2,no
