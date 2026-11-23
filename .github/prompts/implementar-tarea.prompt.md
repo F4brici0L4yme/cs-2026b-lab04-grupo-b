@@ -1,0 +1,1 @@
+Implementa solo la tarea indicada de `specs/hu-12/tasks.md`. Lee primero AGENTS.md, spec.md, plan.md y el código relacionado. Respeta TDD: prueba observable primero y código mínimo después. Reutiliza módulos existentes, no modifiques pruebas para hacerlas pasar y no agregues dependencias. Ejecuta las compuertas pertinentes y resume archivos, decisiones y resultados reales.
