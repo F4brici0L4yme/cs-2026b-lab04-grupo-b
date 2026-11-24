@@ -1,0 +1,7 @@
+{"method": "tools/list", "direction": "response", "latency_ms": 1.134}
+{"method": "tools/call", "tool": "tiempo_llegada", "direction": "request", "arguments": {"bus_id": "SIT-101", "paradero_id": "P-03"}}
+{"method": "tools/call", "tool": "tiempo_llegada", "direction": "response", "latency_ms": 5096.54, "result": {"bus_id": "SIT-101", "paradero_id": "P-03", "eta_min": 4.5, "estado": "ACTUAL"}}
+{"method": "tools/call", "tool": "buses_en_ruta", "direction": "request", "arguments": {"ruta_id": "R-02"}}
+{"method": "tools/call", "tool": "buses_en_ruta", "direction": "response", "latency_ms": 5010.623, "result": {"result": [{"bus_id": "SIT-201", "ruta_id": "R-02", "estado": "DESVIADO", "siguiente_paradero": "P-08"}]}}
+{"method": "tools/call", "tool": "reportar_desvio", "direction": "request", "arguments": {"bus_id": "SIT-201", "ruta_id": "R-02", "descripcion": "GPS confirma ubicación fuera del trazado junto al puente principal."}}
+{"method": "tools/call", "tool": "reportar_desvio", "direction": "response", "latency_ms": 5008.249, "result": {"result": "Creado reportes/DESVIO-05.md"}}
